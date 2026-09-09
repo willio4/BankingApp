@@ -7,18 +7,13 @@ using BankingApp.Domain.ValueObjects;
 
 namespace BankingApp.Domain.Entities
 {
-    public class Transaction
+    public class Transaction(string description)
     {
         private readonly List<LedgerEntry> _ledgerEntries = [];
-        public Guid Id { get; set; }
-        public string Description { get; set; }
-        public DateTime Timestamp { get; set; }
+        public Guid Id { get; } = Guid.NewGuid();
+        public string Description { get; } = description;
+        public DateTime Timestamp { get; } = DateTime.Now;
         public IReadOnlyCollection<LedgerEntry> Entries => _ledgerEntries.AsReadOnly();
-
-        public Transaction(string description)
-        {
-            Description = description;
-        }
 
         public static Transaction CreateTransfer(Account sourceAccount, Account destinationAccount, Money amount, string description)
         {
