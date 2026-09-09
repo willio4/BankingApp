@@ -7,7 +7,7 @@ using BankingApp.Domain.ValueObjects;
 
 namespace BankingApp.Domain.Entities
 {
-    public class Account(string AccountNumber, AccountType Type, string Currency)
+    public class Account(string AccountNumber, AccountType Type, string Currency = "USD")
     {
         public Guid Id { get; } = Guid.NewGuid();
         public string AccountNumber { get; } = AccountNumber;
