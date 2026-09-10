@@ -1,0 +1,23 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using BankingApp.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace BankingApp.Infrastructure.Persistence.Configurations
+{
+    public class AccountConfiguration : IEntityTypeConfiguration<Account>
+    {
+        public void Configure(EntityTypeBuilder<Account> builder)
+        {
+            builder.HasKey(a => a.ID);
+            builder.Property(a => a.AccountNumber).IsRequired().HasMaxLength(12);
+            builder.HasIndex(a => a.AccountNumber).IsUnique();
+            builder.HasMany<LedgerEntry>().WithOne().HasForeignKey(e => e.AccountID);
+
+
+        }
+    }
+}
