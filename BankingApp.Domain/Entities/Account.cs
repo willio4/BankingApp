@@ -73,10 +73,11 @@ namespace BankingApp.Domain.Entities
 
         }
 #pragma warning restore CS8618
-/// <summary>
-/// Calculates the balance of account
-/// </summary>
-/// <returns>decimal value as running balance</returns>
+
+        /// <summary>
+        /// Calculates the balance of account
+        /// </summary>
+        /// <returns>decimal value as running balance</returns>
         public decimal CalculateBalance()
         {
             decimal balance = 0; // end balance of all ledger entries
