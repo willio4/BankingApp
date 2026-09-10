@@ -13,11 +13,12 @@ namespace BankingApp.Domain.Tests.Entities
         [Fact]
         public void AccountCreateSuccessful_ZeroInitialBalance()
         {
-            Money init = new(500);
-            string accountNumber = Random.Shared.NextInt64(100000000000, 1000000000000).ToString();
-            Account myAccount = new(accountNumber,Enums.AccountType.Checking, "USD");
+            Customer customer1 = new("Harlem", "Williams", "harwill2021@gmail.com", "111-111-1111", DateTime.Parse("10/20/1997"));
 
-            Assert.Equal(0, myAccount.CalculateBalance());
+            Account account1 = new("000278405127", customer1.ID, Domain.Enums.AccountType.Checking);
+
+
+            Assert.Equal(0, account1.CalculateBalance());
         }
 
 
@@ -25,20 +26,21 @@ namespace BankingApp.Domain.Tests.Entities
         public void AccountCreateSuccessful_CalculateBalance()
         {
             // Given
-            string accountNumber = Random.Shared.NextInt64(100000000000, 1000000000000).ToString();
-            Account myAccount = new(accountNumber, Enums.AccountType.Checking);
+            Customer customer1 = new("Harlem", "Williams", "harwill2021@gmail.com", "111-111-1111", DateTime.Parse("10/20/1997"));
+
+            Account account1 = new("000278405127", customer1.ID, Domain.Enums.AccountType.Checking);
             Money deposit = new(100);
-            LedgerEntry deposit100 = new(myAccount.Id, deposit, Enums.EntryType.Credit, DateTime.Now);
+            LedgerEntry deposit100 = new(account1.ID, deposit, Enums.EntryType.Credit, DateTime.Now);
             Money withdraw = new(30);
-            LedgerEntry withdraw30 = new(myAccount.Id, withdraw, Enums.EntryType.Debit, DateTime.Now);
+            LedgerEntry withdraw30 = new(account1.ID, withdraw, Enums.EntryType.Debit, DateTime.Now);
             // When
-            myAccount.AddLedgerEntry(deposit100);
-            myAccount.AddLedgerEntry(withdraw30);
+            account1.AddLedgerEntry(deposit100);
+            account1.AddLedgerEntry(withdraw30);
             decimal expected = (deposit - withdraw).Amount;
             // Then
-            Assert.Equal(expected, myAccount.CalculateBalance());
+            Assert.Equal(expected, account1.CalculateBalance());
         }
 
-        
+
     }
 }
