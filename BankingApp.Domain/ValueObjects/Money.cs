@@ -12,12 +12,12 @@ namespace BankingApp.Domain.ValueObjects
         [Required(ErrorMessage = "Amount can not be blank")]
         [DataType(DataType.Currency)]
         public decimal Amount { get; }
-        [Required(ErrorMessage = "Currency can not be blank")]
+        [StringLength(3)]
         public string Currency { get; }
-        public Money(decimal Amount, string Currency = "USD")
+        public Money(decimal amount, string currency = "USD")
         {
-            this.Amount = Amount;
-            this.Currency = Currency;
+            Amount = amount;
+            Currency = currency;
         }
 
         public static Money operator +(Money op1, Money op2)
