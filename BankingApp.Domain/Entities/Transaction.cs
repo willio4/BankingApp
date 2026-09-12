@@ -19,7 +19,7 @@ namespace BankingApp.Domain.Entities
         /// user given description of transaction
         /// </summary>
         [StringLength(250)]
-        public string? Description { get; private set; }
+        public string Description { get; private set; }
         /// <summary>
         /// timestamp of transaction
         /// </summary>
@@ -40,14 +40,14 @@ namespace BankingApp.Domain.Entities
         {
             Description = description;
             _ledgerEntries = [];
-            Timestamp = DateTime.Now;
+            Timestamp = DateTime.UtcNow;
             ID = Guid.NewGuid();
         }
 
 #pragma warning disable CS8618
         private Transaction()
         {
-            
+
         }
 #pragma warning restore CS8618
 
@@ -77,8 +77,8 @@ namespace BankingApp.Domain.Entities
             Transaction transaction = new(description);
 
             // creation of ledger entries
-            var debitEntry = new LedgerEntry(sourceAccount.ID, amount, Enums.EntryType.Debit, DateTime.Now);
-            var creditEntry = new LedgerEntry(destinationAccount.ID, amount, Enums.EntryType.Credit, DateTime.Now);
+            var debitEntry = new LedgerEntry(sourceAccount.ID, amount, Enums.EntryType.Debit, DateTime.UtcNow);
+            var creditEntry = new LedgerEntry(destinationAccount.ID, amount, Enums.EntryType.Credit, DateTime.UtcNow);
 
             // add entries to transaction history
             transaction._ledgerEntries.Add(debitEntry);
@@ -90,5 +90,14 @@ namespace BankingApp.Domain.Entities
 
             return transaction;
         }
+
+        public Money GetAmount()
+        {
+            if (_ledgerEntries.Count == 0) throw new InvalidOperationException("Cannot resolve amount for a transaction with no ledger entries.");
+
+            LedgerEntry source = _ledgerEntries[0];
+            return source.Amount;
+        }
     }
+
 }

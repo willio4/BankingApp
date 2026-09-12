@@ -21,7 +21,7 @@ namespace BankingApp.Domain.Tests.Entities
             Account account1 = new("000278405127", customer1.ID, Domain.Enums.AccountType.Checking);
             Account account2 = new("010470247583", customer2.ID, Domain.Enums.AccountType.Checking);
 
-            LedgerEntry deposit100 = new(account1.ID, new(100.00m), Enums.EntryType.Credit, DateTime.Now);
+            LedgerEntry deposit100 = new(account1.ID, new(100.00m), Enums.EntryType.Credit, DateTime.UtcNow);
             account1.AddLedgerEntry(deposit100);
 
             // build second account with $0 (no ledger entry)
@@ -45,7 +45,7 @@ namespace BankingApp.Domain.Tests.Entities
 
             Account account1 = new("000278405127", customer1.ID, Domain.Enums.AccountType.Checking);
             Account account2 = new("010470247583", customer2.ID, Domain.Enums.AccountType.Checking, "EUR");
-            LedgerEntry deposit100 = new(account1.ID, new(100.00m), Enums.EntryType.Credit, DateTime.Now);
+            LedgerEntry deposit100 = new(account1.ID, new(100.00m), Enums.EntryType.Credit, DateTime.UtcNow);
             account1.AddLedgerEntry(deposit100);
 
             // build second account with $0 (no ledger entry)
@@ -69,7 +69,7 @@ namespace BankingApp.Domain.Tests.Entities
             Account account1 = new("000278405127", customer1.ID, Domain.Enums.AccountType.Checking);
             Account account2 = new("010470247583", customer2.ID, Domain.Enums.AccountType.Checking);
 
-            LedgerEntry deposit100 = new(account1.ID, new(100.00m), Enums.EntryType.Credit, DateTime.Now);
+            LedgerEntry deposit100 = new(account1.ID, new(100.00m), Enums.EntryType.Credit, DateTime.UtcNow);
             account1.AddLedgerEntry(deposit100);
 
             // build second account with $0 (no ledger entry)

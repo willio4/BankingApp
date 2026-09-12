@@ -50,6 +50,11 @@ namespace BankingApp.Domain.Entities
         private readonly List<LedgerEntry> _ledgerEntries = [];
 
         /// <summary>
+        /// Read-only view of ledger entries for external callers and EF Core.
+        /// </summary>
+        public IReadOnlyCollection<LedgerEntry> LedgerEntries => _ledgerEntries.AsReadOnly();
+
+        /// <summary>
         /// Account constructor
         /// </summary>
         /// <param name="accountNumber">unique account number</param>
