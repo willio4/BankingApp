@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using BankingApp.Domain.Entities;
 
-namespace BankingApp.Application.Common.Interfaces
+namespace BankingApp.Application.Common.Interfaces.Repositories
 {
-    public interface IAccountRepo
+    public interface IAccountRepository
     {
         /// <summary>
         /// 

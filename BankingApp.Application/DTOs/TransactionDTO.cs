@@ -6,7 +6,7 @@ using BankingApp.Domain.Entities;
 
 namespace BankingApp.Application.DTOs
 {
-    public record TransactionDto(
+    public record TransactionDTO(
         Guid Id,
         string Description,
         DateTime Timestamp,

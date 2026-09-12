@@ -7,7 +7,7 @@ using BankingApp.Domain.ValueObjects;
 
 namespace BankingApp.Application.DTOs
 {
-    public record TransferRequestDto(
+    public record TransferRequestDTO(
         Guid SourceAccountId,
         Guid DestinationAccountId,
         decimal Amount,
