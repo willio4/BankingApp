@@ -29,6 +29,11 @@ namespace BankingApp.Infrastructure.Persistence
         /// </summary>
         public virtual DbSet<LedgerEntry> LedgerEntries { get; set; }
 
+        /// <summary>
+        /// Customers Table
+        /// </summary>
+        public virtual DbSet<Customer> Customers { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

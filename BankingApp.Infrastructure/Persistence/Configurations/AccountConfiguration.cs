@@ -13,11 +13,17 @@ namespace BankingApp.Infrastructure.Persistence.Configurations
         public void Configure(EntityTypeBuilder<Account> builder)
         {
             builder.HasKey(a => a.ID);
-            builder.Property(a => a.AccountNumber).IsRequired().HasMaxLength(12);
-            builder.HasIndex(a => a.AccountNumber).IsUnique();
-            builder.HasMany<LedgerEntry>().WithOne().HasForeignKey(e => e.AccountID);
-
-
+            builder.Property(a => a.AccountNumber)
+                .IsRequired()
+                .HasMaxLength(12);
+            builder.HasIndex(a => a.AccountNumber)
+                .IsUnique();
+            builder.HasMany(a => a.LedgerEntries)
+                .WithOne()
+                .HasForeignKey(e => e.AccountID)
+                .OnDelete(DeleteBehavior.Cascade);
+            builder.Navigation(a => a.LedgerEntries)
+                .UsePropertyAccessMode(PropertyAccessMode.Field);
         }
     }
 }

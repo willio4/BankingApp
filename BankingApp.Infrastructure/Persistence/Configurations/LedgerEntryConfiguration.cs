@@ -12,7 +12,8 @@ namespace BankingApp.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<LedgerEntry> builder)
         {
-            builder.OwnsOne(entry => entry.Amount, money =>
+            builder.Property(e => e.Timestamp).HasColumnType("datetimeoffset");
+            builder.OwnsOne(e => e.Amount, money =>
             {
                 money.Property(a => a.Amount)
                      .HasColumnName("Amount")
