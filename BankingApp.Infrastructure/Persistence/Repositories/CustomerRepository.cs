@@ -23,5 +23,10 @@ namespace BankingApp.Infrastructure.Persistence.Repositories
             return await _db.Customers
                 .FirstOrDefaultAsync(c => c.ID == id, cancellationToken);
         }
+
+        public async Task<Customer?> GetByEmailAsync(string email, CancellationToken cancellationToken)
+        {
+            return await _db.Customers.FirstOrDefaultAsync(c => c.Email == email, cancellationToken);
+        }
     }
 }

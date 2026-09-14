@@ -11,5 +11,7 @@ namespace BankingApp.Application.Common.Interfaces.Repositories
         Task<Customer?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
         Task AddCustomerAsync(Customer customer, CancellationToken cancellationToken = default);
+
+        Task<Customer?> GetByEmailAsync(string email, CancellationToken cancellationToken);
     }
 }
