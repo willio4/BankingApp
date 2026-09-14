@@ -8,7 +8,7 @@ namespace BankingApp.Application.Common.Interfaces.Services
 {
     public interface ITransactionService
     {
-        Task<TransactionDTO> TransferMoneyAsync(TransferRequestDTO requestDTO, CancellationToken cancellationToken = default);
+        Task<TransactionDTO> TransferMoneyAsync(CreateTransactionRequestDTO requestDTO, CancellationToken cancellationToken = default);
 
         Task<IReadOnlyList<TransactionDTO>> GetAccountTransactionHistoryAsync(Guid accountId, CancellationToken cancellationToken = default);
     }

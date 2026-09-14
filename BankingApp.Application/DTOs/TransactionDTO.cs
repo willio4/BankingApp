@@ -13,4 +13,12 @@ namespace BankingApp.Application.DTOs
         decimal Amount,
         string Currency
     );
+
+    public record CreateTransactionRequestDTO(
+        Guid SourceAccountId,
+        Guid DestinationAccountId,
+        decimal Amount,
+        string Currency,
+        string Description
+    );
 }

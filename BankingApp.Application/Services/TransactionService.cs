@@ -28,7 +28,7 @@ namespace BankingApp.Application.Services
             return [..transactions.Select(MapToDTO)];
         }
 
-        public async Task<TransactionDTO> TransferMoneyAsync(TransferRequestDTO requestDTO, CancellationToken cancellationToken = default)
+        public async Task<TransactionDTO> TransferMoneyAsync(CreateTransactionRequestDTO requestDTO, CancellationToken cancellationToken = default)
         {
             Account? source = await _accountRepository.GetByIdAsync(requestDTO.SourceAccountId, cancellationToken) ?? throw new InvalidOperationException("source account does not exist");
 
