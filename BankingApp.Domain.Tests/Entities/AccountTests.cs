@@ -13,9 +13,10 @@ namespace BankingApp.Domain.Tests.Entities
         [Fact]
         public void AccountCreateSuccessful_ZeroInitialBalance()
         {
-            Customer customer1 = new("Harlem", "Williams", "harwill2021@gmail.com", "111-111-1111", DateTime.Parse("10/20/1997"));
+            Guid id = Guid.NewGuid();
+            Customer customer1 = new(id, "Harlem", "Williams", "harwill2021@gmail.com", "111-111-1111", DateTime.Parse("10/20/1997"));
 
-            Account account1 = new("000278405127", customer1.ID, Domain.Enums.AccountType.Checking);
+            Account account1 = new("000278405127", customer1.Id, Domain.Enums.AccountType.Checking);
 
 
             Assert.Equal(0, account1.CalculateBalance());
@@ -25,10 +26,11 @@ namespace BankingApp.Domain.Tests.Entities
         [Fact]
         public void AccountCreateSuccessful_CalculateBalance()
         {
+            Guid id = Guid.NewGuid();
             // Given
-            Customer customer1 = new("Harlem", "Williams", "harwill2021@gmail.com", "111-111-1111", DateTime.Parse("10/20/1997"));
+            Customer customer1 = new(id, "Harlem", "Williams", "harwill2021@gmail.com", "111-111-1111", DateTime.Parse("10/20/1997"));
 
-            Account account1 = new("000278405127", customer1.ID, Domain.Enums.AccountType.Checking);
+            Account account1 = new("000278405127", customer1.Id, Domain.Enums.AccountType.Checking);
             Money deposit = new(100);
             LedgerEntry deposit100 = new(account1.ID, deposit, Enums.EntryType.Credit, DateTime.UtcNow);
             Money withdraw = new(30);

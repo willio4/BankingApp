@@ -16,11 +16,12 @@ namespace BankingApp.Domain.Tests.Entities
         public void SuccessfulTransaction()
         {
             // build first account with $100
-            Customer customer1 = new("Harlem", "Williams", "harwill2021@gmail.com", "111-111-1111", DateTime.Parse("10/20/1997"));
-            Customer customer2 = new("Jersey", "Rowlette", "jerzrowlette@gmail.com", "222-222-2222", DateTime.Parse("09/30/1995"));
+            Guid id = Guid.NewGuid();
+            Customer customer1 = new(id, "Harlem", "Williams", "harwill2021@gmail.com", "111-111-1111", DateTime.Parse("10/20/1997"));
+            Customer customer2 = new(id, "Jersey", "Rowlette", "jerzrowlette@gmail.com", "222-222-2222", DateTime.Parse("09/30/1995"));
 
-            Account account1 = new("000278405127", customer1.ID, Domain.Enums.AccountType.Checking);
-            Account account2 = new("010470247583", customer2.ID, Domain.Enums.AccountType.Checking);
+            Account account1 = new("000278405127", customer1.Id, Domain.Enums.AccountType.Checking);
+            Account account2 = new("010470247583", customer2.Id, Domain.Enums.AccountType.Checking);
 
             LedgerEntry deposit100 = new(account1.ID, new(100.00m), Enums.EntryType.Credit, DateTime.UtcNow);
             account1.AddLedgerEntry(deposit100);
@@ -40,12 +41,13 @@ namespace BankingApp.Domain.Tests.Entities
         [Fact]
         public void UnsuccessfulTransaction_MismatchCurrency()
         {
+            Guid id = Guid.NewGuid();
             // build first account with $100
-            Customer customer1 = new("Harlem", "Williams", "harwill2021@gmail.com", "111-111-1111", DateTime.Parse("10/20/1997"));
-            Customer customer2 = new("Jersey", "Rowlette", "jerzrowlette@gmail.com", "222-222-2222", DateTime.Parse("09/30/1995"));
+            Customer customer1 = new(id, "Harlem", "Williams", "harwill2021@gmail.com", "111-111-1111", DateTime.Parse("10/20/1997"));
+            Customer customer2 = new(id, "Jersey", "Rowlette", "jerzrowlette@gmail.com", "222-222-2222", DateTime.Parse("09/30/1995"));
 
-            Account account1 = new("000278405127", customer1.ID, Domain.Enums.AccountType.Checking);
-            Account account2 = new("010470247583", customer2.ID, Domain.Enums.AccountType.Checking, "EUR");
+            Account account1 = new("000278405127", customer1.Id, Domain.Enums.AccountType.Checking);
+            Account account2 = new("010470247583", customer2.Id, Domain.Enums.AccountType.Checking, "EUR");
             LedgerEntry deposit100 = new(account1.ID, new(100.00m), Enums.EntryType.Credit, DateTime.UtcNow);
             account1.AddLedgerEntry(deposit100);
 
@@ -63,12 +65,13 @@ namespace BankingApp.Domain.Tests.Entities
         [Fact]
         public void UnsuccessfulTransaction_InsufficientFunds()
         {
+            Guid id = Guid.NewGuid();
             // build first account with $100
-            Customer customer1 = new("Harlem", "Williams", "harwill2021@gmail.com", "111-111-1111", DateTime.Parse("10/20/1997"));
-            Customer customer2 = new("Jersey", "Rowlette", "jerzrowlette@gmail.com", "222-222-2222", DateTime.Parse("09/30/1995"));
+            Customer customer1 = new(id, "Harlem", "Williams", "harwill2021@gmail.com", "111-111-1111", DateTime.Parse("10/20/1997"));
+            Customer customer2 = new(id, "Jersey", "Rowlette", "jerzrowlette@gmail.com", "222-222-2222", DateTime.Parse("09/30/1995"));
 
-            Account account1 = new("000278405127", customer1.ID, Domain.Enums.AccountType.Checking);
-            Account account2 = new("010470247583", customer2.ID, Domain.Enums.AccountType.Checking);
+            Account account1 = new("000278405127", customer1.Id, Domain.Enums.AccountType.Checking);
+            Account account2 = new("010470247583", customer2.Id, Domain.Enums.AccountType.Checking);
 
             LedgerEntry deposit100 = new(account1.ID, new(100.00m), Enums.EntryType.Credit, DateTime.UtcNow);
             account1.AddLedgerEntry(deposit100);
