@@ -66,5 +66,10 @@ namespace BankingApp.Domain.Entities
         {
             _accounts.Add(account);
         }
+
+        public List<Account> GetAccounts()
+        {
+            return _accounts;
+        }
     }
 }
