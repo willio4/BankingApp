@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BankingApp.Infrastructure.Persistence.Repositories
 {
-    public class TransactionRepo(ApplicationDbContext db) : ITransactionRepository
+    public class TransactionRepository(ApplicationDbContext db) : ITransactionRepository
     {
         private readonly ApplicationDbContext _db = db;
 

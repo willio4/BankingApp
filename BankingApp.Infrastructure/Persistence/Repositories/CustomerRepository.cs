@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BankingApp.Infrastructure.Persistence.Repositories
 {
-    public class CustomerRepo(ApplicationDbContext db) : ICustomerRepository
+    public class CustomerRepository(ApplicationDbContext db) : ICustomerRepository
     {
         private readonly ApplicationDbContext _db = db;
 
