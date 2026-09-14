@@ -18,9 +18,12 @@ namespace BankingApp.Application.Services
 
         public async Task<CustomerDTO> CreateCustomerAsync(CreateCustomerRequestDTO requestDTO, CancellationToken cancellationToken = default)
         {
-            Customer? existingCustomer = await _customerRepository.GetByEmailAsync(requestDTO.Email, cancellationToken) ?? throw new ExistingCustomerException("Email already taken");
+            Customer? existingCustomer = await _customerRepository
+                .GetByEmailAsync(requestDTO.Email, cancellationToken);
 
-            Customer customer = new(requestDTO.FirstName, requestDTO.LastName, requestDTO.Email, requestDTO.PhoneNumber, requestDTO.DateOfBirth);
+            if (existingCustomer is not null) throw new ExistingCustomerException("User with email already exist");
+
+            Customer customer = new(requestDTO.Id, requestDTO.FirstName, requestDTO.LastName, requestDTO.Email, requestDTO.PhoneNumber, requestDTO.DateOfBirth);
 
             await _customerRepository.AddCustomerAsync(customer, cancellationToken);
 
@@ -34,12 +37,12 @@ namespace BankingApp.Application.Services
         {
             Customer? customer = await _customerRepository.GetByIdAsync(id, cancellationToken);
 
-            return customer == null ? null : MapToDTO(customer);
+            return customer == null ? throw new InvalidCustomerException("Customer does not exist") : MapToDTO(customer);
         }
 
         public static CustomerDTO MapToDTO(Customer customer)
         {
-            return new CustomerDTO(customer.ID, customer.FirstName, customer.LastName, customer.Email, customer.PhoneNumber, customer.DateOfBirth, customer.GetAccounts());
+            return new CustomerDTO(customer.Id, customer.FirstName, customer.LastName, customer.Email, customer.PhoneNumber, customer.DateOfBirth, customer.GetAccounts());
         }
 
 
