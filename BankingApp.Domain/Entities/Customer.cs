@@ -14,13 +14,13 @@ namespace BankingApp.Domain.Entities
     /// <param name="email">customer email</param>
     /// <param name="phoneNumber">customer phone number</param>
     /// <param name="dateOfBirth">customer date of birth</param>
-    public class Customer(string firstName, string lastName, string email, string phoneNumber, DateTime dateOfBirth)
+    public class Customer(Guid customerId, string firstName, string lastName, string email, string phoneNumber, DateTime dateOfBirth)
     {
         /// <summary>
         /// Customer unique identifier
         /// </summary>
         [Key]
-        public Guid ID { get; private set; } = Guid.NewGuid();
+        public Guid Id { get; private set; } = customerId;
         /// <summary>
         /// customer first name
         /// </summary>

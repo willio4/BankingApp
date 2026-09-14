@@ -21,7 +21,7 @@ namespace BankingApp.Infrastructure.Persistence.Repositories
         public async Task<Customer?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return await _db.Customers
-                .FirstOrDefaultAsync(c => c.ID == id, cancellationToken);
+                .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
         }
 
         public async Task<Customer?> GetByEmailAsync(string email, CancellationToken cancellationToken)
