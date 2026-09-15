@@ -11,10 +11,11 @@ using BankingApp.Domain.Exceptions;
 
 namespace BankingApp.Application.Services
 {
-    public class CustomerService(ICustomerRepository customerRepository, IUnitOfWork unitOfWork) : ICustomerService
+    public class CustomerService(ICustomerRepository customerRepository, IUnitOfWork unitOfWork, AccountService accountService) : ICustomerService
     {
         private readonly ICustomerRepository _customerRepository = customerRepository;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
+        private readonly IAccountService _accountService = accountService;
 
         public async Task<CustomerDTO> CreateCustomerAsync(CreateCustomerRequestDTO requestDTO, CancellationToken cancellationToken = default)
         {
@@ -30,7 +31,6 @@ namespace BankingApp.Application.Services
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return MapToDTO(customer);
-
         }
 
         public async Task<CustomerDTO?> GetCustomerByIdAsync(Guid id, CancellationToken cancellationToken)
@@ -45,6 +45,17 @@ namespace BankingApp.Application.Services
             return new CustomerDTO(customer.Id, customer.FirstName, customer.LastName, customer.Email, customer.PhoneNumber, customer.DateOfBirth, customer.GetAccounts());
         }
 
+        
 
+        public async Task<AccountDTO> OpenAccountAsync(CreateAccountRequestDTO accountRequestDTO, CancellationToken cancellationToken)
+        {
+            // check if customer id is valid
+            Customer? customer = await _customerRepository.GetByIdAsync(accountRequestDTO.CustomerId, cancellationToken) ?? throw new InvalidCustomerException();
+
+            // create account from account request
+            AccountDTO accountDTO = await _accountService.CreateAccountAsync(accountRequestDTO, cancellationToken);
+
+            return accountDTO;
+        }
     }
 }

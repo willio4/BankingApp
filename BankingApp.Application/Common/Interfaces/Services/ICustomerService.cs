@@ -11,5 +11,7 @@ namespace BankingApp.Application.Common.Interfaces.Services
         Task<CustomerDTO> CreateCustomerAsync(CreateCustomerRequestDTO requestDTO, CancellationToken cancellationToken = default);
 
         Task<CustomerDTO?> GetCustomerByIdAsync(Guid id, CancellationToken cancellationToken);
+
+        Task<AccountDTO> OpenAccountAsync(CreateAccountRequestDTO accountRequestDTO, CancellationToken cancellationToken);
     }
 }
