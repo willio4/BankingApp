@@ -6,6 +6,7 @@ using BankingApp.Application.Common.Interfaces.Repositories;
 using BankingApp.Application.Common.Interfaces.Services;
 using BankingApp.Application.DTOs;
 using BankingApp.Domain.Entities;
+using BankingApp.Domain.Exceptions;
 
 namespace BankingApp.Application.Services
 {
@@ -18,13 +19,15 @@ namespace BankingApp.Application.Services
         public async Task<AccountDTO> CreateAccountAsync(CreateAccountRequestDTO requestDTO, CancellationToken cancellationToken = default)
         {
             // check if customer exist
-            Customer? customer = await _customerRepository.GetByIdAsync(requestDTO.CustomerId, cancellationToken) ?? throw new InvalidOperationException();
+            Customer? customer = await _customerRepository.GetByIdAsync(requestDTO.CustomerId, cancellationToken) ?? throw new InvalidCustomerException($"Customer with id: {requestDTO.CustomerId} does not exist.");
 
             // create unique account number
             string accountNumber = GenerateUniqueAccountNumber();
 
             // create account
             var account = new Account(accountNumber, requestDTO.CustomerId, requestDTO.AccountType, requestDTO.Currency);
+
+            customer.AddAccount(account);
 
             // add to account repository
             await _accountRepository.AddAccountAsync(account, cancellationToken);
