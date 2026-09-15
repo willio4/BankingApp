@@ -77,8 +77,8 @@ namespace BankingApp.Domain.Entities
             Transaction transaction = new(description);
 
             // creation of ledger entries
-            var debitEntry = new LedgerEntry(sourceAccount.ID, amount, Enums.EntryType.Debit, DateTime.UtcNow);
-            var creditEntry = new LedgerEntry(destinationAccount.ID, amount, Enums.EntryType.Credit, DateTime.UtcNow);
+            var debitEntry = new LedgerEntry(sourceAccount.Id, amount, Enums.EntryType.Debit, DateTime.UtcNow);
+            var creditEntry = new LedgerEntry(destinationAccount.Id, amount, Enums.EntryType.Credit, DateTime.UtcNow);
 
             // add entries to transaction history
             transaction._ledgerEntries.Add(debitEntry);

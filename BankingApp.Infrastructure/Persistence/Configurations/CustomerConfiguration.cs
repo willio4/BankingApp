@@ -18,7 +18,7 @@ namespace BankingApp.Infrastructure.Persistence.Configurations
             builder.Property(c => c.DateOfBirth).IsRequired().HasColumnType("datetimeoffset");
             builder.Property(c => c.PhoneNumber).IsRequired().HasMaxLength(15);
             builder.Property(c => c.Email).IsRequired().HasMaxLength(50);
-            builder.HasMany<Account>().WithOne().HasForeignKey(a => a.CustomerID);
+            builder.HasMany<Account>().WithOne().HasForeignKey(a => a.CustomerId);
         }
     }
 }

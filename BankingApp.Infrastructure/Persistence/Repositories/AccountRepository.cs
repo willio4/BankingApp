@@ -15,7 +15,7 @@ public class AccountRepository(ApplicationDbContext db) : IAccountRepository
     {
         return await _db.Accounts
             .Include(a => a.LedgerEntries)
-            .FirstOrDefaultAsync(a => a.ID == id, cancellationToken);
+            .FirstOrDefaultAsync(a => a.Id == id, cancellationToken);
     }
 
     public async Task<Account?> GetByAccountNumberAsync(string accountNumber, CancellationToken cancellationToken = default)

@@ -17,7 +17,7 @@ namespace BankingApp.Domain.Entities
         /// </summary>
         [Key]
         [Required]
-        public Guid ID { get; init; } = Guid.NewGuid();
+        public Guid Id { get; init; } = Guid.NewGuid();
 
         /// <summary>
         /// 12-digit account number 
@@ -30,7 +30,7 @@ namespace BankingApp.Domain.Entities
         /// ID of customer account belongs to
         /// </summary>
         [Required]
-        public Guid CustomerID { get; private set; }
+        public Guid CustomerId { get; private set; }
 
         /// <summary>
         /// Checking or Savings account enum
@@ -64,7 +64,7 @@ namespace BankingApp.Domain.Entities
         public Account(string accountNumber, Guid customerId, AccountType type, string currency = "USD")
         {
             AccountNumber = accountNumber;
-            CustomerID = customerId;
+            CustomerId = customerId;
             Type = type;
             Currency = currency;
         }

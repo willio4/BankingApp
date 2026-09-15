@@ -12,7 +12,7 @@ namespace BankingApp.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Account> builder)
         {
-            builder.HasKey(a => a.ID);
+            builder.HasKey(a => a.Id);
             builder.Property(a => a.AccountNumber)
                 .IsRequired()
                 .HasMaxLength(12);

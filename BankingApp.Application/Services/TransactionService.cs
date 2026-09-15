@@ -22,10 +22,10 @@ namespace BankingApp.Application.Services
             Account? account = await _accountRepository.GetByIdAsync(accountId, cancellationToken) ?? throw new InvalidOperationException();
 
             // get all transactions associated with account
-            IReadOnlyList<Transaction> transactions = await _transactionRepository.GetByAccountIdAsync(account.ID, cancellationToken);
+            IReadOnlyList<Transaction> transactions = await _transactionRepository.GetByAccountIdAsync(account.Id, cancellationToken);
 
             // spread transactions, map to dto then put in list and return
-            return [..transactions.Select(MapToDTO)];
+            return [.. transactions.Select(MapToDTO)];
         }
 
         public async Task<TransactionDTO> TransferMoneyAsync(CreateTransactionRequestDTO requestDTO, CancellationToken cancellationToken = default)
@@ -59,5 +59,5 @@ namespace BankingApp.Application.Services
             return new TransactionDTO(transaction.ID, transaction.Description, transaction.Timestamp, amount.Amount, amount.Currency);
         }
     }
-    
+
 }

@@ -50,16 +50,16 @@ namespace BankingApp.Application.Services
 
         private static AccountDTO MapToDTO(Account account)
         {
-            return new AccountDTO(account.ID, account.AccountNumber, account.CustomerID, account.Type, account.CalculateBalance(), account.Currency);
+            return new AccountDTO(account.Id, account.AccountNumber, account.CustomerId, account.Type, account.CalculateBalance(), account.Currency);
         }
 
         private static string GenerateUniqueAccountNumber()
         {
             Span<char> buffer = stackalloc char[12];
 
-            for(int i = 0; i < 12; i++)
+            for (int i = 0; i < 12; i++)
             {
-                buffer[i] = (char)('0' + Random.Shared.Next(0,10));
+                buffer[i] = (char)('0' + Random.Shared.Next(0, 10));
             }
 
             return new string(buffer);

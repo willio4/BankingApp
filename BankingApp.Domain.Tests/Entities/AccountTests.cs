@@ -32,9 +32,9 @@ namespace BankingApp.Domain.Tests.Entities
 
             Account account1 = new("000278405127", customer1.Id, Domain.Enums.AccountType.Checking);
             Money deposit = new(100);
-            LedgerEntry deposit100 = new(account1.ID, deposit, Enums.EntryType.Credit, DateTime.UtcNow);
+            LedgerEntry deposit100 = new(account1.Id, deposit, Enums.EntryType.Credit, DateTime.UtcNow);
             Money withdraw = new(30);
-            LedgerEntry withdraw30 = new(account1.ID, withdraw, Enums.EntryType.Debit, DateTime.UtcNow);
+            LedgerEntry withdraw30 = new(account1.Id, withdraw, Enums.EntryType.Debit, DateTime.UtcNow);
             // When
             account1.AddLedgerEntry(deposit100);
             account1.AddLedgerEntry(withdraw30);
