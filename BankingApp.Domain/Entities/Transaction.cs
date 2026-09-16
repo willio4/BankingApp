@@ -91,6 +91,21 @@ namespace BankingApp.Domain.Entities
             return transaction;
         }
 
+        public static Transaction CreateTransfer(Account account, Money amount, string description, bool isWithdraw)
+        {
+            if(account.Currency != amount.Currency) throw new CurrencyMismatchException();
+            if(isWithdraw && account.CalculateBalance() < amount.Amount) throw new InsufficientFundsException();
+
+            Transaction transaction = new(description);
+
+            LedgerEntry ledgerEntry = isWithdraw == true ? new(account.Id, amount, Enums.EntryType.Debit, DateTime.UtcNow) : new(account.Id, amount, Enums.EntryType.Credit, DateTime.UtcNow);
+
+            transaction._ledgerEntries.Add(ledgerEntry);
+            account.AddLedgerEntry(ledgerEntry);
+
+            return transaction;
+        }
+
         public Money GetAmount()
         {
             if (_ledgerEntries.Count == 0) throw new InvalidOperationException("Cannot resolve amount for a transaction with no ledger entries.");

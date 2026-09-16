@@ -21,4 +21,16 @@ namespace BankingApp.Application.DTOs
         string Currency,
         string Description
     );
+
+    public record DepositMoneyRequestDTO(
+        string AccountNumber,
+        decimal Amount,
+        string Currency
+    );
+
+    public record WithdrawMoneyRequestDTO(
+        string AccountNumber,
+        decimal Amount,
+        string Currency
+    );
 }

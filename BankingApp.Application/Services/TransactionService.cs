@@ -6,6 +6,7 @@ using BankingApp.Application.Common.Interfaces.Repositories;
 using BankingApp.Application.Common.Interfaces.Services;
 using BankingApp.Application.DTOs;
 using BankingApp.Domain.Entities;
+using BankingApp.Domain.Exceptions;
 using BankingApp.Domain.ValueObjects;
 
 namespace BankingApp.Application.Services
