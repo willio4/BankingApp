@@ -56,7 +56,42 @@ namespace BankingApp.Application.Services
         private static TransactionDTO MapToDTO(Transaction transaction)
         {
             Money amount = transaction.GetAmount();
-            return new TransactionDTO(transaction.ID, transaction.Description, transaction.Timestamp, amount.Amount, amount.Currency);
+            return new TransactionDTO(transaction.Id, transaction.Description, transaction.Timestamp, amount.Amount, amount.Currency);
+        }
+
+        public async Task<TransactionDTO> DepositMoneyAsync(DepositMoneyRequestDTO depositMoneyRequestDTO, CancellationToken cancellationToken = default)
+        {
+            Account? account = await _accountRepository.GetByAccountNumberAsync(depositMoneyRequestDTO.AccountNumber, cancellationToken) ?? throw new NullAccountException("Account could not be found");
+
+            if (account.Currency != depositMoneyRequestDTO.Currency) throw new CurrencyMismatchException("Currency Mismatch");
+
+            Money amount = new(depositMoneyRequestDTO.Amount, depositMoneyRequestDTO.Currency);
+
+            Transaction transaction = Transaction.CreateTransfer(account, amount, $"Deposit: {amount.Amount}, \"{amount.Currency}\"", false);
+            
+            await _transactionRepository.AddTransactionAsync(transaction, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            return MapToDTO(transaction);
+
+        }
+
+        public async Task<TransactionDTO> WithdrawMoneyAsync(WithdrawMoneyRequestDTO withdrawMoneyRequestDTO, CancellationToken cancellationToken = default)
+        {
+            Account? account = await _accountRepository.GetByAccountNumberAsync(withdrawMoneyRequestDTO.AccountNumber, cancellationToken) ?? throw new NullAccountException("Account could not be found");
+
+            if (account.Currency != withdrawMoneyRequestDTO.Currency) throw new CurrencyMismatchException("Currency Mismatch");
+
+            if (account.CalculateBalance() < withdrawMoneyRequestDTO.Amount) throw new InsufficientFundsException("Insufficient funds");
+
+            Money amount = new(withdrawMoneyRequestDTO.Amount, withdrawMoneyRequestDTO.Currency);
+
+            Transaction transaction = Transaction.CreateTransfer(account, amount, $"Deposit: {amount.Amount}, \"{amount.Currency}\"", true);
+
+            await _transactionRepository.AddTransactionAsync(transaction, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            return MapToDTO(transaction);
         }
     }
 

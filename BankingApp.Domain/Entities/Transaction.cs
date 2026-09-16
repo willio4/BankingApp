@@ -14,7 +14,7 @@ namespace BankingApp.Domain.Entities
         /// unique transaction identifier
         /// </summary>
         [Key]
-        public Guid ID { get; init; }
+        public Guid Id { get; init; }
         /// <summary>
         /// user given description of transaction
         /// </summary>
@@ -41,7 +41,7 @@ namespace BankingApp.Domain.Entities
             Description = description;
             _ledgerEntries = [];
             Timestamp = DateTime.UtcNow;
-            ID = Guid.NewGuid();
+            Id = Guid.NewGuid();
         }
 
 #pragma warning disable CS8618

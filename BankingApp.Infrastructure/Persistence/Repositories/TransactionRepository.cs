@@ -18,7 +18,7 @@ namespace BankingApp.Infrastructure.Persistence.Repositories
         {
             return await _db.Transactions
                 .Include(t => t.Entries)
-                .Where(t => t.Entries.Any(e => e.AccountID == accountId))
+                .Where(t => t.Entries.Any(e => e.AccountId == accountId))
                 .OrderByDescending(t => t.Timestamp)
                 .ToListAsync(cancellationToken);
         }
@@ -27,7 +27,7 @@ namespace BankingApp.Infrastructure.Persistence.Repositories
         {
             return await _db.Transactions
             .Include(t => t.Entries)
-            .FirstOrDefaultAsync(t => t.ID == id, cancellationToken);
+            .FirstOrDefaultAsync(t => t.Id == id, cancellationToken);
         }
     }
 }

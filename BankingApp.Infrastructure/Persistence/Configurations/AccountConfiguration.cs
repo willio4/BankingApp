@@ -20,7 +20,7 @@ namespace BankingApp.Infrastructure.Persistence.Configurations
                 .IsUnique();
             builder.HasMany(a => a.LedgerEntries)
                 .WithOne()
-                .HasForeignKey(e => e.AccountID)
+                .HasForeignKey(e => e.AccountId)
                 .OnDelete(DeleteBehavior.Cascade);
             builder.Navigation(a => a.LedgerEntries)
                 .UsePropertyAccessMode(PropertyAccessMode.Field);

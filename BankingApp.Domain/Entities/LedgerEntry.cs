@@ -15,12 +15,12 @@ namespace BankingApp.Domain.Entities
         /// ledger entry unique identifier
         /// </summary>
         [Key]
-        public Guid ID { get; init; } = Guid.NewGuid();
+        public Guid Id { get; init; } = Guid.NewGuid();
         /// <summary>
         /// id of account ledger entry belongs to
         /// </summary>
         [Required]
-        public Guid AccountID { get; private set; }
+        public Guid AccountId { get; private set; }
         /// <summary>
         /// money object associated with ledger entry
         /// </summary>
@@ -47,7 +47,7 @@ namespace BankingApp.Domain.Entities
         /// <param name="timestamp">timestamp of ledger entry</param>
         public LedgerEntry(Guid accountId, Money amount, EntryType type, DateTime timestamp)
         {
-            AccountID = accountId;
+            AccountId = accountId;
             Amount = amount;
             Type = type;
             Timestamp = timestamp;
