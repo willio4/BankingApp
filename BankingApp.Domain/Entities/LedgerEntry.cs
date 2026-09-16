@@ -56,10 +56,10 @@ namespace BankingApp.Domain.Entities
         /// <summary>
         /// Empty constructor for database migration
         /// </summary>
-        #pragma warning disable CS8618
+#pragma warning disable CS8618
         private LedgerEntry()
         {
         }
-        #pragma warning restore CS8618
+#pragma warning restore CS8618
     }
 }
