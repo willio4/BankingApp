@@ -24,9 +24,13 @@ namespace BankingApp.Application.Services
         {
             ArgumentNullException.ThrowIfNull(requestDTO);
 
-            if (string.IsNullOrEmpty(requestDTO.FirstName.Trim()) || string.IsNullOrEmpty(requestDTO.LastName.Trim()) || string.IsNullOrEmpty(requestDTO.Email.Trim()) || string.IsNullOrEmpty(requestDTO.PhoneNumber.Trim())) throw new ArgumentException("Customer details cannot be null");
-            
-            if(!MailAddress.TryCreate(requestDTO.Email, out _)) throw new ArgumentException("Invalid email address");
+            if (string.IsNullOrWhiteSpace(requestDTO.FirstName) ||
+                string.IsNullOrWhiteSpace(requestDTO.LastName) ||
+                string.IsNullOrWhiteSpace(requestDTO.Email) ||
+                string.IsNullOrWhiteSpace(requestDTO.PhoneNumber))
+                throw new ArgumentException("Customer details cannot be empty");
+
+            if (!MailAddress.TryCreate(requestDTO.Email, out _)) throw new ArgumentException("Invalid email address");
 
             Regex regex = MyRegex1();
             
