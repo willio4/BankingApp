@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net.Mail;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BankingApp.Application.Common.Interfaces.Repositories;
 using BankingApp.Application.Common.Interfaces.Services;
@@ -11,7 +14,7 @@ using BankingApp.Domain.Exceptions;
 
 namespace BankingApp.Application.Services
 {
-    public class CustomerService(ICustomerRepository customerRepository, IUnitOfWork unitOfWork, AccountService accountService) : ICustomerService
+    public partial class CustomerService(ICustomerRepository customerRepository, IUnitOfWork unitOfWork, AccountService accountService) : ICustomerService
     {
         private readonly ICustomerRepository _customerRepository = customerRepository;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
@@ -19,6 +22,16 @@ namespace BankingApp.Application.Services
 
         public async Task<CustomerDTO> CreateCustomerAsync(CreateCustomerRequestDTO requestDTO, CancellationToken cancellationToken = default)
         {
+            ArgumentNullException.ThrowIfNull(requestDTO);
+
+            if (string.IsNullOrEmpty(requestDTO.FirstName.Trim()) || string.IsNullOrEmpty(requestDTO.LastName.Trim()) || string.IsNullOrEmpty(requestDTO.Email.Trim()) || string.IsNullOrEmpty(requestDTO.PhoneNumber.Trim())) throw new ArgumentException("Customer details cannot be null");
+            
+            if(!MailAddress.TryCreate(requestDTO.Email, out _)) throw new ArgumentException("Invalid email address");
+
+            Regex regex = MyRegex1();
+            
+            if(!regex.IsMatch(requestDTO.PhoneNumber)) throw new ArgumentException("Invalid phone number");
+
             Customer? existingCustomer = await _customerRepository
                 .GetByEmailAsync(requestDTO.Email, cancellationToken);
 
@@ -57,5 +70,8 @@ namespace BankingApp.Application.Services
 
             return accountDTO;
         }
+
+        [GeneratedRegex(@"^\d{3}-?\d{3}-?\d{4}$")]
+        private static partial Regex MyRegex1();
     }
 }

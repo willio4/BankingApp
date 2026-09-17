@@ -21,6 +21,8 @@ namespace BankingApp.Application.Services
             // check if customer exist
             Customer? customer = await _customerRepository.GetByIdAsync(requestDTO.CustomerId, cancellationToken) ?? throw new InvalidCustomerException($"Customer with id: {requestDTO.CustomerId} does not exist.");
 
+            if(string.IsNullOrEmpty(requestDTO.Currency.Trim()) || requestDTO.Currency.Length != 3) throw new ArgumentException("Currency is invalid");
+
             // create unique account number
             string accountNumber = GenerateUniqueAccountNumber();
 
