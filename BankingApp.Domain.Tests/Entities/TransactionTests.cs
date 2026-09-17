@@ -220,15 +220,42 @@ namespace BankingApp.Domain.Tests.Entities
             };
             
             await func.Should().ThrowAsync<CurrencyMismatchException>();
+        }
+
+        [Fact]
+        public async Task AccountWithdrawalSuccessfulTest()
+        {
+            // Given
+            CancellationTokenSource cts = new();
+            // create 2 customers request
+            CreateCustomerRequestDTO createCustomerRequestDTO = new(Guid.NewGuid(), "Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTime.Parse("10/20/1997"));
+
+            CreateCustomerRequestDTO createCustomerRequestDTO1 = new(Guid.NewGuid(), "Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTime.Parse("09/30/1995"));
+
+            // create 2 customers
+            CustomerDTO harlem = await _customerService.CreateCustomerAsync(createCustomerRequestDTO, cts.Token);
+
+            // create 2 account request
+            CreateAccountRequestDTO accountRequestDTO = new(harlem.Id, Enums.AccountType.Checking, "USD");
+
+            AccountDTO? harlemAccount = await _customerService.OpenAccountAsync(accountRequestDTO, cts.Token);
+
+            // create 2 deposit money request
+            DepositMoneyRequestDTO depositMoneyRequestDTO = new(harlemAccount.AccountNumber, 5000m, "USD");
+
+            await _transactionService.DepositMoneyAsync(depositMoneyRequestDTO, cts.Token);
+
+            WithdrawMoneyRequestDTO withdrawMoneyRequestDTO = new(harlemAccount.AccountNumber, 2200m, "USD");
 
 
-            // harlemAccount = await _accountService.GetAccountByIdAsync(harlemAccount.Id, cts.Token);
-            // jerzAccount = await _accountService.GetAccountByIdAsync(jerzAccount.Id, cts.Token);
 
-            // harlemAccount.Should().NotBeNull();
-            // jerzAccount.Should().NotBeNull();
-            // harlemAccount.Balance.Should().Be(2700);
-            // jerzAccount.Balance.Should().Be(4600);
+
+            // When
+            await _transactionService.WithdrawMoneyAsync(withdrawMoneyRequestDTO, cts.Token);
+            // Then
+            harlemAccount = await _accountService.GetAccountByAccountNumberAsync(harlemAccount.AccountNumber, cts.Token);
+            harlemAccount.Should().NotBeNull();
+            harlemAccount.Balance.Should().Be(2800);
         }
 
         [Fact]
