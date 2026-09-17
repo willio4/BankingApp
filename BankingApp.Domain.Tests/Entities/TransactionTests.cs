@@ -26,7 +26,6 @@ namespace BankingApp.Domain.Tests.Entities
         private readonly List<Customer> customers = [];
         private readonly List<Account> accounts = [];
         private readonly List<Transaction> transactions = [];
-        private readonly List<LedgerEntry> ledgerEntries = [];
 
         public TransactionTests()
         {

@@ -123,6 +123,35 @@ namespace BankingApp.Domain.Tests.Entities
             accountDTO.Balance.Should().Be(0);
         }
 
+        [Fact]
+        public async Task AccountCreate_Unsuccessful()
+        {
+            // Arrange
+            CancellationTokenSource cts = new();
+            Customer customer = new(
+                Guid.NewGuid(),
+                "Harlem",
+                "Williams",
+                "harwill97@gmail.com",
+                "111-111-1111",
+                DateTime.Parse("10/20/1997")
+            );
+
+            customers.Add(customer);
+
+            CreateAccountRequestDTO accountRequestDTO = new(customer.Id, Enums.AccountType.Checking, "USD");
+
+            // Act
+            AccountDTO accountDTO = await _customerService.OpenAccountAsync(accountRequestDTO, cts.Token);
+
+            // Assert
+            List<Account> accounts = customer.GetAccounts();
+
+            accounts.Should().ContainEquivalentOf(accountDTO, options => options
+                .Excluding(a => a.Balance)
+            );
+        }
+
 
     }
 }
