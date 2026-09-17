@@ -20,7 +20,7 @@ namespace BankingApp.Application.Services
         public async Task<IReadOnlyList<TransactionDTO>> GetAccountTransactionHistoryAsync(Guid accountId, CancellationToken cancellationToken = default)
         {
             // check account exist
-            Account? account = await _accountRepository.GetByIdAsync(accountId, cancellationToken) ?? throw new InvalidOperationException();
+            Account? account = await _accountRepository.GetByIdAsync(accountId, cancellationToken) ?? throw new NullAccountException();
 
             // get all transactions associated with account
             IReadOnlyList<Transaction> transactions = await _transactionRepository.GetByAccountIdAsync(account.Id, cancellationToken);
@@ -31,13 +31,13 @@ namespace BankingApp.Application.Services
 
         public async Task<TransactionDTO> TransferMoneyAsync(CreateTransactionRequestDTO requestDTO, CancellationToken cancellationToken = default)
         {
-            Account? source = await _accountRepository.GetByIdAsync(requestDTO.SourceAccountId, cancellationToken) ?? throw new InvalidOperationException("source account does not exist");
+            Account? source = await _accountRepository.GetByIdAsync(requestDTO.SourceAccountId, cancellationToken) ?? throw new NullAccountException("source account does not exist");
 
-            Account? destination = await _accountRepository.GetByIdAsync(requestDTO.DestinationAccountId, cancellationToken) ?? throw new InvalidOperationException("destination account does not exist");
+            Account? destination = await _accountRepository.GetByIdAsync(requestDTO.DestinationAccountId, cancellationToken) ?? throw new NullAccountException("destination account does not exist");
 
             if (source.Currency != requestDTO.Currency || destination.Currency != requestDTO.Currency)
             {
-                throw new InvalidOperationException("Currency mismatch between transfer request and accounts.");
+                throw new CurrencyMismatchException("Currency mismatch between transfer request and accounts.");
             }
 
             Money money = new(requestDTO.Amount, requestDTO.Currency);
