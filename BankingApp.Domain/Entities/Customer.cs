@@ -39,13 +39,14 @@ namespace BankingApp.Domain.Entities
         [Required]
         [DataType(DataType.EmailAddress)]
         [StringLength(50)]
+        [RegularExpression(@"^[\w\d.]+@[\w\d.]+$")]
         public string Email { get; set; } = email;
         /// <summary>
         /// customer phone number
         /// </summary>
         [Required]
         [DataType(DataType.PhoneNumber)]
-        [StringLength(12)]
+        [RegularExpression(@"^\d{3}-?\d{3}-?\d{4}$")]
         public string PhoneNumber { get; set; } = phoneNumber;
         /// <summary>
         /// customer date of birth

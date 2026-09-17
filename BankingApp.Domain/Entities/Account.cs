@@ -42,6 +42,7 @@ namespace BankingApp.Domain.Entities
         /// Currency tied to specific account
         /// </summary>
         [Required]
+        
         public string Currency { get; private set; }
 
         /// <summary>
