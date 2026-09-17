@@ -112,7 +112,7 @@ namespace BankingApp.Domain.Tests.Entities
 
 
         [Fact]
-        public async Task SuccessfulTransaction()
+        public async Task SuccessfulDeposit()
         {
             CancellationTokenSource cts = new();
             // create 2 customers request
@@ -148,50 +148,246 @@ namespace BankingApp.Domain.Tests.Entities
         }
 
         [Fact]
-        public void UnsuccessfulTransaction_MismatchCurrency()
+        public async Task UnsuccessfulDeposit_ThrowCurrencyMismatchException()
         {
-            Guid id = Guid.NewGuid();
-            // build first account with $100
-            Customer customer1 = new(id, "Harlem", "Williams", "harwill2021@gmail.com", "111-111-1111", DateTime.Parse("10/20/1997"));
-            Customer customer2 = new(id, "Jersey", "Rowlette", "jerzrowlette@gmail.com", "222-222-2222", DateTime.Parse("09/30/1995"));
+            CancellationTokenSource cts = new();
+            // create 2 customers request
+            CreateCustomerRequestDTO createCustomerRequestDTO = new(Guid.NewGuid(), "Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTime.Parse("10/20/1997"));
 
-            Account account1 = new("000278405127", customer1.Id, Domain.Enums.AccountType.Checking);
-            Account account2 = new("010470247583", customer2.Id, Domain.Enums.AccountType.Checking, "EUR");
-            LedgerEntry deposit100 = new(account1.Id, new(100.00m), Enums.EntryType.Credit, DateTime.UtcNow);
-            account1.AddLedgerEntry(deposit100);
+            CreateCustomerRequestDTO createCustomerRequestDTO1 = new(Guid.NewGuid(), "Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTime.Parse("09/30/1995"));
 
-            // build second account with $0 (no ledger entry)
+            // create 2 customers
+            CustomerDTO harlem = await _customerService.CreateCustomerAsync(createCustomerRequestDTO, cts.Token);
+            CustomerDTO jersey = await _customerService.CreateCustomerAsync(createCustomerRequestDTO1, cts.Token);
 
+            // create 2 account request
+            CreateAccountRequestDTO accountRequestDTO = new(harlem.Id, Enums.AccountType.Checking, "USD");
+            CreateAccountRequestDTO accountRequestDTO1 = new(jersey.Id, Enums.AccountType.Savings, "EUR");
 
+            AccountDTO? harlemAccount = await _customerService.OpenAccountAsync(accountRequestDTO, cts.Token);
+            AccountDTO? jerzAccount = await _customerService.OpenAccountAsync(accountRequestDTO1, cts.Token);
 
-            Assert.Throws<CurrencyMismatchException>(() =>
+            // create 2 deposit money request
+            DepositMoneyRequestDTO depositMoneyRequestDTO = new(harlemAccount.AccountNumber, 5000m, "USD");
+            DepositMoneyRequestDTO depositMoneyRequestDTO1 = new(jerzAccount.AccountNumber, 2300, "USD");
+
+            await _transactionService.DepositMoneyAsync(depositMoneyRequestDTO, cts.Token);
+
+            Func<Task> func = async () =>
             {
-                // create transaction from account1 to account2 of $25.75
-                Transaction.CreateTransfer(account1, account2, new(25.75m), "Tranferring $25.75 from account1 to account2");
-            });
+                await _transactionService.DepositMoneyAsync(depositMoneyRequestDTO1, cts.Token);
+            };
+
+            await func.Should().ThrowAsync<CurrencyMismatchException>();
         }
 
         [Fact]
-        public void UnsuccessfulTransaction_InsufficientFunds()
+        public async Task UnsuccessfulTransaction_ThrowsCurrencyMismatch()
         {
-            Guid id = Guid.NewGuid();
-            // build first account with $100
-            Customer customer1 = new(id, "Harlem", "Williams", "harwill2021@gmail.com", "111-111-1111", DateTime.Parse("10/20/1997"));
-            Customer customer2 = new(id, "Jersey", "Rowlette", "jerzrowlette@gmail.com", "222-222-2222", DateTime.Parse("09/30/1995"));
+            CancellationTokenSource cts = new();
+            // create 2 customers request
+            CreateCustomerRequestDTO createCustomerRequestDTO = new(Guid.NewGuid(), "Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTime.Parse("10/20/1997"));
 
-            Account account1 = new("000278405127", customer1.Id, Domain.Enums.AccountType.Checking);
-            Account account2 = new("010470247583", customer2.Id, Domain.Enums.AccountType.Checking);
+            CreateCustomerRequestDTO createCustomerRequestDTO1 = new(Guid.NewGuid(), "Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTime.Parse("09/30/1995"));
 
-            LedgerEntry deposit100 = new(account1.Id, new(100.00m), Enums.EntryType.Credit, DateTime.UtcNow);
-            account1.AddLedgerEntry(deposit100);
+            // create 2 customers
+            CustomerDTO harlem = await _customerService.CreateCustomerAsync(createCustomerRequestDTO, cts.Token);
+            CustomerDTO jersey = await _customerService.CreateCustomerAsync(createCustomerRequestDTO1, cts.Token);
 
-            // build second account with $0 (no ledger entry)
+            // create 2 account request
+            CreateAccountRequestDTO accountRequestDTO = new(harlem.Id, Enums.AccountType.Checking, "USD");
+            CreateAccountRequestDTO accountRequestDTO1 = new(jersey.Id, Enums.AccountType.Savings, "EUR");
 
-            Assert.Throws<InsufficientFundsException>(() =>
+            AccountDTO? harlemAccount = await _customerService.OpenAccountAsync(accountRequestDTO, cts.Token);
+            AccountDTO? jerzAccount = await _customerService.OpenAccountAsync(accountRequestDTO1, cts.Token);
+
+            // create 2 deposit money request
+            DepositMoneyRequestDTO depositMoneyRequestDTO = new(harlemAccount.AccountNumber, 5000m, "USD");
+            DepositMoneyRequestDTO depositMoneyRequestDTO1 = new(jerzAccount.AccountNumber, 2300, "EUR");
+
+            await _transactionService.DepositMoneyAsync(depositMoneyRequestDTO, cts.Token);
+            await _transactionService.DepositMoneyAsync(depositMoneyRequestDTO1, cts.Token);
+
+            harlemAccount = await _accountService.GetAccountByIdAsync(harlemAccount.Id, cts.Token);
+            jerzAccount = await _accountService.GetAccountByIdAsync(jerzAccount.Id, cts.Token);
+            harlemAccount.Should().NotBeNull();
+            jerzAccount.Should().NotBeNull();
+
+            CreateTransactionRequestDTO createTransactionRequestDTO = new(harlemAccount.Id, jerzAccount.Id, 2300, "USD", "Transferring 2300 to Jerj");
+
+            Func<Task> func = async () =>
             {
-                // create transaction from account1 to account2 of $125.75
-                Transaction.CreateTransfer(account1, account2, new(125.75m), "Tranferring $125.75 from account1 to account2");
-            });
+                TransactionDTO transactionDTO = await _transactionService.TransferMoneyAsync(createTransactionRequestDTO, cts.Token);
+            };
+            
+            await func.Should().ThrowAsync<CurrencyMismatchException>();
+
+
+            // harlemAccount = await _accountService.GetAccountByIdAsync(harlemAccount.Id, cts.Token);
+            // jerzAccount = await _accountService.GetAccountByIdAsync(jerzAccount.Id, cts.Token);
+
+            // harlemAccount.Should().NotBeNull();
+            // jerzAccount.Should().NotBeNull();
+            // harlemAccount.Balance.Should().Be(2700);
+            // jerzAccount.Balance.Should().Be(4600);
+        }
+
+        [Fact]
+        public async Task SuccessfulTransactionTest()
+        {
+            CancellationTokenSource cts = new();
+            // create 2 customers request
+            CreateCustomerRequestDTO createCustomerRequestDTO = new(Guid.NewGuid(), "Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTime.Parse("10/20/1997"));
+
+            CreateCustomerRequestDTO createCustomerRequestDTO1 = new(Guid.NewGuid(), "Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTime.Parse("09/30/1995"));
+
+            // create 2 customers
+            CustomerDTO harlem = await _customerService.CreateCustomerAsync(createCustomerRequestDTO, cts.Token);
+            CustomerDTO jersey = await _customerService.CreateCustomerAsync(createCustomerRequestDTO1, cts.Token);
+
+            // create 2 account request
+            CreateAccountRequestDTO accountRequestDTO = new(harlem.Id, Enums.AccountType.Checking, "USD");
+            CreateAccountRequestDTO accountRequestDTO1 = new(jersey.Id, Enums.AccountType.Savings, "USD");
+
+            AccountDTO? harlemAccount = await _customerService.OpenAccountAsync(accountRequestDTO, cts.Token);
+            AccountDTO? jerzAccount = await _customerService.OpenAccountAsync(accountRequestDTO1, cts.Token);
+
+            // create 2 deposit money request
+            DepositMoneyRequestDTO depositMoneyRequestDTO = new(harlemAccount.AccountNumber, 5000m, "USD");
+            DepositMoneyRequestDTO depositMoneyRequestDTO1 = new(jerzAccount.AccountNumber, 2300, "USD");
+
+            await _transactionService.DepositMoneyAsync(depositMoneyRequestDTO, cts.Token);
+            await _transactionService.DepositMoneyAsync(depositMoneyRequestDTO1, cts.Token);
+
+            harlemAccount = await _accountService.GetAccountByIdAsync(harlemAccount.Id, cts.Token);
+            jerzAccount = await _accountService.GetAccountByIdAsync(jerzAccount.Id, cts.Token);
+            harlemAccount.Should().NotBeNull();
+            jerzAccount.Should().NotBeNull();
+
+            CreateTransactionRequestDTO createTransactionRequestDTO = new(harlemAccount.Id, jerzAccount.Id, 2300, "USD", "Transferring 2300 to Jerj");
+
+            TransactionDTO transactionDTO = await _transactionService.TransferMoneyAsync(createTransactionRequestDTO, cts.Token);
+            
+            harlemAccount = await _accountService.GetAccountByIdAsync(harlemAccount.Id, cts.Token);
+            jerzAccount = await _accountService.GetAccountByIdAsync(jerzAccount.Id, cts.Token);
+
+            harlemAccount.Should().NotBeNull();
+            jerzAccount.Should().NotBeNull();
+            harlemAccount.Balance.Should().Be(2700);
+            jerzAccount.Balance.Should().Be(4600);
+        }
+
+        [Fact]
+        public async Task UnsuccessfulDeposit_ThrowCurrencyMisMatchExceptionTest()
+        {
+            CancellationTokenSource cts = new();
+            // create 2 customers request
+            CreateCustomerRequestDTO createCustomerRequestDTO = new(Guid.NewGuid(), "Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTime.Parse("10/20/1997"));
+
+            CreateCustomerRequestDTO createCustomerRequestDTO1 = new(Guid.NewGuid(), "Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTime.Parse("09/30/1995"));
+
+            // create 2 customers
+            CustomerDTO harlem = await _customerService.CreateCustomerAsync(createCustomerRequestDTO, cts.Token);
+            CustomerDTO jersey = await _customerService.CreateCustomerAsync(createCustomerRequestDTO1, cts.Token);
+
+            // create 2 account request
+            CreateAccountRequestDTO accountRequestDTO = new(harlem.Id, Enums.AccountType.Checking, "USD");
+            CreateAccountRequestDTO accountRequestDTO1 = new(jersey.Id, Enums.AccountType.Savings, "USD");
+
+            AccountDTO? harlemAccount = await _customerService.OpenAccountAsync(accountRequestDTO, cts.Token);
+            AccountDTO? jerzAccount = await _customerService.OpenAccountAsync(accountRequestDTO1, cts.Token);
+
+            // create 2 deposit money request
+            DepositMoneyRequestDTO depositMoneyRequestDTO = new(harlemAccount.AccountNumber, 5000m, "EUR");
+            DepositMoneyRequestDTO depositMoneyRequestDTO1 = new(jerzAccount.AccountNumber, 2300, "USD");
+
+            Func<Task> func = async () =>
+            {
+                await _transactionService.DepositMoneyAsync(depositMoneyRequestDTO, cts.Token);
+            };
+
+            await func.Should().ThrowAsync<CurrencyMismatchException>();
+        }
+
+
+        [Fact]
+        public async Task UnsuccessfulWithdrawal_ThrowInsufficientFundsTest()
+        {
+            CancellationTokenSource cts = new();
+            // create 2 customers request
+            CreateCustomerRequestDTO createCustomerRequestDTO = new(Guid.NewGuid(), "Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTime.Parse("10/20/1997"));
+
+            CreateCustomerRequestDTO createCustomerRequestDTO1 = new(Guid.NewGuid(), "Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTime.Parse("09/30/1995"));
+
+            // create 2 customers
+            CustomerDTO harlem = await _customerService.CreateCustomerAsync(createCustomerRequestDTO, cts.Token);
+            CustomerDTO jersey = await _customerService.CreateCustomerAsync(createCustomerRequestDTO1, cts.Token);
+
+            // create 2 account request
+            CreateAccountRequestDTO accountRequestDTO = new(harlem.Id, Enums.AccountType.Checking, "USD");
+            CreateAccountRequestDTO accountRequestDTO1 = new(jersey.Id, Enums.AccountType.Savings, "EUR");
+
+            AccountDTO? harlemAccount = await _customerService.OpenAccountAsync(accountRequestDTO, cts.Token);
+            AccountDTO? jerzAccount = await _customerService.OpenAccountAsync(accountRequestDTO1, cts.Token);
+
+            // create 2 deposit money request
+            DepositMoneyRequestDTO depositMoneyRequestDTO = new(harlemAccount.AccountNumber, 5000m, "USD");
+            DepositMoneyRequestDTO depositMoneyRequestDTO1 = new(jerzAccount.AccountNumber, 2300, "EUR");
+
+            await _transactionService.DepositMoneyAsync(depositMoneyRequestDTO, cts.Token);
+            await _transactionService.DepositMoneyAsync(depositMoneyRequestDTO1, cts.Token);
+
+            WithdrawMoneyRequestDTO withdrawMoneyRequestDTO = new(harlemAccount.AccountNumber, 10000, "USD");
+
+            Func<Task> func = async () =>
+            {
+                await _transactionService.WithdrawMoneyAsync(withdrawMoneyRequestDTO, cts.Token);
+            };
+
+            await func.Should().ThrowAsync<InsufficientFundsException>();
+        }
+
+
+        [Fact]
+        public async Task UnsuccessfulWithdrawal_ThrowCurrencyMismatchTest()
+        {
+            CancellationTokenSource cts = new();
+            // create 2 customers request
+            CreateCustomerRequestDTO createCustomerRequestDTO = new(Guid.NewGuid(), "Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTime.Parse("10/20/1997"));
+
+            CreateCustomerRequestDTO createCustomerRequestDTO1 = new(Guid.NewGuid(), "Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTime.Parse("09/30/1995"));
+
+            // create 2 customers
+            CustomerDTO harlem = await _customerService.CreateCustomerAsync(createCustomerRequestDTO, cts.Token);
+            CustomerDTO jersey = await _customerService.CreateCustomerAsync(createCustomerRequestDTO1, cts.Token);
+
+            // create 2 account request
+            CreateAccountRequestDTO accountRequestDTO = new(harlem.Id, Enums.AccountType.Checking, "USD");
+            CreateAccountRequestDTO accountRequestDTO1 = new(jersey.Id, Enums.AccountType.Savings, "EUR");
+
+            AccountDTO? harlemAccount = await _customerService.OpenAccountAsync(accountRequestDTO, cts.Token);
+            AccountDTO? jerzAccount = await _customerService.OpenAccountAsync(accountRequestDTO1, cts.Token);
+
+            // create 2 deposit money request
+            DepositMoneyRequestDTO depositMoneyRequestDTO = new(harlemAccount.AccountNumber, 5000m, "USD");
+            DepositMoneyRequestDTO depositMoneyRequestDTO1 = new(jerzAccount.AccountNumber, 2300, "EUR");
+
+            await _transactionService.DepositMoneyAsync(depositMoneyRequestDTO, cts.Token);
+            await _transactionService.DepositMoneyAsync(depositMoneyRequestDTO1, cts.Token);
+
+            harlemAccount = await _accountService.GetAccountByIdAsync(harlemAccount.Id, cts.Token);
+            jerzAccount = await _accountService.GetAccountByIdAsync(jerzAccount.Id, cts.Token);
+            harlemAccount.Should().NotBeNull();
+            jerzAccount.Should().NotBeNull();
+
+            WithdrawMoneyRequestDTO withdrawMoneyRequestDTO = new(harlemAccount.AccountNumber, 2000, "EUR");
+
+            Func<Task> func = async () =>
+            {
+                await _transactionService.WithdrawMoneyAsync(withdrawMoneyRequestDTO, cts.Token);
+            };
+
+            await func.Should().ThrowAsync<CurrencyMismatchException>();
         }
     }
 }
