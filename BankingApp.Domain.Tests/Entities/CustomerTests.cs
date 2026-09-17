@@ -82,8 +82,7 @@ namespace BankingApp.Domain.Tests.Entities
         public async Task CreateCustomer_ThrowsExistingCustomerException()
         {
             CancellationTokenSource cts = new();
-            Guid customerId = Guid.NewGuid();
-            CreateCustomerRequestDTO customerRequestDTO = new(customerId, "Harlem", "Williams", "harwill97@aol.com", "111-111-1111", DateTime.Parse("10/20/1997"));
+            CreateCustomerRequestDTO customerRequestDTO = new(Guid.NewGuid(), "Harlem", "Williams", "harwill97@aol.com", "111-111-1111", DateTime.Parse("10/20/1997"));
 
             await _customerService.CreateCustomerAsync(customerRequestDTO, cts.Token);
 
@@ -110,6 +109,172 @@ namespace BankingApp.Domain.Tests.Entities
             };
 
             await func.Should().ThrowAsync<InvalidCustomerException>();
+        }
+
+        [Fact]
+        public async Task CreateCustomerNullFirstName_ThrowsArgumentException()
+        {
+            // Given
+            CreateCustomerRequestDTO customerRequestDTO = new(Guid.NewGuid(), null!, "Williams", "harwill97@aol.com", "111-111-1111", DateTime.Parse("10/20/1997"));
+            CancellationTokenSource cts = new();
+            // When
+            Func<Task> action = async () =>
+            {
+                await _customerService.CreateCustomerAsync(customerRequestDTO, cts.Token);
+            };
+            // Then
+            await action.Should().ThrowAsync<ArgumentException>();
+        }
+
+        [Fact]
+        public async Task CreateCustomerEmptyFirstName_ThrowsArgumentException()
+        {
+            // Given
+            CreateCustomerRequestDTO customerRequestDTO = new(Guid.NewGuid(), "     ", "Williams", "harwill97@aol.com", "111-111-1111", DateTime.Parse("10/20/1997"));
+            CancellationTokenSource cts = new();
+            // When
+            Func<Task> action = async () =>
+            {
+                await _customerService.CreateCustomerAsync(customerRequestDTO, cts.Token);
+            };
+            // Then
+            await action.Should().ThrowAsync<ArgumentException>();
+        }
+
+        [Fact]
+        public async Task CreateCustomerNullLastName_ThrowsArgumentException()
+        {
+            // Given
+            CreateCustomerRequestDTO customerRequestDTO = new(Guid.NewGuid(), "Harlem", null!, "harwill97@aol.com", "111-111-1111", DateTime.Parse("10/20/1997"));
+            CancellationTokenSource cts = new();
+            // When
+            Func<Task> action = async () =>
+            {
+                await _customerService.CreateCustomerAsync(customerRequestDTO, cts.Token);
+            };
+            // Then
+            await action.Should().ThrowAsync<ArgumentException>();
+        }
+
+        [Fact]
+        public async Task CreateCustomerEmptyLastName_ThrowsArgumentException()
+        {
+            // Given
+            CreateCustomerRequestDTO customerRequestDTO = new(Guid.NewGuid(), "Harlem", "", "harwill97@aol.com", "111-111-1111", DateTime.Parse("10/20/1997"));
+            CancellationTokenSource cts = new();
+            // When
+            Func<Task> action = async () =>
+            {
+                await _customerService.CreateCustomerAsync(customerRequestDTO, cts.Token);
+            };
+            // Then
+            await action.Should().ThrowAsync<ArgumentException>();
+        }
+
+        [Fact]
+        public async Task CreateCustomerNullEmail_ThrowsArgumentException()
+        {
+            // Given
+            CreateCustomerRequestDTO customerRequestDTO = new(Guid.NewGuid(), "Harlem", "Williams", null!, "111-111-1111", DateTime.Parse("10/20/1997"));
+            CancellationTokenSource cts = new();
+            // When
+            Func<Task> action = async () =>
+            {
+                await _customerService.CreateCustomerAsync(customerRequestDTO, cts.Token);
+            };
+            // Then
+            await action.Should().ThrowAsync<ArgumentException>();
+        }
+
+        [Fact]
+        public async Task CreateCustomerEmptyEmail_ThrowsArgumentException()
+        {
+            // Given
+            CreateCustomerRequestDTO customerRequestDTO = new(Guid.NewGuid(), "Harlem", "Williams", "", "111-111-1111", DateTime.Parse("10/20/1997"));
+            CancellationTokenSource cts = new();
+            // When
+            Func<Task> action = async () =>
+            {
+                await _customerService.CreateCustomerAsync(customerRequestDTO, cts.Token);
+            };
+            // Then
+            await action.Should().ThrowAsync<ArgumentException>();
+        }
+
+        [Fact]
+        public async Task CreateCustomerNullPhoneNumber_ThrowsArgumentException()
+        {
+            // Given
+            CreateCustomerRequestDTO customerRequestDTO = new(Guid.NewGuid(), "Harlem", "Williams", "harwill97@aol.com", null!, DateTime.Parse("10/20/1997"));
+            CancellationTokenSource cts = new();
+            // When
+            Func<Task> action = async () =>
+            {
+                await _customerService.CreateCustomerAsync(customerRequestDTO, cts.Token);
+            };
+            // Then
+            await action.Should().ThrowAsync<ArgumentException>();
+        }
+
+        [Fact]
+        public async Task CreateCustomerEmptyPhoneNumber_ThrowsArgumentException()
+        {
+            // Given
+            CreateCustomerRequestDTO customerRequestDTO = new(Guid.NewGuid(), "Harlem", "Williams", "harwill97@aol.com", "", DateTime.Parse("10/20/1997"));
+            CancellationTokenSource cts = new();
+            // When
+            Func<Task> action = async () =>
+            {
+                await _customerService.CreateCustomerAsync(customerRequestDTO, cts.Token);
+            };
+            // Then
+            await action.Should().ThrowAsync<ArgumentException>();
+        }
+
+        [Fact]
+        public async Task CreateCustomerUnsuccessfully_InvalidEmail()
+        {
+            CancellationTokenSource cts = new();
+            Guid customerId = Guid.NewGuid();
+            CreateCustomerRequestDTO customerRequestDTO = new(customerId, "Harlem", "Williams", "harwill97@.com", "111-111-1111", DateTime.Parse("10/20/1997"));
+
+            Func<Task> action = async () =>
+            {
+                await _customerService.CreateCustomerAsync(customerRequestDTO, cts.Token);
+            };
+            await action.Should().ThrowAsync<ArgumentException>();
+
+        }
+
+        [Fact]
+        public async Task CreateCustomerUnsuccessfully_InvalidPhoneNumberTest()
+        {
+            CancellationTokenSource cts = new();
+            Guid customerId = Guid.NewGuid();
+            CreateCustomerRequestDTO customerRequestDTO = new(customerId, "Harlem", "Williams", "harwill97@aol.com", "(111) 111-1111", DateTime.Parse("10/20/1997"));
+
+            Func<Task> action = async () => {
+                await _customerService.CreateCustomerAsync(customerRequestDTO, cts.Token);
+            };
+            await action.Should().ThrowAsync<ArgumentException>();
+
+        }
+
+
+        [Fact]
+        public async Task CreateCustomerNullRequest_ThrowsArgumentNullException()
+        {
+            // Given
+            CreateCustomerRequestDTO? createCustomerRequestDTO = null;
+            CancellationTokenSource cts = new();
+            // When
+            Func<Task> action = async () =>
+            {
+                createCustomerRequestDTO.Should().BeNull();
+                await _customerService.CreateCustomerAsync(createCustomerRequestDTO, cts.Token);
+            };
+            // Then
+            await action.Should().ThrowAsync<ArgumentNullException>();
         }
     }
 }
