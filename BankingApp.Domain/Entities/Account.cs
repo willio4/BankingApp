@@ -74,9 +74,13 @@ namespace BankingApp.Domain.Entities
         /// <summary>
         /// Account constructor for database migration
         /// </summary>
-        private Account()
+        public Account(Guid id, string accountNumber, Guid customerId, AccountType type, string currency = "USD")
         {
-
+            Id = id;
+            AccountNumber = accountNumber;
+            CustomerId = customerId;
+            Type = type;
+            Currency = currency;
         }
 #pragma warning restore CS8618
 

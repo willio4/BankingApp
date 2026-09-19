@@ -35,8 +35,7 @@ namespace BankingApp.Domain.Entities
         /// date and time of ledger entry
         /// </summary>
         [Required]
-        [DataType(DataType.DateTime)]
-        public DateTime Timestamp { get; private set; }
+        public DateTimeOffset Timestamp { get; private set; }
 
         /// <summary>
         /// LedgerEntry constructor
@@ -45,7 +44,7 @@ namespace BankingApp.Domain.Entities
         /// <param name="amount">money object</param>
         /// <param name="type">debit or credit</param>
         /// <param name="timestamp">timestamp of ledger entry</param>
-        public LedgerEntry(Guid accountId, Money amount, EntryType type, DateTime timestamp)
+        public LedgerEntry(Guid accountId, Money amount, EntryType type, DateTimeOffset timestamp)
         {
             AccountId = accountId;
             Amount = amount;

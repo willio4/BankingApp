@@ -24,8 +24,7 @@ namespace BankingApp.Domain.Entities
         /// timestamp of transaction
         /// </summary>
         [Required]
-        [DataType(DataType.DateTime)]
-        public DateTime Timestamp { get; private set; }
+        public DateTimeOffset Timestamp { get; private set; }
         /// <summary>
         /// record of ledger entries of transaction
         /// </summary>
@@ -40,7 +39,7 @@ namespace BankingApp.Domain.Entities
         {
             Description = description;
             _ledgerEntries = [];
-            Timestamp = DateTime.UtcNow;
+            Timestamp = DateTimeOffset.UtcNow;
             Id = Guid.NewGuid();
         }
 
@@ -77,8 +76,8 @@ namespace BankingApp.Domain.Entities
             Transaction transaction = new(description);
 
             // creation of ledger entries
-            var debitEntry = new LedgerEntry(sourceAccount.Id, amount, Enums.EntryType.Debit, DateTime.UtcNow);
-            var creditEntry = new LedgerEntry(destinationAccount.Id, amount, Enums.EntryType.Credit, DateTime.UtcNow);
+            var debitEntry = new LedgerEntry(sourceAccount.Id, amount, Enums.EntryType.Debit, DateTimeOffset.UtcNow);
+            var creditEntry = new LedgerEntry(destinationAccount.Id, amount, Enums.EntryType.Credit, DateTimeOffset.UtcNow);
 
             // add entries to transaction history
             transaction._ledgerEntries.Add(debitEntry);
@@ -98,7 +97,7 @@ namespace BankingApp.Domain.Entities
 
             Transaction transaction = new(description);
 
-            LedgerEntry ledgerEntry = isWithdraw == true ? new(account.Id, amount, Enums.EntryType.Debit, DateTime.UtcNow) : new(account.Id, amount, Enums.EntryType.Credit, DateTime.UtcNow);
+            LedgerEntry ledgerEntry = isWithdraw == true ? new(account.Id, amount, Enums.EntryType.Debit, DateTimeOffset.UtcNow) : new(account.Id, amount, Enums.EntryType.Credit, DateTimeOffset.UtcNow);
 
             transaction._ledgerEntries.Add(ledgerEntry);
             account.AddLedgerEntry(ledgerEntry);
