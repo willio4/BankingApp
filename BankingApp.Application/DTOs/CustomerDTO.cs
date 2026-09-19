@@ -9,7 +9,7 @@ namespace BankingApp.Application.DTOs
         string LastName,
         string Email, 
         string PhoneNumber,
-        DateTime DateOfBirth
+        DateTimeOffset DateOfBirth
     );
 
     public record CustomerDTO(
@@ -18,7 +18,7 @@ namespace BankingApp.Application.DTOs
         string LastName,
         string Email,
         string PhoneNumber,
-        DateTime DateOfBirth,
+        DateTimeOffset DateOfBirth,
         List<Account> Accounts
     );
 }

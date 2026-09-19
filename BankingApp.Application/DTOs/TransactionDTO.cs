@@ -9,7 +9,7 @@ namespace BankingApp.Application.DTOs
     public record TransactionDTO(
         Guid Id,
         string Description,
-        DateTime Timestamp,
+        DateTimeOffset Timestamp,
         decimal Amount,
         string Currency
     );
