@@ -4,7 +4,6 @@ namespace BankingApp.Application.DTOs
 {
     public record CreateCustomerRequestDTO
     (
-        Guid Id,
         string FirstName, 
         string LastName,
         string Email, 
