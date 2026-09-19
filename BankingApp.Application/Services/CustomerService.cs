@@ -14,7 +14,7 @@ using BankingApp.Domain.Exceptions;
 
 namespace BankingApp.Application.Services
 {
-    public partial class CustomerService(ICustomerRepository customerRepository, IUnitOfWork unitOfWork, AccountService accountService) : ICustomerService
+    public partial class CustomerService(ICustomerRepository customerRepository, IUnitOfWork unitOfWork, IAccountService accountService) : ICustomerService
     {
         private readonly ICustomerRepository _customerRepository = customerRepository;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
