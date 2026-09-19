@@ -70,10 +70,10 @@ namespace BankingApp.Domain.Tests.Entities
         {
             CancellationTokenSource cts = new();
             Guid customerId = Guid.NewGuid();
-            CreateCustomerRequestDTO customerRequestDTO = new(customerId, "Harlem", "Williams", "harwill97@aol.com", "111-111-1111", DateTime.Parse("10/20/1997"));
+            CreateCustomerRequestDTO customerRequestDTO = new(customerId, "Harlem", "Williams", "harwill97@aol.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
 
             CustomerDTO? customerDTO = await _customerService.CreateCustomerAsync(customerRequestDTO, cts.Token);
-            Customer customer = new(customerId, "Harlem", "Williams", "harwill97@aol.com", "111-111-1111", DateTime.Parse("10/20/1997"));
+            Customer customer = new(customerId, "Harlem", "Williams", "harwill97@aol.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
 
             customerDTO.Should().BeEquivalentTo(customer);
         }
@@ -82,7 +82,7 @@ namespace BankingApp.Domain.Tests.Entities
         public async Task CreateCustomer_ThrowsExistingCustomerException()
         {
             CancellationTokenSource cts = new();
-            CreateCustomerRequestDTO customerRequestDTO = new(Guid.NewGuid(), "Harlem", "Williams", "harwill97@aol.com", "111-111-1111", DateTime.Parse("10/20/1997"));
+            CreateCustomerRequestDTO customerRequestDTO = new(Guid.NewGuid(), "Harlem", "Williams", "harwill97@aol.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
 
             await _customerService.CreateCustomerAsync(customerRequestDTO, cts.Token);
 
@@ -99,7 +99,7 @@ namespace BankingApp.Domain.Tests.Entities
         {
             CancellationTokenSource cts = new();
             Guid customerId = Guid.NewGuid();
-            CreateCustomerRequestDTO customerRequestDTO = new(customerId, "Harlem", "Williams", "harwill97@aol.com", "111-111-1111", DateTime.Parse("10/20/1997"));
+            CreateCustomerRequestDTO customerRequestDTO = new(customerId, "Harlem", "Williams", "harwill97@aol.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
 
             await _customerService.CreateCustomerAsync(customerRequestDTO, cts.Token);
 
@@ -115,7 +115,7 @@ namespace BankingApp.Domain.Tests.Entities
         public async Task CreateCustomerNullFirstName_ThrowsArgumentException()
         {
             // Given
-            CreateCustomerRequestDTO customerRequestDTO = new(Guid.NewGuid(), null!, "Williams", "harwill97@aol.com", "111-111-1111", DateTime.Parse("10/20/1997"));
+            CreateCustomerRequestDTO customerRequestDTO = new(Guid.NewGuid(), null!, "Williams", "harwill97@aol.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
             CancellationTokenSource cts = new();
             // When
             Func<Task> action = async () =>
@@ -130,7 +130,7 @@ namespace BankingApp.Domain.Tests.Entities
         public async Task CreateCustomerEmptyFirstName_ThrowsArgumentException()
         {
             // Given
-            CreateCustomerRequestDTO customerRequestDTO = new(Guid.NewGuid(), "     ", "Williams", "harwill97@aol.com", "111-111-1111", DateTime.Parse("10/20/1997"));
+            CreateCustomerRequestDTO customerRequestDTO = new(Guid.NewGuid(), "     ", "Williams", "harwill97@aol.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
             CancellationTokenSource cts = new();
             // When
             Func<Task> action = async () =>
@@ -145,7 +145,7 @@ namespace BankingApp.Domain.Tests.Entities
         public async Task CreateCustomerNullLastName_ThrowsArgumentException()
         {
             // Given
-            CreateCustomerRequestDTO customerRequestDTO = new(Guid.NewGuid(), "Harlem", null!, "harwill97@aol.com", "111-111-1111", DateTime.Parse("10/20/1997"));
+            CreateCustomerRequestDTO customerRequestDTO = new(Guid.NewGuid(), "Harlem", null!, "harwill97@aol.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
             CancellationTokenSource cts = new();
             // When
             Func<Task> action = async () =>
@@ -160,7 +160,7 @@ namespace BankingApp.Domain.Tests.Entities
         public async Task CreateCustomerEmptyLastName_ThrowsArgumentException()
         {
             // Given
-            CreateCustomerRequestDTO customerRequestDTO = new(Guid.NewGuid(), "Harlem", "", "harwill97@aol.com", "111-111-1111", DateTime.Parse("10/20/1997"));
+            CreateCustomerRequestDTO customerRequestDTO = new(Guid.NewGuid(), "Harlem", "", "harwill97@aol.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
             CancellationTokenSource cts = new();
             // When
             Func<Task> action = async () =>
@@ -175,7 +175,7 @@ namespace BankingApp.Domain.Tests.Entities
         public async Task CreateCustomerNullEmail_ThrowsArgumentException()
         {
             // Given
-            CreateCustomerRequestDTO customerRequestDTO = new(Guid.NewGuid(), "Harlem", "Williams", null!, "111-111-1111", DateTime.Parse("10/20/1997"));
+            CreateCustomerRequestDTO customerRequestDTO = new(Guid.NewGuid(), "Harlem", "Williams", null!, "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
             CancellationTokenSource cts = new();
             // When
             Func<Task> action = async () =>
@@ -190,7 +190,7 @@ namespace BankingApp.Domain.Tests.Entities
         public async Task CreateCustomerEmptyEmail_ThrowsArgumentException()
         {
             // Given
-            CreateCustomerRequestDTO customerRequestDTO = new(Guid.NewGuid(), "Harlem", "Williams", "", "111-111-1111", DateTime.Parse("10/20/1997"));
+            CreateCustomerRequestDTO customerRequestDTO = new(Guid.NewGuid(), "Harlem", "Williams", "", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
             CancellationTokenSource cts = new();
             // When
             Func<Task> action = async () =>
@@ -205,7 +205,7 @@ namespace BankingApp.Domain.Tests.Entities
         public async Task CreateCustomerNullPhoneNumber_ThrowsArgumentException()
         {
             // Given
-            CreateCustomerRequestDTO customerRequestDTO = new(Guid.NewGuid(), "Harlem", "Williams", "harwill97@aol.com", null!, DateTime.Parse("10/20/1997"));
+            CreateCustomerRequestDTO customerRequestDTO = new(Guid.NewGuid(), "Harlem", "Williams", "harwill97@aol.com", null!, DateTimeOffset.Parse("10/20/1997"));
             CancellationTokenSource cts = new();
             // When
             Func<Task> action = async () =>
@@ -220,7 +220,7 @@ namespace BankingApp.Domain.Tests.Entities
         public async Task CreateCustomerEmptyPhoneNumber_ThrowsArgumentException()
         {
             // Given
-            CreateCustomerRequestDTO customerRequestDTO = new(Guid.NewGuid(), "Harlem", "Williams", "harwill97@aol.com", "", DateTime.Parse("10/20/1997"));
+            CreateCustomerRequestDTO customerRequestDTO = new(Guid.NewGuid(), "Harlem", "Williams", "harwill97@aol.com", "", DateTimeOffset.Parse("10/20/1997"));
             CancellationTokenSource cts = new();
             // When
             Func<Task> action = async () =>
@@ -236,7 +236,7 @@ namespace BankingApp.Domain.Tests.Entities
         {
             CancellationTokenSource cts = new();
             Guid customerId = Guid.NewGuid();
-            CreateCustomerRequestDTO customerRequestDTO = new(customerId, "Harlem", "Williams", "harwill97@.com", "111-111-1111", DateTime.Parse("10/20/1997"));
+            CreateCustomerRequestDTO customerRequestDTO = new(customerId, "Harlem", "Williams", "harwill97@.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
 
             Func<Task> action = async () =>
             {
@@ -251,7 +251,7 @@ namespace BankingApp.Domain.Tests.Entities
         {
             CancellationTokenSource cts = new();
             Guid customerId = Guid.NewGuid();
-            CreateCustomerRequestDTO customerRequestDTO = new(customerId, "Harlem", "Williams", "harwill97@aol.com", "(111) 111-1111", DateTime.Parse("10/20/1997"));
+            CreateCustomerRequestDTO customerRequestDTO = new(customerId, "Harlem", "Williams", "harwill97@aol.com", "(111) 111-1111", DateTimeOffset.Parse("10/20/1997"));
 
             Func<Task> action = async () => {
                 await _customerService.CreateCustomerAsync(customerRequestDTO, cts.Token);
