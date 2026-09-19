@@ -13,5 +13,7 @@ namespace BankingApp.Application.Common.Interfaces.Repositories
         Task AddCustomerAsync(Customer customer, CancellationToken cancellationToken = default);
 
         Task<Customer?> GetByEmailAsync(string email, CancellationToken cancellationToken);
+
+        Task UpdateCustomerAsync(Customer customer, CancellationToken cancellationToken = default);
     }
 }

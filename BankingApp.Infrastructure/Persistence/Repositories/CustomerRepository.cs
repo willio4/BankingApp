@@ -28,5 +28,11 @@ namespace BankingApp.Infrastructure.Persistence.Repositories
         {
             return await _db.Customers.FirstOrDefaultAsync(c => c.Email == email, cancellationToken);
         }
+
+        public Task UpdateCustomerAsync(Customer customer, CancellationToken cancellationToken = default)
+        {
+            _db.Customers.Update(customer);
+            return Task.CompletedTask;
+        }
     }
 }
