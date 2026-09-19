@@ -52,7 +52,7 @@ namespace BankingApp.Domain.Entities
         /// customer date of birth
         /// </summary>
         [Required]
-        public DateTimeOffset DateOfBirth { get; private set; } = dateOfBirth;
+        public DateTimeOffset DateOfBirth { get; set; } = dateOfBirth;
         /// <summary>
         /// all accounts associated with customer
         /// </summary>
