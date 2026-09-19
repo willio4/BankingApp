@@ -41,7 +41,7 @@ namespace BankingApp.Application.Services
 
             if (existingCustomer is not null) throw new ExistingCustomerException("User with email already exist");
 
-            Customer customer = new(requestDTO.Id, requestDTO.FirstName, requestDTO.LastName, requestDTO.Email, requestDTO.PhoneNumber, requestDTO.DateOfBirth);
+            Customer customer = new(Guid.NewGuid(), requestDTO.FirstName, requestDTO.LastName, requestDTO.Email, requestDTO.PhoneNumber, requestDTO.DateOfBirth);
 
             await _customerRepository.AddCustomerAsync(customer, cancellationToken);
 
@@ -62,8 +62,6 @@ namespace BankingApp.Application.Services
             return new CustomerDTO(customer.Id, customer.FirstName, customer.LastName, customer.Email, customer.PhoneNumber, customer.DateOfBirth, customer.GetAccounts());
         }
 
-        
-
         public async Task<AccountDTO> OpenAccountAsync(CreateAccountRequestDTO accountRequestDTO, CancellationToken cancellationToken)
         {
             // check if customer id is valid
@@ -77,5 +75,25 @@ namespace BankingApp.Application.Services
 
         [GeneratedRegex(@"^\d{3}-?\d{3}-?\d{4}$")]
         private static partial Regex MyRegex1();
+
+        public async Task<CustomerDTO?> UpdateCustomer(CustomerDTO previous, CreateCustomerRequestDTO updated, CancellationToken cancellationToken = default)
+        {
+            CancellationTokenSource cts = new();
+            Customer? customer = await _customerRepository.GetByIdAsync(previous.Id, cts.Token);
+
+            if(customer is not null)
+            {
+                customer.FirstName = updated.FirstName;
+                customer.LastName = updated.LastName;
+                customer.Email = updated.Email;
+                customer.PhoneNumber = updated.PhoneNumber;
+                customer.DateOfBirth = updated.DateOfBirth;
+
+                await _customerRepository.UpdateCustomerAsync(customer, cts.Token);
+                await _unitOfWork.SaveChangesAsync(cts.Token);
+            }
+
+            return MapToDTO(customer!);
+        }
     }
 }
