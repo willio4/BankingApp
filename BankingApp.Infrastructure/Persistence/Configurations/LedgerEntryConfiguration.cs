@@ -22,7 +22,7 @@ namespace BankingApp.Infrastructure.Persistence.Configurations
                 money.Property(a => a.Currency)
                      .HasColumnName("Currency")
                      .HasColumnType("nvarchar(3)");
-            });            
+            });
         }
     }
 }

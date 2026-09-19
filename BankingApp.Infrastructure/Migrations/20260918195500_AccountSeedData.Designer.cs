@@ -4,6 +4,7 @@ using BankingApp.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankingApp.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260918195500_AccountSeedData")]
+    partial class AccountSeedData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,7 +58,7 @@ namespace BankingApp.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("81c8c2f1-1444-42ae-a6e5-272886a99f7e"),
+                            Id = new Guid("360b7962-1b37-4880-a87e-c244d1001e52"),
                             AccountNumber = "693762756416",
                             Currency = "USD",
                             CustomerId = new Guid("7222f4a6-b8ca-4cc5-ad74-7b4b34d79779"),
@@ -63,7 +66,7 @@ namespace BankingApp.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("c7e97394-c25a-4f38-a54e-82e21610066d"),
+                            Id = new Guid("06320057-2872-42af-a09a-6635ee881ddb"),
                             AccountNumber = "990888064302",
                             Currency = "USD",
                             CustomerId = new Guid("7222f4a6-b8ca-4cc5-ad74-7b4b34d79779"),
@@ -71,7 +74,7 @@ namespace BankingApp.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("4cb0b54d-3874-464d-8acb-b3242012d81f"),
+                            Id = new Guid("d48b9479-c96f-4402-a356-4d2f830aab71"),
                             AccountNumber = "660279434684",
                             Currency = "USD",
                             CustomerId = new Guid("4bf2a680-ac31-4206-be1a-8effc3d6c427"),
@@ -79,7 +82,7 @@ namespace BankingApp.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("a0901605-7462-45b0-9f0c-06b58bb724e6"),
+                            Id = new Guid("b131623b-44ec-4e60-84e2-23ee5638e28d"),
                             AccountNumber = "752142281253",
                             Currency = "USD",
                             CustomerId = new Guid("4bf2a680-ac31-4206-be1a-8effc3d6c427"),
@@ -87,7 +90,7 @@ namespace BankingApp.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("ee722d5c-fa75-49ff-a438-ae2ea86b2f18"),
+                            Id = new Guid("29feb7be-21e0-4f55-90ca-df47379569ba"),
                             AccountNumber = "416459422322",
                             Currency = "USD",
                             CustomerId = new Guid("afbd278c-5176-4510-9ad1-ae2acf34f80a"),
@@ -95,7 +98,7 @@ namespace BankingApp.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("1f6ec25e-6086-4747-b476-aabc217773ea"),
+                            Id = new Guid("8a0e9a6a-0ea3-4439-9fdc-20860f836f42"),
                             AccountNumber = "145967913707",
                             Currency = "USD",
                             CustomerId = new Guid("afbd278c-5176-4510-9ad1-ae2acf34f80a"),
@@ -103,7 +106,7 @@ namespace BankingApp.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("05781c31-1bd7-46a6-8554-b0470866c62e"),
+                            Id = new Guid("5ccf1509-a6f3-42d2-9cc7-3b3fab726300"),
                             AccountNumber = "228947707340",
                             Currency = "USD",
                             CustomerId = new Guid("418586f3-7268-4035-8ae7-d2241c474876"),
@@ -111,7 +114,7 @@ namespace BankingApp.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("e0b80df6-49a6-4c75-8b99-b184ad1c2fb7"),
+                            Id = new Guid("e65ae612-bc01-431a-ad1f-7d6c19a74e34"),
                             AccountNumber = "681627673954",
                             Currency = "USD",
                             CustomerId = new Guid("418586f3-7268-4035-8ae7-d2241c474876"),

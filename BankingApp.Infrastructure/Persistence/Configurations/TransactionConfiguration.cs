@@ -13,7 +13,6 @@ namespace BankingApp.Infrastructure.Persistence.Configurations
         public void Configure(EntityTypeBuilder<Transaction> builder)
         {
             builder.Property(t => t.Timestamp).HasColumnType("datetimeoffset");
-            
         }
     }
 }
