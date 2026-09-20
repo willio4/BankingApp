@@ -1,4 +1,5 @@
 using BankingApp.Domain.Entities;
+using BankingApp.Domain.Enums;
 
 namespace BankingApp.Application.DTOs
 {
@@ -18,6 +19,7 @@ namespace BankingApp.Application.DTOs
         string Email,
         string PhoneNumber,
         DateTimeOffset DateOfBirth,
-        List<Account> Accounts
+        CustomerStatus CustomerStatus,
+        IReadOnlyList<AccountDTO> Accounts
     );
 }

@@ -8,7 +8,8 @@ namespace BankingApp.Application.DTOs
         Guid CustomerId,
         AccountType Type,
         decimal Balance,
-        string Currency
+        string Currency,
+        AccountStatus AccountStatus
     );
 
     public record CreateAccountRequestDTO(
