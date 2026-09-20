@@ -1,3 +1,7 @@
+using System.Net;
+using System.Reflection.Metadata.Ecma335;
+using BankingApp.Application.Common.Interfaces.Services;
+using BankingApp.Application.DTOs;
 using BankingApp.Domain.Entities;
 using BankingApp.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Http;
@@ -12,10 +16,12 @@ namespace BankingApp.WebAPI.Controllers
     public class AccountController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly ICustomerService _customerService;
 
-        public AccountController(ApplicationDbContext context)
+        public AccountController(ApplicationDbContext context, ICustomerService customerService)
         {
             _context = context;
+            _customerService = customerService;
         }
 
         [HttpGet]
@@ -25,5 +31,17 @@ namespace BankingApp.WebAPI.Controllers
             return await _context.Accounts
                 .ToListAsync();
         }
+
+        [HttpGet("{customerId:Guid}")]
+        public async Task<ActionResult<IReadOnlyList<AccountDTO>>> GetCustomerAccounts(Guid customerId)
+        {
+            CancellationTokenSource cts = new();
+            CustomerDTO? customer = await _customerService.GetCustomerByIdAsync(customerId, cts.Token);
+
+            if(customer is null) return Problem("Unknown customer id", statusCode: 404, title: "Account Retrieval");
+
+            return Ok(customer.Accounts);
+        }
+
     }
 }
