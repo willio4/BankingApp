@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BankingApp.Application.Common.Interfaces.Repositories;
 using BankingApp.Application.Common.Interfaces.Services;
+using BankingApp.Application.Common.Mappings;
 using BankingApp.Application.DTOs;
 using BankingApp.Domain.Entities;
 using BankingApp.Domain.Exceptions;
@@ -36,26 +37,21 @@ namespace BankingApp.Application.Services
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return MapToDTO(account);
+            return account.ToDTO();
         }
 
         public async Task<AccountDTO?> GetAccountByAccountNumberAsync(string accountNumber, CancellationToken cancellationToken = default)
         {
             Account? account = await _accountRepository.GetByAccountNumberAsync(accountNumber, cancellationToken);
 
-            return account is null ? null : MapToDTO(account);
+            return account is null ? null : account.ToDTO();
         }
 
         public async Task<AccountDTO?> GetAccountByIdAsync(Guid accountId, CancellationToken cancellationToken = default)
         {
             Account? account = await _accountRepository.GetByIdAsync(accountId, cancellationToken);
 
-            return account is null ? null : MapToDTO(account);
-        }
-
-        private static AccountDTO MapToDTO(Account account)
-        {
-            return new AccountDTO(account.Id, account.AccountNumber, account.CustomerId, account.Type, account.CalculateBalance(), account.Currency);
+            return account is null ? null : account.ToDTO();
         }
 
         private static string GenerateUniqueAccountNumber()

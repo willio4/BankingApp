@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BankingApp.Application.Common.Interfaces.Repositories;
 using BankingApp.Application.Common.Interfaces.Services;
+using BankingApp.Application.Common.Mappings;
 using BankingApp.Application.DTOs;
 using BankingApp.Domain.Entities;
 using BankingApp.Domain.Enums;
@@ -33,8 +34,8 @@ namespace BankingApp.Application.Services
             if (!MailAddress.TryCreate(requestDTO.Email, out _)) throw new ArgumentException("Invalid email address");
 
             Regex regex = MyRegex1();
-            
-            if(!regex.IsMatch(requestDTO.PhoneNumber)) throw new ArgumentException("Invalid phone number");
+
+            if (!regex.IsMatch(requestDTO.PhoneNumber)) throw new ArgumentException("Invalid phone number");
 
             Customer? existingCustomer = await _customerRepository
                 .GetByEmailAsync(requestDTO.Email, cancellationToken);
@@ -47,20 +48,16 @@ namespace BankingApp.Application.Services
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return MapToDTO(customer);
+            return customer.ToDTO();
         }
 
         public async Task<CustomerDTO?> GetCustomerByIdAsync(Guid id, CancellationToken cancellationToken)
         {
             Customer? customer = await _customerRepository.GetByIdAsync(id, cancellationToken);
 
-            return customer == null ? throw new InvalidCustomerException("Customer does not exist") : MapToDTO(customer);
+            return customer == null ? throw new InvalidCustomerException("Customer does not exist") : customer.ToDTO();
         }
 
-        public static CustomerDTO MapToDTO(Customer customer)
-        {
-            return new CustomerDTO(customer.Id, customer.FirstName, customer.LastName, customer.Email, customer.PhoneNumber, customer.DateOfBirth, customer.GetAccounts());
-        }
 
         public async Task<AccountDTO> OpenAccountAsync(CreateAccountRequestDTO accountRequestDTO, CancellationToken cancellationToken)
         {
@@ -81,7 +78,7 @@ namespace BankingApp.Application.Services
             CancellationTokenSource cts = new();
             Customer? customer = await _customerRepository.GetByIdAsync(previous.Id, cts.Token);
 
-            if(customer is not null)
+            if (customer is not null)
             {
                 customer.FirstName = updated.FirstName;
                 customer.LastName = updated.LastName;
@@ -93,7 +90,7 @@ namespace BankingApp.Application.Services
                 await _unitOfWork.SaveChangesAsync(cts.Token);
             }
 
-            return MapToDTO(customer!);
+            return customer!.ToDTO();
         }
     }
 }
