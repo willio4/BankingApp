@@ -24,19 +24,19 @@ namespace BankingApp.Domain.Entities
         /// </summary>
         [StringLength(12)]
         [Required]
-        public string AccountNumber { get; private set; }
+        public string AccountNumber { get; init; }
 
         /// <summary>
         /// ID of customer account belongs to
         /// </summary>
         [Required]
-        public Guid CustomerId { get; private set; }
+        public Guid CustomerId { get; init; }
 
         /// <summary>
         /// Checking or Savings account enum
         /// </summary>
         [Required]
-        public AccountType Type { get; private set; }
+        public AccountType Type { get; init; }
 
         /// <summary>
         /// Currency tied to specific account
@@ -44,6 +44,8 @@ namespace BankingApp.Domain.Entities
         [Required]
         
         public string Currency { get; private set; }
+
+        public AccountStatus AccountStatus { get; set; }
 
         /// <summary>
         /// list of all ledger entries for account
@@ -62,25 +64,27 @@ namespace BankingApp.Domain.Entities
         /// <param name="customerId">id of account owner</param>
         /// <param name="type">checking or savings specifier</param>
         /// <param name="currency">currency of account</param>
-        public Account(string accountNumber, Guid customerId, AccountType type, string currency = "USD")
+        public Account(string accountNumber, Guid customerId, AccountType type, string currency = "USD", AccountStatus accountStatus = AccountStatus.Active)
         {
             AccountNumber = accountNumber;
             CustomerId = customerId;
             Type = type;
             Currency = currency;
+            AccountStatus = accountStatus;
         }
 
 #pragma warning disable CS8618
         /// <summary>
         /// Account constructor for database migration
         /// </summary>
-        public Account(Guid id, string accountNumber, Guid customerId, AccountType type, string currency = "USD")
+        public Account(Guid id, string accountNumber, Guid customerId, AccountType type, string currency = "USD", AccountStatus accountStatus = AccountStatus.Active)
         {
             Id = id;
             AccountNumber = accountNumber;
             CustomerId = customerId;
             Type = type;
             Currency = currency;
+            AccountStatus = accountStatus;
         }
 #pragma warning restore CS8618
 

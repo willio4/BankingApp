@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using BankingApp.Domain.Enums;
 
 namespace BankingApp.Domain.Entities
 {
@@ -14,7 +15,7 @@ namespace BankingApp.Domain.Entities
     /// <param name="email">customer email</param>
     /// <param name="phoneNumber">customer phone number</param>
     /// <param name="dateOfBirth">customer date of birth</param>
-    public class Customer(Guid id, string firstName, string lastName, string email, string phoneNumber, DateTimeOffset dateOfBirth)
+    public class Customer(Guid id, string firstName, string lastName, string email, string phoneNumber, DateTimeOffset dateOfBirth, CustomerStatus customerStatus = CustomerStatus.Active)
     {
         /// <summary>
         /// Customer unique identifier
@@ -53,10 +54,14 @@ namespace BankingApp.Domain.Entities
         /// </summary>
         [Required]
         public DateTimeOffset DateOfBirth { get; set; } = dateOfBirth;
+
+        public CustomerStatus CustomerStatus { get; set; } = customerStatus;
         /// <summary>
         /// all accounts associated with customer
         /// </summary>
         private readonly List<Account> _accounts = [];
+
+        public IReadOnlyCollection<Account> Accounts => _accounts.AsReadOnly();
 
         /// <summary>
         /// adds account ownership to customer
@@ -65,11 +70,6 @@ namespace BankingApp.Domain.Entities
         public void AddAccount(Account account)
         {
             _accounts.Add(account);
-        }
-
-        public List<Account> GetAccounts()
-        {
-            return _accounts;
         }
     }
 }
