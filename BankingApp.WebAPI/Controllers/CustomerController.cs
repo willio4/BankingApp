@@ -1,14 +1,11 @@
-using System.Net;
 using BankingApp.Application.Common.Interfaces.Repositories;
 using BankingApp.Application.Common.Interfaces.Services;
 using BankingApp.Application.DTOs;
-using BankingApp.Domain.Entities;
 using BankingApp.Infrastructure.Persistence;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using BankingApp.Domain.Entities;
+using BankingApp.Application.Common.Mappings;
 
 namespace BankingApp.WebAPI.Controllers
 {
@@ -19,18 +16,34 @@ namespace BankingApp.WebAPI.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ICustomerService _customerService;
+        private readonly IAccountService _accountService;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CustomerController(ApplicationDbContext context, ICustomerService customerService)
+        public CustomerController(ApplicationDbContext context, ICustomerService customerService, IAccountService accountService, IUnitOfWork unitOfWork)
         {
             _context = context;
             _customerService = customerService;
+            _accountService = accountService;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
+        public async Task<ActionResult<IEnumerable<CustomerDTO>>> GetCustomers()
         {
             if(_context.Customers == null) return NotFound();
-            return await _context.Customers.ToListAsync();
+
+            CancellationTokenSource cts = new();
+
+            var customers = await _context.Customers
+                .Include(c => c.Accounts) 
+                .AsNoTracking()
+                .ToListAsync(cts.Token);
+
+            List<CustomerDTO> customerDtos = customers
+                .Select(c => c.ToDTO())
+                .ToList();
+
+            return customerDtos;
         }
 
         [HttpGet("{customerId:guid}")]
@@ -38,22 +51,16 @@ namespace BankingApp.WebAPI.Controllers
         {
             if(_context.Customers == null) return NotFound();
 
-            Customer? customer = await _context.Customers.FindAsync(customerId);
-
             CancellationTokenSource cts = new();
+
+            CustomerDTO? customer = await _customerService.GetCustomerByIdAsync(customerId, cts.Token);
 
             if(customer == null)
             {
                 return Problem("Customer doesn't exist", statusCode: 404, title: "Customer Search");
             }
 
-            CustomerDTO? customerDTO = await _customerService.GetCustomerByIdAsync(customer.Id, cts.Token);
-        
-            if(customerDTO is null) {
-                return Problem("Customer doesn't exist", statusCode: 404, title: "Customer Search");
-            }
-
-            return customerDTO;
+            return Ok(customer);
         }
 
         [HttpPost]
@@ -82,6 +89,19 @@ namespace BankingApp.WebAPI.Controllers
             CustomerDTO? current = await _customerService.UpdateCustomer(old, updated, cts.Token);
 
             return Ok(current);
+        }
+
+        [HttpPost("{customerId}")]
+        public async Task<ActionResult<CustomerDTO>> OpenAccount(Guid customerId, [FromBody] CreateAccountRequestDTO accountRequest)
+        {
+            CancellationTokenSource cts = new();
+            CustomerDTO? customer = await _customerService.GetCustomerByIdAsync(customerId, cts.Token);
+
+            if(customer is null) return Problem("Unknown customer id", statusCode: 404, title: "Open customer account");
+
+            AccountDTO account = await _customerService.OpenAccountAsync(accountRequest, cts.Token);
+
+            return CreatedAtAction(nameof(GetCustomerById), new {customerId = customerId}, account);
         }
     }
 }
