@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BankingApp.Application.Common.Interfaces.Repositories;
 using BankingApp.Application.Common.Interfaces.Services;
+using BankingApp.Application.Common.Mappings;
 using BankingApp.Application.DTOs;
 using BankingApp.Domain.Entities;
 using BankingApp.Domain.Exceptions;
@@ -26,7 +27,7 @@ namespace BankingApp.Application.Services
             IReadOnlyList<Transaction> transactions = await _transactionRepository.GetByAccountIdAsync(account.Id, cancellationToken);
 
             // spread transactions, map to dto then put in list and return
-            return [.. transactions.Select(MapToDTO)];
+            return [.. transactions.Select(t => t.ToDTO())];
         }
 
         public async Task<TransactionDTO> TransferMoneyAsync(CreateTransactionRequestDTO requestDTO, CancellationToken cancellationToken = default)
@@ -50,14 +51,7 @@ namespace BankingApp.Application.Services
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return MapToDTO(transaction);
-
-        }
-
-        private static TransactionDTO MapToDTO(Transaction transaction)
-        {
-            Money amount = transaction.GetAmount();
-            return new TransactionDTO(transaction.Id, transaction.Description, transaction.Timestamp, amount.Amount, amount.Currency);
+            return transaction.ToDTO();
         }
 
         public async Task<TransactionDTO> DepositMoneyAsync(DepositMoneyRequestDTO depositMoneyRequestDTO, CancellationToken cancellationToken = default)
@@ -68,13 +62,12 @@ namespace BankingApp.Application.Services
 
             Money amount = new(depositMoneyRequestDTO.Amount, depositMoneyRequestDTO.Currency);
 
-            Transaction transaction = Transaction.CreateTransfer(account, amount, $"Deposit: {amount.Amount}, \"{amount.Currency}\"", false);
+            Transaction transaction = Transaction.CreateTransfer(account, amount, $"Deposit: ${amount.Amount}, {amount.Currency}", false);
             
             await _transactionRepository.AddTransactionAsync(transaction, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return MapToDTO(transaction);
-
+            return transaction.ToDTO();
         }
 
         public async Task<TransactionDTO> WithdrawMoneyAsync(WithdrawMoneyRequestDTO withdrawMoneyRequestDTO, CancellationToken cancellationToken = default)
@@ -87,12 +80,19 @@ namespace BankingApp.Application.Services
 
             Money amount = new(withdrawMoneyRequestDTO.Amount, withdrawMoneyRequestDTO.Currency);
 
-            Transaction transaction = Transaction.CreateTransfer(account, amount, $"Deposit: {amount.Amount}, \"{amount.Currency}\"", true);
+            Transaction transaction = Transaction.CreateTransfer(account, amount, $"Withdraw: ${amount.Amount}, {amount.Currency}", true);
 
             await _transactionRepository.AddTransactionAsync(transaction, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return MapToDTO(transaction);
+            return transaction.ToDTO();
+        }
+
+        public async Task<TransactionDTO> GetTransactionByIdAsync(Guid transactionId, CancellationToken cancellationToken = default)
+        {
+            Transaction? transaction = await _transactionRepository.GetByIdAsync(transactionId, cancellationToken) ?? throw new NullTransactionException();
+
+            return transaction.ToDTO();
         }
     }
 

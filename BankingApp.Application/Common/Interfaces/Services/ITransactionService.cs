@@ -9,10 +9,9 @@ namespace BankingApp.Application.Common.Interfaces.Services
     public interface ITransactionService
     {
         Task<TransactionDTO> TransferMoneyAsync(CreateTransactionRequestDTO requestDTO, CancellationToken cancellationToken = default);
-
         Task<IReadOnlyList<TransactionDTO>> GetAccountTransactionHistoryAsync(Guid accountId, CancellationToken cancellationToken = default);
-
         Task<TransactionDTO> DepositMoneyAsync(DepositMoneyRequestDTO depositMoneyRequestDTO, CancellationToken cancellationToken = default);
         Task<TransactionDTO> WithdrawMoneyAsync(WithdrawMoneyRequestDTO withdrawMoneyRequestDTO, CancellationToken cancellationToken = default);
+        Task<TransactionDTO> GetTransactionByIdAsync(Guid transactionId, CancellationToken cancellationToken = default);
     }
 }

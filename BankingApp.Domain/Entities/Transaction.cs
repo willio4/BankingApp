@@ -28,7 +28,7 @@ namespace BankingApp.Domain.Entities
         /// <summary>
         /// record of ledger entries of transaction
         /// </summary>
-        private readonly List<LedgerEntry> _ledgerEntries;
+        private readonly List<LedgerEntry> _ledgerEntries = [];
         public IReadOnlyCollection<LedgerEntry> Entries => _ledgerEntries.AsReadOnly();
 
         /// <summary>
@@ -75,9 +75,12 @@ namespace BankingApp.Domain.Entities
 
             Transaction transaction = new(description);
 
+            var debitAmount = new Money(amount.Amount, amount.Currency);
+            var creditAmount = new Money(amount.Amount, amount.Currency);
+
             // creation of ledger entries
-            var debitEntry = new LedgerEntry(sourceAccount.Id, amount, Enums.EntryType.Debit, DateTimeOffset.UtcNow);
-            var creditEntry = new LedgerEntry(destinationAccount.Id, amount, Enums.EntryType.Credit, DateTimeOffset.UtcNow);
+            var debitEntry = new LedgerEntry(sourceAccount.Id, debitAmount, Enums.EntryType.Debit, DateTimeOffset.UtcNow);
+            var creditEntry = new LedgerEntry(destinationAccount.Id, creditAmount, Enums.EntryType.Credit, DateTimeOffset.UtcNow);
 
             // add entries to transaction history
             transaction._ledgerEntries.Add(debitEntry);

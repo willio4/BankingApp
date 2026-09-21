@@ -31,4 +31,15 @@ public static class MappingExtensions
             account.AccountStatus
         );
     }
+
+    public static TransactionDTO ToDTO(this Transaction transaction)
+    {
+        return new TransactionDTO(
+            transaction.Id,
+            transaction.Description,
+            transaction.Timestamp,
+            transaction.GetAmount().Amount,
+            transaction.GetAmount().Currency
+        );
+    }
 }
