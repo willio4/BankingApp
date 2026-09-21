@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BankingApp.Domain.Entities;
 using BankingApp.Application.Common.Mappings;
+using BankingApp.Infrastructure.Migrations;
+using Microsoft.Identity.Client.NativeInterop;
 
 namespace BankingApp.WebAPI.Controllers
 {
@@ -35,12 +37,14 @@ namespace BankingApp.WebAPI.Controllers
             CancellationTokenSource cts = new();
 
             var customers = await _context.Customers
-                .Include(c => c.Accounts) 
+                .Include(c => c.Accounts
+                .Where(a => a.AccountStatus != Domain.Enums.AccountStatus.Closed)) 
                 .AsNoTracking()
                 .ToListAsync(cts.Token);
 
             List<CustomerDTO> customerDtos = customers
                 .Select(c => c.ToDTO())
+                .OrderBy(c => c.CustomerStatus)
                 .ToList();
 
             return customerDtos;
@@ -102,6 +106,32 @@ namespace BankingApp.WebAPI.Controllers
             AccountDTO account = await _customerService.OpenAccountAsync(accountRequest, cts.Token);
 
             return CreatedAtAction(nameof(GetCustomerById), new {customerId = customerId}, account);
+        }
+
+        [HttpPatch("delete-user/{customerId}")]
+        public async Task<IActionResult> DeleteCustomer(Guid customerId)
+        {
+            CancellationTokenSource cts = new();
+            CustomerDTO? customer = await _customerService.GetCustomerByIdAsync(customerId, cts.Token);
+
+            if(customer is null) return Problem("Unknown customer", statusCode: 404, title: "Customer Deletion");
+
+
+            while(customer.Accounts.Count > 0)
+            {
+                try
+                {
+                    AccountDTO currentAccount = customer.Accounts[customer.Accounts.Count - 1];
+                    await _accountService.CloseAccount(currentAccount, cts.Token);
+                } catch(Exception err)
+                {
+                    return Content( $"{err.Message}" );
+                }
+            } 
+
+            customer = await _customerService.DeleteCustomer(customer, cts.Token);
+
+            return Ok(customer);
         }
     }
 }

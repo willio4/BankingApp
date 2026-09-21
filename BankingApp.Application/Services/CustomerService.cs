@@ -92,5 +92,19 @@ namespace BankingApp.Application.Services
 
             return customer!.ToDTO();
         }
+
+        public async Task<CustomerDTO> DeleteCustomer(CustomerDTO customer, CancellationToken cancellationToken = default)
+        {
+            if(customer is null) throw new InvalidCustomerException();
+            Customer? update = await _customerRepository.GetByIdAsync(customer.Id, cancellationToken);
+
+            update!.CustomerStatus = CustomerStatus.Closed;
+            await _customerRepository.UpdateCustomerAsync(update, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            update = await _customerRepository.GetByIdAsync(customer.Id, cancellationToken);
+
+            return update!.ToDTO();
+        }
     }
 }
