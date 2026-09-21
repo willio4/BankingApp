@@ -21,6 +21,9 @@ namespace BankingApp.Infrastructure.Persistence.Repositories
         public async Task<Customer?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return await _db.Customers
+                .Include(c => c.Accounts
+                    .Where(a => a.AccountStatus != Domain.Enums.AccountStatus.Closed)
+                    .OrderBy(a => a.AccountStatus))
                 .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
         }
 

@@ -65,6 +65,26 @@ namespace BankingApp.Application.Services
 
             return new string(buffer);
         }
+
+        public async Task<AccountDTO> CloseAccount(AccountDTO account, CancellationToken cancellationToken = default)
+        {
+            if (account is null) throw new NullAccountException();
+
+            if (account.Balance != 0) throw new UnsatisfactoryAccountStandingException();
+
+            Account? acc = await _accountRepository.GetByIdAsync(account.Id, cancellationToken);
+
+            if(acc is null) throw new NullAccountException();
+
+            acc.AccountStatus = Domain.Enums.AccountStatus.Closed;
+
+            await _accountRepository.UpdateAccountAsync(acc, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            acc = await _accountRepository.GetByIdAsync(account.Id, cancellationToken);
+
+            return acc!.ToDTO();
+        }
     }
 
 }
