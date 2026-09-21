@@ -12,7 +12,20 @@ namespace BankingApp.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Transaction> builder)
         {
-            builder.Property(t => t.Timestamp).HasColumnType("datetimeoffset");
+            builder.HasKey(t => t.Id);
+
+            builder.Property(t => t.Timestamp)
+                .IsRequired()
+                .HasColumnType("datetimeoffset");
+
+            builder.HasMany(t => t.Entries)
+                .WithOne()
+                .HasForeignKey(e => e.TransactionId)
+                .IsRequired();
+            
+            builder.Navigation(t => t.Entries)
+                .HasField("_ledgerEntries")
+                .UsePropertyAccessMode(PropertyAccessMode.Field);
         }
     }
 }

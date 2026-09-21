@@ -13,20 +13,26 @@ namespace BankingApp.Infrastructure.Persistence.Configurations
         public void Configure(EntityTypeBuilder<Account> builder)
         {
             builder.HasKey(a => a.Id);
+
             builder.Property(a => a.AccountNumber)
                 .IsRequired()
                 .HasMaxLength(12);
+
             builder.Property(a => a.AccountStatus)
                 .IsRequired()
                 .HasDefaultValue(Domain.Enums.AccountStatus.Active);
+
             builder.HasIndex(a => a.AccountNumber)
                 .IsUnique();
+
             builder.HasMany(a => a.LedgerEntries)
                 .WithOne()
                 .HasForeignKey(e => e.AccountId)
                 .OnDelete(DeleteBehavior.Cascade);
+
             builder.Navigation(a => a.LedgerEntries)
                 .UsePropertyAccessMode(PropertyAccessMode.Field);
+                
             builder.HasData(
                 new Account(Guid.Parse("81c8c2f1-1444-42ae-a6e5-272886a99f7e"), "693762756416", Guid.Parse("7222f4a6-b8ca-4cc5-ad74-7b4b34d79779"), Domain.Enums.AccountType.Checking, "USD", Domain.Enums.AccountStatus.Active),
 

@@ -12,17 +12,30 @@ namespace BankingApp.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<LedgerEntry> builder)
         {
-            builder.Property(e => e.Timestamp).HasColumnType("datetimeoffset");
+            builder.HasKey(e => e.Id);
+
+            builder.Property(e => e.Timestamp)
+                   .IsRequired()
+                   .HasColumnType("datetimeoffset");
+
             builder.OwnsOne(e => e.Amount, money =>
             {
                 money.Property(a => a.Amount)
                      .HasColumnName("Amount")
-                     .HasColumnType("decimal(18,2)");
+                     .HasColumnType("decimal(18,2)")
+                     .IsRequired();
 
                 money.Property(a => a.Currency)
                      .HasColumnName("Currency")
-                     .HasColumnType("nvarchar(3)");
+                     .HasMaxLength(3)
+                     .HasColumnType("nvarchar(3)")
+                     .IsRequired();
             });
+
+            builder.HasOne<Account>()
+                   .WithMany(a => a.LedgerEntries) 
+                   .HasForeignKey(e => e.AccountId)
+                   .IsRequired();
         }
     }
 }
