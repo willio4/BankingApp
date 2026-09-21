@@ -38,7 +38,8 @@ namespace BankingApp.WebAPI.Controllers
 
             var customers = await _context.Customers
                 .Include(c => c.Accounts
-                .Where(a => a.AccountStatus != Domain.Enums.AccountStatus.Closed)) 
+                .Where(a => a.AccountStatus != Domain.Enums.AccountStatus.Closed))
+                .ThenInclude(a => a.LedgerEntries)
                 .AsNoTracking()
                 .ToListAsync(cts.Token);
 

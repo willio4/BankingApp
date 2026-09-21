@@ -53,7 +53,8 @@ namespace BankingApp.Application.Services
 
         public async Task<CustomerDTO?> GetCustomerByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            Customer? customer = await _customerRepository.GetByIdAsync(id, cancellationToken);
+            Customer? customer = await _customerRepository
+                .GetByIdAsync(id, cancellationToken);
 
             return customer == null ? throw new InvalidCustomerException("Customer does not exist") : customer.ToDTO();
         }
