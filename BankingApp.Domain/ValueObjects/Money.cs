@@ -11,9 +11,9 @@ namespace BankingApp.Domain.ValueObjects
     {
         [Required(ErrorMessage = "Amount can not be blank")]
         [DataType(DataType.Currency)]
-        public decimal Amount { get; }
+        public decimal Amount { get; init; }
         [StringLength(3)]
-        public string Currency { get; }
+        public string Currency { get; init; }
         public Money(decimal amount, string currency = "USD")
         {
             Amount = amount;

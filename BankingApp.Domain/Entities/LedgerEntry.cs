@@ -37,6 +37,8 @@ namespace BankingApp.Domain.Entities
         [Required]
         public DateTimeOffset Timestamp { get; private set; }
 
+        public Guid TransactionId { get; private set; }
+
         /// <summary>
         /// LedgerEntry constructor
         /// </summary>

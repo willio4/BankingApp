@@ -35,7 +35,7 @@ namespace BankingApp.WebAPI.Controllers
                 .ToListAsync();
         }
 
-        [HttpGet("{customerId:Guid}")]
+        [HttpGet("customer/{customerId:Guid}")]
         public async Task<ActionResult<IReadOnlyList<AccountDTO>>> GetCustomerAccounts(Guid customerId)
         {
             CancellationTokenSource cts = new();
@@ -44,6 +44,17 @@ namespace BankingApp.WebAPI.Controllers
             if(customer is null) return Problem("Unknown customer id", statusCode: 404, title: "Account Retrieval");
 
             return Ok(customer.Accounts);
+        }
+
+        [HttpGet("{accountId}")]
+        public async Task<ActionResult<AccountDTO>> GetAccount(Guid accountId)
+        {
+            CancellationTokenSource cts = new();
+            AccountDTO? account = await _accountService.GetAccountByIdAsync(accountId, cts.Token);
+
+            if(account is null) return Problem("Unknown account id", statusCode: 404, title: "Account Search");
+
+            return Ok(account);
         }
 
         [HttpPatch("close-account/{accountId}")]
