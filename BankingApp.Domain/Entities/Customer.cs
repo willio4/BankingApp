@@ -15,7 +15,7 @@ namespace BankingApp.Domain.Entities
     /// <param name="email">customer email</param>
     /// <param name="phoneNumber">customer phone number</param>
     /// <param name="dateOfBirth">customer date of birth</param>
-    public class Customer(Guid id, string firstName, string lastName, string email, string phoneNumber, DateTimeOffset dateOfBirth, CustomerStatus customerStatus = CustomerStatus.Active)
+    public class Customer(Guid id, string firstName, string lastName, string email, string phoneNumber, DateTimeOffset dateOfBirth, Guid userId, CustomerStatus customerStatus = CustomerStatus.Active)
     {
         /// <summary>
         /// Customer unique identifier
@@ -56,6 +56,8 @@ namespace BankingApp.Domain.Entities
         public DateTimeOffset DateOfBirth { get; set; } = dateOfBirth;
 
         public CustomerStatus CustomerStatus { get; set; } = customerStatus;
+
+        public Guid UserId { get; private set; } = userId;
         /// <summary>
         /// all accounts associated with customer
         /// </summary>

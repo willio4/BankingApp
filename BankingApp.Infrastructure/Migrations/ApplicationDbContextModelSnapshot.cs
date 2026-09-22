@@ -56,80 +56,6 @@ namespace BankingApp.Infrastructure.Migrations
                     b.HasIndex("CustomerId");
 
                     b.ToTable("Accounts");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("81c8c2f1-1444-42ae-a6e5-272886a99f7e"),
-                            AccountNumber = "693762756416",
-                            AccountStatus = 0,
-                            Currency = "USD",
-                            CustomerId = new Guid("7222f4a6-b8ca-4cc5-ad74-7b4b34d79779"),
-                            Type = 0
-                        },
-                        new
-                        {
-                            Id = new Guid("c7e97394-c25a-4f38-a54e-82e21610066d"),
-                            AccountNumber = "990888064302",
-                            AccountStatus = 0,
-                            Currency = "USD",
-                            CustomerId = new Guid("7222f4a6-b8ca-4cc5-ad74-7b4b34d79779"),
-                            Type = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("4cb0b54d-3874-464d-8acb-b3242012d81f"),
-                            AccountNumber = "660279434684",
-                            AccountStatus = 0,
-                            Currency = "USD",
-                            CustomerId = new Guid("4bf2a680-ac31-4206-be1a-8effc3d6c427"),
-                            Type = 0
-                        },
-                        new
-                        {
-                            Id = new Guid("a0901605-7462-45b0-9f0c-06b58bb724e6"),
-                            AccountNumber = "752142281253",
-                            AccountStatus = 0,
-                            Currency = "USD",
-                            CustomerId = new Guid("4bf2a680-ac31-4206-be1a-8effc3d6c427"),
-                            Type = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("ee722d5c-fa75-49ff-a438-ae2ea86b2f18"),
-                            AccountNumber = "416459422322",
-                            AccountStatus = 0,
-                            Currency = "USD",
-                            CustomerId = new Guid("afbd278c-5176-4510-9ad1-ae2acf34f80a"),
-                            Type = 0
-                        },
-                        new
-                        {
-                            Id = new Guid("1f6ec25e-6086-4747-b476-aabc217773ea"),
-                            AccountNumber = "145967913707",
-                            AccountStatus = 0,
-                            Currency = "USD",
-                            CustomerId = new Guid("afbd278c-5176-4510-9ad1-ae2acf34f80a"),
-                            Type = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("05781c31-1bd7-46a6-8554-b0470866c62e"),
-                            AccountNumber = "228947707340",
-                            AccountStatus = 0,
-                            Currency = "USD",
-                            CustomerId = new Guid("418586f3-7268-4035-8ae7-d2241c474876"),
-                            Type = 0
-                        },
-                        new
-                        {
-                            Id = new Guid("e0b80df6-49a6-4c75-8b99-b184ad1c2fb7"),
-                            AccountNumber = "681627673954",
-                            AccountStatus = 0,
-                            Currency = "USD",
-                            CustomerId = new Guid("418586f3-7268-4035-8ae7-d2241c474876"),
-                            Type = 1
-                        });
                 });
 
             modelBuilder.Entity("BankingApp.Domain.Entities.Customer", b =>
@@ -166,51 +92,15 @@ namespace BankingApp.Infrastructure.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Customers");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("418586f3-7268-4035-8ae7-d2241c474876"),
-                            CustomerStatus = 0,
-                            DateOfBirth = new DateTimeOffset(new DateTime(1997, 10, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -7, 0, 0, 0)),
-                            Email = "omarwilliams@gmail.com",
-                            FirstName = "Omar",
-                            LastName = "Williams",
-                            PhoneNumber = "111-111-1111"
-                        },
-                        new
-                        {
-                            Id = new Guid("4bf2a680-ac31-4206-be1a-8effc3d6c427"),
-                            CustomerStatus = 0,
-                            DateOfBirth = new DateTimeOffset(new DateTime(2010, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -8, 0, 0, 0)),
-                            Email = "harlemwilliams@gmail.com",
-                            FirstName = "Harlem",
-                            LastName = "Williams",
-                            PhoneNumber = "222-222-2222"
-                        },
-                        new
-                        {
-                            Id = new Guid("7222f4a6-b8ca-4cc5-ad74-7b4b34d79779"),
-                            CustomerStatus = 0,
-                            DateOfBirth = new DateTimeOffset(new DateTime(1995, 9, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -7, 0, 0, 0)),
-                            Email = "tylerrowlette@gmail.com",
-                            FirstName = "Tyler",
-                            LastName = "Rowlette",
-                            PhoneNumber = "333-333-3333"
-                        },
-                        new
-                        {
-                            Id = new Guid("afbd278c-5176-4510-9ad1-ae2acf34f80a"),
-                            CustomerStatus = 0,
-                            DateOfBirth = new DateTimeOffset(new DateTime(2005, 8, 31, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -7, 0, 0, 0)),
-                            Email = "jerseyrowlette@gmail.com",
-                            FirstName = "Jerey",
-                            LastName = "Rowlette",
-                            PhoneNumber = "444-444-4444"
-                        });
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("BankingApp.Domain.Entities.LedgerEntry", b =>

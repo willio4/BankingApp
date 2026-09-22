@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BankingApp.Domain.Entities;
 using BankingApp.Application.Common.Mappings;
-using BankingApp.Infrastructure.Migrations;
 using Microsoft.Identity.Client.NativeInterop;
 
 namespace BankingApp.WebAPI.Controllers

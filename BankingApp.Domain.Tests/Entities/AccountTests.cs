@@ -82,7 +82,8 @@ namespace BankingApp.Domain.Tests.Entities
                 "Williams",
                 "harwill97@gmail.com",
                 "111-111-1111",
-                DateTimeOffset.Parse("10/20/1997")
+                DateTimeOffset.Parse("10/20/1997"),
+                Guid.NewGuid()
             );
 
             customers.Add(customer);
@@ -111,7 +112,8 @@ namespace BankingApp.Domain.Tests.Entities
                 "Williams",
                 "harwill97@gmail.com",
                 "111-111-1111",
-                DateTimeOffset.Parse("10/20/1997")
+                DateTimeOffset.Parse("10/20/1997"),
+                Guid.NewGuid()
             );
 
             customers.Add(customer);
@@ -134,7 +136,8 @@ namespace BankingApp.Domain.Tests.Entities
                 "Williams",
                 "harwill97@gmail.com",
                 "111-111-1111",
-                DateTimeOffset.Parse("10/20/1997")
+                DateTimeOffset.Parse("10/20/1997"),
+                Guid.NewGuid()
             );
 
             customers.Add(customer);

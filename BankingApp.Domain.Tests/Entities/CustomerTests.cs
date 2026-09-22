@@ -72,7 +72,7 @@ namespace BankingApp.Domain.Tests.Entities
             CreateCustomerRequestDTO customerRequestDTO = new("Harlem", "Williams", "harwill97@aol.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
 
             CustomerDTO? customerDTO = await _customerService.CreateCustomerAsync(customerRequestDTO, cts.Token);
-            Customer customer = new(customerDTO.Id, "Harlem", "Williams", "harwill97@aol.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
+            Customer customer = new(customerDTO.Id, "Harlem", "Williams", "harwill97@aol.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"), Guid.NewGuid());
 
             customerDTO.Should().BeEquivalentTo(customer);
         }
