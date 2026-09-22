@@ -30,18 +30,14 @@ namespace BankingApp.WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CustomerDTO>>> GetCustomers()
+        public async Task<ActionResult<IEnumerable<CustomerDTO>>> GetCustomers(CancellationToken cancellationToken)
         {
-            if(_context.Customers == null) return NotFound();
-
-            CancellationTokenSource cts = new();
-
             var customers = await _context.Customers
                 .Include(c => c.Accounts
                 .Where(a => a.AccountStatus != Domain.Enums.AccountStatus.Closed))
                 .ThenInclude(a => a.LedgerEntries)
                 .AsNoTracking()
-                .ToListAsync(cts.Token);
+                .ToListAsync(cancellationToken);
 
             List<CustomerDTO> customerDtos = customers
                 .Select(c => c.ToDTO())
@@ -52,13 +48,9 @@ namespace BankingApp.WebAPI.Controllers
         }
 
         [HttpGet("{customerId:guid}")]
-        public async Task<ActionResult<CustomerDTO>> GetCustomerById(Guid customerId)
+        public async Task<ActionResult<CustomerDTO>> GetCustomerById(Guid customerId, CancellationToken cancellationToken)
         {
-            if(_context.Customers == null) return NotFound();
-
-            CancellationTokenSource cts = new();
-
-            CustomerDTO? customer = await _customerService.GetCustomerByIdAsync(customerId, cts.Token);
+            CustomerDTO? customer = await _customerService.GetCustomerByIdAsync(customerId, cancellationToken);
 
             if(customer == null)
             {
@@ -69,12 +61,11 @@ namespace BankingApp.WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<CustomerDTO>> AddCustomer([FromBody]CreateCustomerRequestDTO customerRequestDTO)
+        public async Task<ActionResult<CustomerDTO>> AddCustomer([FromBody] CreateCustomerRequestDTO customerRequestDTO, CancellationToken cancellationToken)
         {
-            CancellationTokenSource cts = new();
-            CustomerDTO customerDTO = await _customerService.CreateCustomerAsync(customerRequestDTO, cts.Token);
+            CustomerDTO customerDTO = await _customerService.CreateCustomerAsync(customerRequestDTO, cancellationToken);
 
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 return CreatedAtAction(nameof(GetCustomerById), new { customerId = customerDTO.Id }, customerDTO);
             }
@@ -86,51 +77,49 @@ namespace BankingApp.WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<CustomerDTO>> UpdateCustomer(CreateCustomerRequestDTO updated, Guid id)
+        public async Task<ActionResult<CustomerDTO>> UpdateCustomer(CreateCustomerRequestDTO updated, Guid id, CancellationToken cancellationToken)
         {
-            CancellationTokenSource cts = new();
-            CustomerDTO? old = await _customerService.GetCustomerByIdAsync(id, cts.Token);
-            if(old is null) return Problem("Customer does not exist");
-            CustomerDTO? current = await _customerService.UpdateCustomer(old, updated, cts.Token);
+            CustomerDTO? old = await _customerService.GetCustomerByIdAsync(id, cancellationToken);
+            if (old is null) return Problem("Customer does not exist");
+            CustomerDTO? current = await _customerService.UpdateCustomer(old, updated, cancellationToken);
 
             return Ok(current);
         }
 
         [HttpPost("{customerId}")]
-        public async Task<ActionResult<CustomerDTO>> OpenAccount(Guid customerId, [FromBody] CreateAccountRequestDTO accountRequest)
+        public async Task<ActionResult<CustomerDTO>> OpenAccount(Guid customerId, [FromBody] CreateAccountRequestDTO accountRequest, CancellationToken cancellationToken)
         {
-            CancellationTokenSource cts = new();
-            CustomerDTO? customer = await _customerService.GetCustomerByIdAsync(customerId, cts.Token);
+            CustomerDTO? customer = await _customerService.GetCustomerByIdAsync(customerId, cancellationToken);
 
-            if(customer is null) return Problem("Unknown customer id", statusCode: 404, title: "Open customer account");
+            if (customer is null) return Problem("Unknown customer id", statusCode: 404, title: "Open customer account");
 
-            AccountDTO account = await _customerService.OpenAccountAsync(accountRequest, cts.Token);
+            AccountDTO account = await _customerService.OpenAccountAsync(accountRequest, cancellationToken);
 
-            return CreatedAtAction(nameof(GetCustomerById), new {customerId = customerId}, account);
+            return CreatedAtAction(nameof(GetCustomerById), new { customerId = customerId }, account);
         }
 
         [HttpPatch("delete-user/{customerId}")]
-        public async Task<IActionResult> DeleteCustomer(Guid customerId)
+        public async Task<IActionResult> DeleteCustomer(Guid customerId, CancellationToken cancellationToken)
         {
-            CancellationTokenSource cts = new();
-            CustomerDTO? customer = await _customerService.GetCustomerByIdAsync(customerId, cts.Token);
+            CustomerDTO? customer = await _customerService.GetCustomerByIdAsync(customerId, cancellationToken);
 
-            if(customer is null) return Problem("Unknown customer", statusCode: 404, title: "Customer Deletion");
+            if (customer is null) return Problem("Unknown customer", statusCode: 404, title: "Customer Deletion");
 
 
-            while(customer.Accounts.Count > 0)
+            while (customer.Accounts.Count > 0)
             {
                 try
                 {
                     AccountDTO currentAccount = customer.Accounts[customer.Accounts.Count - 1];
-                    await _accountService.CloseAccount(currentAccount, cts.Token);
-                } catch(Exception err)
-                {
-                    return Content( $"{err.Message}" );
+                    await _accountService.CloseAccount(currentAccount, cancellationToken);
                 }
-            } 
+                catch (Exception err)
+                {
+                    return Content($"{err.Message}");
+                }
+            }
 
-            customer = await _customerService.DeleteCustomer(customer, cts.Token);
+            customer = await _customerService.DeleteCustomer(customer, cancellationToken);
 
             return Ok(customer);
         }

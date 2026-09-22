@@ -28,18 +28,16 @@ namespace BankingApp.WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Account>>> GetAccounts()
+        public async Task<ActionResult<IEnumerable<Account>>> GetAccounts(CancellationToken cancellationToken)
         {
-            if (_context.Accounts == null) return NotFound();
             return await _context.Accounts
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
         }
 
         [HttpGet("customer/{customerId:Guid}")]
-        public async Task<ActionResult<IReadOnlyList<AccountDTO>>> GetCustomerAccounts(Guid customerId)
+        public async Task<ActionResult<IReadOnlyList<AccountDTO>>> GetCustomerAccounts(Guid customerId, CancellationToken cancellationToken)
         {
-            CancellationTokenSource cts = new();
-            CustomerDTO? customer = await _customerService.GetCustomerByIdAsync(customerId, cts.Token);
+            CustomerDTO? customer = await _customerService.GetCustomerByIdAsync(customerId, cancellationToken);
 
             if(customer is null) return Problem("Unknown customer id", statusCode: 404, title: "Account Retrieval");
 
@@ -47,10 +45,9 @@ namespace BankingApp.WebAPI.Controllers
         }
 
         [HttpGet("{accountId}")]
-        public async Task<ActionResult<AccountDTO>> GetAccount(Guid accountId)
+        public async Task<ActionResult<AccountDTO>> GetAccount(Guid accountId, CancellationToken cancellationToken)
         {
-            CancellationTokenSource cts = new();
-            AccountDTO? account = await _accountService.GetAccountByIdAsync(accountId, cts.Token);
+            AccountDTO? account = await _accountService.GetAccountByIdAsync(accountId, cancellationToken);
 
             if(account is null) return Problem("Unknown account id", statusCode: 404, title: "Account Search");
 
@@ -58,16 +55,15 @@ namespace BankingApp.WebAPI.Controllers
         }
 
         [HttpPatch("close-account/{accountId}")]
-        public async Task<ActionResult<AccountDTO>> DeleteAccount(Guid accountId)
+        public async Task<ActionResult<AccountDTO>> DeleteAccount(Guid accountId, CancellationToken cancellationToken)
         {
-            CancellationTokenSource cts = new();
-            AccountDTO? account = await _accountService.GetAccountByIdAsync(accountId, cts.Token);
+            AccountDTO? account = await _accountService.GetAccountByIdAsync(accountId, cancellationToken);
 
             if(account is null) return Problem("Unknown account", statusCode: 404, title: "Account Deletion");
 
             if(account.Balance != 0) return Problem("Account balance must be zero before closing", statusCode: 405, title: "Account Deletion");
 
-            account = await _accountService.CloseAccount(account, cts.Token);
+            account = await _accountService.CloseAccount(account, cancellationToken);
 
             return Ok(account);
         }

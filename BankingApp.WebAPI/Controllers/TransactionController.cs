@@ -21,10 +21,9 @@ namespace BankingApp.WebAPI.Controllers
             _context = context;
         }
         [HttpGet("{transactionId}")]
-        public async Task<ActionResult<TransactionDTO>> GetTransactionById(Guid transactionId)
+        public async Task<ActionResult<TransactionDTO>> GetTransactionById(Guid transactionId, CancellationToken cancellationToken)
         {
-            CancellationTokenSource cts = new();
-            TransactionDTO? transaction = await _transactionService.GetTransactionByIdAsync(transactionId, cts.Token);
+            TransactionDTO? transaction = await _transactionService.GetTransactionByIdAsync(transactionId, cancellationToken);
 
             if(transaction is null) return Problem("Unknown transaction id", statusCode: 404, title: "Transaction Search");
 
@@ -32,46 +31,41 @@ namespace BankingApp.WebAPI.Controllers
         }
 
         [HttpPost("deposit")]
-        public async Task<ActionResult<TransactionDTO>> Deposit([FromBody]DepositMoneyRequestDTO requestDTO)
+        public async Task<ActionResult<TransactionDTO>> Deposit([FromBody]DepositMoneyRequestDTO requestDTO, CancellationToken cancellationToken)
         {
-            CancellationTokenSource cts = new();
-            TransactionDTO transaction = await _transactionService.DepositMoneyAsync(requestDTO, cts.Token);
+            TransactionDTO transaction = await _transactionService.DepositMoneyAsync(requestDTO, cancellationToken);
             return CreatedAtAction(nameof(GetTransactionById), new { transactionId = transaction.Id }, transaction);
         }
 
         [HttpPost("withdraw")]
-        public async Task<ActionResult<TransactionDTO>> Withdraw([FromBody] WithdrawMoneyRequestDTO requestDTO)
+        public async Task<ActionResult<TransactionDTO>> Withdraw([FromBody] WithdrawMoneyRequestDTO requestDTO, CancellationToken cancellationToken)
         {
-            CancellationTokenSource cts = new();
-            TransactionDTO transaction = await _transactionService.WithdrawMoneyAsync(requestDTO, cts.Token);
+            TransactionDTO transaction = await _transactionService.WithdrawMoneyAsync(requestDTO, cancellationToken);
             return CreatedAtAction(nameof(GetTransactionById), new { transactionId = transaction.Id }, transaction);
         }
 
         [HttpPost("transfer")]
-        public async Task<ActionResult<TransactionDTO>> Transfer([FromBody] CreateTransactionRequestDTO requestDTO)
+        public async Task<ActionResult<TransactionDTO>> Transfer([FromBody] CreateTransactionRequestDTO requestDTO, CancellationToken cancellationToken)
         {
-            CancellationTokenSource cts = new();
-            TransactionDTO transaction = await _transactionService.TransferMoneyAsync(requestDTO, cts.Token);
+            TransactionDTO transaction = await _transactionService.TransferMoneyAsync(requestDTO, cancellationToken);
             return CreatedAtAction(nameof(GetTransactionById), new {transactionId = transaction.Id}, transaction);
         }
 
         [HttpGet("history/{accountId}")]
-        public async Task<ActionResult<IEnumerable<TransactionDTO>>> GetAccountTransactionHistory(Guid accountId)
+        public async Task<ActionResult<IEnumerable<TransactionDTO>>> GetAccountTransactionHistory(Guid accountId, CancellationToken cancellationToken)
         {
-            CancellationTokenSource cts = new();
-            IReadOnlyList<TransactionDTO> transactions = await _transactionService.GetAccountTransactionHistoryAsync(accountId, cts.Token);
+            IReadOnlyList<TransactionDTO> transactions = await _transactionService.GetAccountTransactionHistoryAsync(accountId, cancellationToken);
 
             return Ok(transactions);
         }
 
         [HttpGet()]
-        public async Task<ActionResult<IEnumerable<Transaction>>> GetAllTransactions()
+        public async Task<ActionResult<IEnumerable<Transaction>>> GetAllTransactions(CancellationToken cancellationToken)
         {
-            CancellationTokenSource cts = new();
             var transactions = await _context.Transactions
                 .AsNoTracking()
                 .Include(t => t.Entries)
-                .ToListAsync(cts.Token);
+                .ToListAsync(cancellationToken);
             return Ok(transactions);
         }
 
