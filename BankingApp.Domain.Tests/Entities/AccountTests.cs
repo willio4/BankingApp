@@ -93,7 +93,7 @@ namespace BankingApp.Domain.Tests.Entities
             AccountDTO accountDTO = await _customerService.OpenAccountAsync(accountRequestDTO, cts.Token);
 
             // Assert
-            List<Account> accounts = customer.GetAccounts();
+            List<Account> accounts = customer.Accounts.ToList();
 
             accounts.Should().ContainEquivalentOf(accountDTO, options => options
                 .Excluding(a => a.Balance)
@@ -145,7 +145,7 @@ namespace BankingApp.Domain.Tests.Entities
             AccountDTO accountDTO = await _customerService.OpenAccountAsync(accountRequestDTO, cts.Token);
 
             // Assert
-            List<Account> accounts = customer.GetAccounts();
+            List<Account> accounts = customer.Accounts.ToList();
 
             accounts.Should().ContainEquivalentOf(accountDTO, options => options
                 .Excluding(a => a.Balance)
