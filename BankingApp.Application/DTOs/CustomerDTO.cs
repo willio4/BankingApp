@@ -9,7 +9,8 @@ namespace BankingApp.Application.DTOs
         string LastName,
         string Email, 
         string PhoneNumber,
-        DateTimeOffset DateOfBirth
+        DateTimeOffset DateOfBirth,
+        Guid UserId
     );
 
     public record CustomerDTO(
@@ -20,6 +21,7 @@ namespace BankingApp.Application.DTOs
         string PhoneNumber,
         DateTimeOffset DateOfBirth,
         CustomerStatus CustomerStatus,
+        Guid UserId,
         IReadOnlyList<AccountDTO> Accounts
     );
 }

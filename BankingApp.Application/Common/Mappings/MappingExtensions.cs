@@ -15,6 +15,7 @@ public static class MappingExtensions
             customer.PhoneNumber,
             customer.DateOfBirth,
             customer.CustomerStatus,
+            customer.UserId,
             customer.Accounts.Select(a => a.ToDTO()).ToList()
         );
     }

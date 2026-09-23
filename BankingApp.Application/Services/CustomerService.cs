@@ -42,7 +42,7 @@ namespace BankingApp.Application.Services
 
             if (existingCustomer is not null) throw new ExistingCustomerException("User with email already exist");
 
-            Customer customer = new(Guid.NewGuid(), requestDTO.FirstName, requestDTO.LastName, requestDTO.Email, requestDTO.PhoneNumber, requestDTO.DateOfBirth, Guid.NewGuid());
+            Customer customer = new(Guid.NewGuid(), requestDTO.FirstName, requestDTO.LastName, requestDTO.Email, requestDTO.PhoneNumber, requestDTO.DateOfBirth, requestDTO.UserId);
 
             await _customerRepository.AddCustomerAsync(customer, cancellationToken);
 
