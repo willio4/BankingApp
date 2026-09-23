@@ -26,6 +26,8 @@ namespace BankingApp.Infrastructure.Persistence.Configurations
                    .HasForeignKey(a => a.CustomerId);
 
             builder.HasIndex(c => c.UserId).IsUnique();
+            builder.HasIndex(c => c.PhoneNumber).IsUnique();
+            builder.HasIndex(c => c.Email).IsUnique();
         }
     }
 }

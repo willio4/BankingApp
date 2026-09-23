@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BankingApp.Domain.Entities;
-using BankingApp.Domain.IdentityEntities;
+using BankingApp.Infrastructure.IdentityEntities;
 using BankingApp.Domain.ValueObjects;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

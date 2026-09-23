@@ -1,7 +1,7 @@
 
 using Microsoft.AspNetCore.Identity;
 
-namespace BankingApp.Domain.IdentityEntities
+namespace BankingApp.Infrastructure.IdentityEntities
 {
     public class ApplicationRole : IdentityRole<Guid>
     {
