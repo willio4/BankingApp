@@ -1,34 +1,41 @@
 
+using System.IdentityModel.Tokens.Jwt;
+using System.Runtime.CompilerServices;
+using System.Security.Claims;
+using System.Text;
 using BankingApp.Application.Common.Interfaces.Services;
 using BankingApp.Application.DTOs;
 using BankingApp.Domain.Entities;
 using BankingApp.Infrastructure.IdentityEntities;
 using BankingApp.Infrastructure.Persistence;
+using BankingApp.Infrastructure.Tokens;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BankingApp.WebAPI.Controllers
 {
-    [Route("api/{controller}")]
+    [Route("api/[controller]")]
     [ApiController]
     [Produces("application/json")]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ApplicationDbContext _db;
         private readonly ICustomerService _customerService;
 
-        public UserController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ApplicationDbContext db, ICustomerService customerService)
+        public UserController(UserManager<ApplicationUser> userManager, ApplicationDbContext db, ICustomerService customerService)
         {
             _db = db;
             _userManager = userManager;
-            _signInManager = signInManager;
             _customerService = customerService;
         }
-        
+
         [HttpPost("register")]
+        [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] Application.DTOs.RegisterRequest u, CancellationToken cancellationToken)
         {
             if (ModelState.IsValid == false)
@@ -56,14 +63,7 @@ namespace BankingApp.WebAPI.Controllers
                     // if user created, use user to create customer
                     CreateCustomerRequestDTO request = new(user.FirstName!, user.LastName!, user.Email, user.PhoneNumber, user.DateOfBirth, user.Id);
 
-                    if (ModelState.IsValid)
-                    {
-                        CustomerDTO response = await _customerService.CreateCustomerAsync(request, cancellationToken);
-                    }
-                    else
-                    {
-                        return BadRequest(ModelState);
-                    }
+                    CustomerDTO response = await _customerService.CreateCustomerAsync(request, cancellationToken);
                 }
                 else
                 {
@@ -83,32 +83,30 @@ namespace BankingApp.WebAPI.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request, CancellationToken cancellationToken)
+        [AllowAnonymous]
+        public async Task<IActionResult> Login([FromBody] LoginRequest request, TokenProvider tokenProvider, CancellationToken cancellationToken)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
             ApplicationUser? user = await _db.Users.FirstOrDefaultAsync(u => u.Email == request.Email, cancellationToken);
 
-            if(user is null) return Problem("email not found", statusCode: 404, title:"Login");
+            
 
-            Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(user, request.Password, false, false);
+            if (user is null || await _userManager.CheckPasswordAsync(user, request.Password) == false) return Unauthorized();
 
-            if(result.Succeeded)
-            {
-                return Ok(result.Succeeded);
-            }
+            var (accessToken, refreshToken) = tokenProvider.GenerateTokens(user);
 
-            return BadRequest(result);
+            return Ok(new LoginResponse(accessToken, refreshToken));
+
         }
 
         [HttpPost("logout")]
-        public async Task<IActionResult> Logout(ApplicationUser user, CancellationToken cancellationToken)
+        public async Task<IActionResult> Logout()
         {
-            await _signInManager.SignOutAsync();
-            return Ok();
+            return Ok(new { message = "Logged out successfully" });
         }
     }
 }
