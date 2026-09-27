@@ -8,14 +8,14 @@ namespace BankingApp.Application.Common.Interfaces.Services
 {
     public interface ICustomerService
     {
-        Task<CustomerDTO> CreateCustomerAsync(CreateCustomerRequestDTO requestDTO, CancellationToken cancellationToken = default);
+        Task<CustomerResponse> CreateCustomerAsync(CustomerRequest requestDTO, CancellationToken cancellationToken = default);
 
-        Task<CustomerDTO?> GetCustomerByIdAsync(Guid id, CancellationToken cancellationToken = default);
+        Task<CustomerResponse?> GetCustomerByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-        Task<CustomerDTO?> UpdateCustomerAsync(CustomerDTO previous, CreateCustomerRequestDTO updated, CancellationToken cancellationToken = default);
+        Task<CustomerResponse?> UpdateCustomerAsync(CustomerResponse previous, CustomerRequest updated, CancellationToken cancellationToken = default);
 
-        Task<AccountDTO> OpenAccountAsync(CreateAccountRequestDTO accountRequestDTO, CancellationToken cancellationToken = default);
+        Task<AccountResponse> OpenAccountAsync(AccountRequest accountRequestDTO, CancellationToken cancellationToken = default);
 
-        Task<CustomerDTO> DeleteCustomerAsync(CustomerDTO customer, CancellationToken cancellationToken = default);
+        Task<CustomerResponse> DeleteCustomerAsync(CustomerResponse customer, CancellationToken cancellationToken = default);
     }
 }

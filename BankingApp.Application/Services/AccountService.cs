@@ -17,7 +17,7 @@ namespace BankingApp.Application.Services
         private readonly ICustomerRepository _customerRepository = customerRepository;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-        public async Task<AccountDTO> CreateAccountAsync(CreateAccountRequestDTO requestDTO, CancellationToken cancellationToken = default)
+        public async Task<AccountResponse> CreateAccountAsync(AccountRequest requestDTO, CancellationToken cancellationToken = default)
         {
             // check if customer exist
             Customer? customer = await _customerRepository.GetByIdAsync(requestDTO.CustomerId, cancellationToken) ?? throw new InvalidCustomerException($"Customer with id: {requestDTO.CustomerId} does not exist.");
@@ -40,14 +40,14 @@ namespace BankingApp.Application.Services
             return account.ToDTO();
         }
 
-        public async Task<AccountDTO?> GetAccountByAccountNumberAsync(string accountNumber, CancellationToken cancellationToken = default)
+        public async Task<AccountResponse?> GetAccountByAccountNumberAsync(string accountNumber, CancellationToken cancellationToken = default)
         {
             Account? account = await _accountRepository.GetByAccountNumberAsync(accountNumber, cancellationToken);
 
             return account is null ? null : account.ToDTO();
         }
 
-        public async Task<AccountDTO?> GetAccountByIdAsync(Guid accountId, CancellationToken cancellationToken = default)
+        public async Task<AccountResponse?> GetAccountByIdAsync(Guid accountId, CancellationToken cancellationToken = default)
         {
             Account? account = await _accountRepository.GetByIdAsync(accountId, cancellationToken);
 
@@ -66,7 +66,7 @@ namespace BankingApp.Application.Services
             return new string(buffer);
         }
 
-        public async Task<AccountDTO> CloseAccountAsync(AccountDTO account, CancellationToken cancellationToken = default)
+        public async Task<AccountResponse> CloseAccountAsync(AccountResponse account, CancellationToken cancellationToken = default)
         {
             if (account is null) throw new NullAccountException();
 

@@ -3,17 +3,7 @@ using BankingApp.Domain.Enums;
 
 namespace BankingApp.Application.DTOs
 {
-    public record CreateCustomerRequestDTO
-    (
-        string FirstName, 
-        string LastName,
-        string Email, 
-        string PhoneNumber,
-        DateTimeOffset DateOfBirth,
-        Guid UserId
-    );
-
-    public record CustomerDTO(
+    public record CustomerResponse(
         Guid Id,
         string FirstName,
         string LastName,
@@ -22,6 +12,6 @@ namespace BankingApp.Application.DTOs
         DateTimeOffset DateOfBirth,
         CustomerStatus CustomerStatus,
         Guid UserId,
-        IReadOnlyList<AccountDTO> Accounts
+        IReadOnlyList<AccountResponse> Accounts
     );
 }

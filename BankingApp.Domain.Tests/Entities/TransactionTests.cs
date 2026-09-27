@@ -115,24 +115,24 @@ namespace BankingApp.Domain.Tests.Entities
         {
             CancellationTokenSource cts = new();
             // create 2 customers request
-            CreateCustomerRequestDTO createCustomerRequestDTO = new( "Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
+            CustomerRequest createCustomerRequestDTO = new("Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
 
-            CreateCustomerRequestDTO createCustomerRequestDTO1 = new( "Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTimeOffset.Parse("09/30/1995"));
+            CustomerRequest createCustomerRequestDTO1 = new("Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTimeOffset.Parse("09/30/1995"));
 
             // create 2 customers
-            CustomerDTO harlem = await _customerService.CreateCustomerAsync(createCustomerRequestDTO, cts.Token);
-            CustomerDTO jersey = await _customerService.CreateCustomerAsync(createCustomerRequestDTO1, cts.Token);
+            CustomerResponse harlem = await _customerService.CreateCustomerAsync(createCustomerRequestDTO, cts.Token);
+            CustomerResponse jersey = await _customerService.CreateCustomerAsync(createCustomerRequestDTO1, cts.Token);
 
             // create 2 account request
-            CreateAccountRequestDTO accountRequestDTO = new(harlem.Id, Enums.AccountType.Checking, "USD");
-            CreateAccountRequestDTO accountRequestDTO1 = new(jersey.Id, Enums.AccountType.Savings, "USD");
+            AccountRequest accountRequestDTO = new(harlem.Id, Enums.AccountType.Checking, "USD");
+            AccountRequest accountRequestDTO1 = new(jersey.Id, Enums.AccountType.Savings, "USD");
 
-            AccountDTO? harlemAccount = await _customerService.OpenAccountAsync(accountRequestDTO, cts.Token);
-            AccountDTO? jerzAccount = await _customerService.OpenAccountAsync(accountRequestDTO1, cts.Token);
+            AccountResponse? harlemAccount = await _customerService.OpenAccountAsync(accountRequestDTO, cts.Token);
+            AccountResponse? jerzAccount = await _customerService.OpenAccountAsync(accountRequestDTO1, cts.Token);
 
             // create 2 deposit money request
-            DepositMoneyRequestDTO depositMoneyRequestDTO = new(harlemAccount.AccountNumber, 5000m, "USD");
-            DepositMoneyRequestDTO depositMoneyRequestDTO1 = new(jerzAccount.AccountNumber, 2300, "USD");
+            DepositRequest depositMoneyRequestDTO = new(harlemAccount.AccountNumber, 5000m, "USD");
+            DepositRequest depositMoneyRequestDTO1 = new(jerzAccount.AccountNumber, 2300, "USD");
 
             await _transactionService.DepositMoneyAsync(depositMoneyRequestDTO, cts.Token);
             await _transactionService.DepositMoneyAsync(depositMoneyRequestDTO1, cts.Token);
@@ -151,24 +151,24 @@ namespace BankingApp.Domain.Tests.Entities
         {
             CancellationTokenSource cts = new();
             // create 2 customers request
-            CreateCustomerRequestDTO createCustomerRequestDTO = new( "Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
+            CustomerRequest createCustomerRequestDTO = new("Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
 
-            CreateCustomerRequestDTO createCustomerRequestDTO1 = new( "Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTimeOffset.Parse("09/30/1995"));
+            CustomerRequest createCustomerRequestDTO1 = new("Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTimeOffset.Parse("09/30/1995"));
 
             // create 2 customers
-            CustomerDTO harlem = await _customerService.CreateCustomerAsync(createCustomerRequestDTO, cts.Token);
-            CustomerDTO jersey = await _customerService.CreateCustomerAsync(createCustomerRequestDTO1, cts.Token);
+            CustomerResponse harlem = await _customerService.CreateCustomerAsync(createCustomerRequestDTO, cts.Token);
+            CustomerResponse jersey = await _customerService.CreateCustomerAsync(createCustomerRequestDTO1, cts.Token);
 
             // create 2 account request
-            CreateAccountRequestDTO accountRequestDTO = new(harlem.Id, Enums.AccountType.Checking, "USD");
-            CreateAccountRequestDTO accountRequestDTO1 = new(jersey.Id, Enums.AccountType.Savings, "EUR");
+            AccountRequest accountRequestDTO = new(harlem.Id, Enums.AccountType.Checking, "USD");
+            AccountRequest accountRequestDTO1 = new(jersey.Id, Enums.AccountType.Savings, "EUR");
 
-            AccountDTO? harlemAccount = await _customerService.OpenAccountAsync(accountRequestDTO, cts.Token);
-            AccountDTO? jerzAccount = await _customerService.OpenAccountAsync(accountRequestDTO1, cts.Token);
+            AccountResponse? harlemAccount = await _customerService.OpenAccountAsync(accountRequestDTO, cts.Token);
+            AccountResponse? jerzAccount = await _customerService.OpenAccountAsync(accountRequestDTO1, cts.Token);
 
             // create 2 deposit money request
-            DepositMoneyRequestDTO depositMoneyRequestDTO = new(harlemAccount.AccountNumber, 5000m, "USD");
-            DepositMoneyRequestDTO depositMoneyRequestDTO1 = new(jerzAccount.AccountNumber, 2300, "USD");
+            DepositRequest depositMoneyRequestDTO = new(harlemAccount.AccountNumber, 5000m, "USD");
+            DepositRequest depositMoneyRequestDTO1 = new(jerzAccount.AccountNumber, 2300, "USD");
 
             await _transactionService.DepositMoneyAsync(depositMoneyRequestDTO, cts.Token);
 
@@ -185,24 +185,24 @@ namespace BankingApp.Domain.Tests.Entities
         {
             CancellationTokenSource cts = new();
             // create 2 customers request
-            CreateCustomerRequestDTO createCustomerRequestDTO = new( "Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
+            CustomerRequest createCustomerRequestDTO = new("Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
 
-            CreateCustomerRequestDTO createCustomerRequestDTO1 = new( "Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTimeOffset.Parse("09/30/1995"));
+            CustomerRequest createCustomerRequestDTO1 = new("Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTimeOffset.Parse("09/30/1995"));
 
             // create 2 customers
-            CustomerDTO harlem = await _customerService.CreateCustomerAsync(createCustomerRequestDTO, cts.Token);
-            CustomerDTO jersey = await _customerService.CreateCustomerAsync(createCustomerRequestDTO1, cts.Token);
+            CustomerResponse harlem = await _customerService.CreateCustomerAsync(createCustomerRequestDTO, cts.Token);
+            CustomerResponse jersey = await _customerService.CreateCustomerAsync(createCustomerRequestDTO1, cts.Token);
 
             // create 2 account request
-            CreateAccountRequestDTO accountRequestDTO = new(harlem.Id, Enums.AccountType.Checking, "USD");
-            CreateAccountRequestDTO accountRequestDTO1 = new(jersey.Id, Enums.AccountType.Savings, "EUR");
+            AccountRequest accountRequestDTO = new(harlem.Id, Enums.AccountType.Checking, "USD");
+            AccountRequest accountRequestDTO1 = new(jersey.Id, Enums.AccountType.Savings, "EUR");
 
-            AccountDTO? harlemAccount = await _customerService.OpenAccountAsync(accountRequestDTO, cts.Token);
-            AccountDTO? jerzAccount = await _customerService.OpenAccountAsync(accountRequestDTO1, cts.Token);
+            AccountResponse? harlemAccount = await _customerService.OpenAccountAsync(accountRequestDTO, cts.Token);
+            AccountResponse? jerzAccount = await _customerService.OpenAccountAsync(accountRequestDTO1, cts.Token);
 
             // create 2 deposit money request
-            DepositMoneyRequestDTO depositMoneyRequestDTO = new(harlemAccount.AccountNumber, 5000m, "USD");
-            DepositMoneyRequestDTO depositMoneyRequestDTO1 = new(jerzAccount.AccountNumber, 2300, "EUR");
+            DepositRequest depositMoneyRequestDTO = new(harlemAccount.AccountNumber, 5000m, "USD");
+            DepositRequest depositMoneyRequestDTO1 = new(jerzAccount.AccountNumber, 2300, "EUR");
 
             await _transactionService.DepositMoneyAsync(depositMoneyRequestDTO, cts.Token);
             await _transactionService.DepositMoneyAsync(depositMoneyRequestDTO1, cts.Token);
@@ -212,13 +212,13 @@ namespace BankingApp.Domain.Tests.Entities
             harlemAccount.Should().NotBeNull();
             jerzAccount.Should().NotBeNull();
 
-            CreateTransactionRequestDTO createTransactionRequestDTO = new(harlemAccount.Id, jerzAccount.Id, 2300, "USD", "Transferring 2300 to Jerj");
+            TransactionRequest createTransactionRequestDTO = new(harlemAccount.Id, jerzAccount.Id, 2300, "USD", "Transferring 2300 to Jerj");
 
             Func<Task> func = async () =>
             {
-                TransactionDTO transactionDTO = await _transactionService.TransferMoneyAsync(createTransactionRequestDTO, cts.Token);
+                TransactionResponse transactionDTO = await _transactionService.TransferMoneyAsync(createTransactionRequestDTO, cts.Token);
             };
-            
+
             await func.Should().ThrowAsync<CurrencyMismatchException>();
         }
 
@@ -228,24 +228,24 @@ namespace BankingApp.Domain.Tests.Entities
             // Given
             CancellationTokenSource cts = new();
             // create 2 customers request
-            CreateCustomerRequestDTO createCustomerRequestDTO = new( "Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
+            CustomerRequest createCustomerRequestDTO = new("Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
 
-            CreateCustomerRequestDTO createCustomerRequestDTO1 = new( "Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTimeOffset.Parse("09/30/1995"));
+            CustomerRequest createCustomerRequestDTO1 = new("Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTimeOffset.Parse("09/30/1995"));
 
             // create 2 customers
-            CustomerDTO harlem = await _customerService.CreateCustomerAsync(createCustomerRequestDTO, cts.Token);
+            CustomerResponse harlem = await _customerService.CreateCustomerAsync(createCustomerRequestDTO, cts.Token);
 
             // create 2 account request
-            CreateAccountRequestDTO accountRequestDTO = new(harlem.Id, Enums.AccountType.Checking, "USD");
+            AccountRequest accountRequestDTO = new(harlem.Id, Enums.AccountType.Checking, "USD");
 
-            AccountDTO? harlemAccount = await _customerService.OpenAccountAsync(accountRequestDTO, cts.Token);
+            AccountResponse? harlemAccount = await _customerService.OpenAccountAsync(accountRequestDTO, cts.Token);
 
             // create 2 deposit money request
-            DepositMoneyRequestDTO depositMoneyRequestDTO = new(harlemAccount.AccountNumber, 5000m, "USD");
+            DepositRequest depositMoneyRequestDTO = new(harlemAccount.AccountNumber, 5000m, "USD");
 
             await _transactionService.DepositMoneyAsync(depositMoneyRequestDTO, cts.Token);
 
-            WithdrawMoneyRequestDTO withdrawMoneyRequestDTO = new(harlemAccount.AccountNumber, 2200m, "USD");
+            WithdrawRequest withdrawMoneyRequestDTO = new(harlemAccount.AccountNumber, 2200m, "USD");
 
 
 
@@ -263,24 +263,24 @@ namespace BankingApp.Domain.Tests.Entities
         {
             CancellationTokenSource cts = new();
             // create 2 customers request
-            CreateCustomerRequestDTO createCustomerRequestDTO = new( "Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
+            CustomerRequest createCustomerRequestDTO = new("Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
 
-            CreateCustomerRequestDTO createCustomerRequestDTO1 = new( "Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTimeOffset.Parse("09/30/1995"));
+            CustomerRequest createCustomerRequestDTO1 = new("Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTimeOffset.Parse("09/30/1995"));
 
             // create 2 customers
-            CustomerDTO harlem = await _customerService.CreateCustomerAsync(createCustomerRequestDTO, cts.Token);
-            CustomerDTO jersey = await _customerService.CreateCustomerAsync(createCustomerRequestDTO1, cts.Token);
+            CustomerResponse harlem = await _customerService.CreateCustomerAsync(createCustomerRequestDTO, cts.Token);
+            CustomerResponse jersey = await _customerService.CreateCustomerAsync(createCustomerRequestDTO1, cts.Token);
 
             // create 2 account request
-            CreateAccountRequestDTO accountRequestDTO = new(harlem.Id, Enums.AccountType.Checking, "USD");
-            CreateAccountRequestDTO accountRequestDTO1 = new(jersey.Id, Enums.AccountType.Savings, "USD");
+            AccountRequest accountRequestDTO = new(harlem.Id, Enums.AccountType.Checking, "USD");
+            AccountRequest accountRequestDTO1 = new(jersey.Id, Enums.AccountType.Savings, "USD");
 
-            AccountDTO? harlemAccount = await _customerService.OpenAccountAsync(accountRequestDTO, cts.Token);
-            AccountDTO? jerzAccount = await _customerService.OpenAccountAsync(accountRequestDTO1, cts.Token);
+            AccountResponse? harlemAccount = await _customerService.OpenAccountAsync(accountRequestDTO, cts.Token);
+            AccountResponse? jerzAccount = await _customerService.OpenAccountAsync(accountRequestDTO1, cts.Token);
 
             // create 2 deposit money request
-            DepositMoneyRequestDTO depositMoneyRequestDTO = new(harlemAccount.AccountNumber, 5000m, "USD");
-            DepositMoneyRequestDTO depositMoneyRequestDTO1 = new(jerzAccount.AccountNumber, 2300, "USD");
+            DepositRequest depositMoneyRequestDTO = new(harlemAccount.AccountNumber, 5000m, "USD");
+            DepositRequest depositMoneyRequestDTO1 = new(jerzAccount.AccountNumber, 2300, "USD");
 
             await _transactionService.DepositMoneyAsync(depositMoneyRequestDTO, cts.Token);
             await _transactionService.DepositMoneyAsync(depositMoneyRequestDTO1, cts.Token);
@@ -290,10 +290,10 @@ namespace BankingApp.Domain.Tests.Entities
             harlemAccount.Should().NotBeNull();
             jerzAccount.Should().NotBeNull();
 
-            CreateTransactionRequestDTO createTransactionRequestDTO = new(harlemAccount.Id, jerzAccount.Id, 2300, "USD", "Transferring 2300 to Jerj");
+            TransactionRequest createTransactionRequestDTO = new(harlemAccount.Id, jerzAccount.Id, 2300, "USD", "Transferring 2300 to Jerj");
 
-            TransactionDTO transactionDTO = await _transactionService.TransferMoneyAsync(createTransactionRequestDTO, cts.Token);
-            
+            TransactionResponse transactionDTO = await _transactionService.TransferMoneyAsync(createTransactionRequestDTO, cts.Token);
+
             harlemAccount = await _accountService.GetAccountByIdAsync(harlemAccount.Id, cts.Token);
             jerzAccount = await _accountService.GetAccountByIdAsync(jerzAccount.Id, cts.Token);
 
@@ -308,24 +308,24 @@ namespace BankingApp.Domain.Tests.Entities
         {
             CancellationTokenSource cts = new();
             // create 2 customers request
-            CreateCustomerRequestDTO createCustomerRequestDTO = new( "Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
+            CustomerRequest createCustomerRequestDTO = new("Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
 
-            CreateCustomerRequestDTO createCustomerRequestDTO1 = new( "Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTimeOffset.Parse("09/30/1995"));
+            CustomerRequest createCustomerRequestDTO1 = new("Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTimeOffset.Parse("09/30/1995"));
 
             // create 2 customers
-            CustomerDTO harlem = await _customerService.CreateCustomerAsync(createCustomerRequestDTO, cts.Token);
-            CustomerDTO jersey = await _customerService.CreateCustomerAsync(createCustomerRequestDTO1, cts.Token);
+            CustomerResponse harlem = await _customerService.CreateCustomerAsync(createCustomerRequestDTO, cts.Token);
+            CustomerResponse jersey = await _customerService.CreateCustomerAsync(createCustomerRequestDTO1, cts.Token);
 
             // create 2 account request
-            CreateAccountRequestDTO accountRequestDTO = new(harlem.Id, Enums.AccountType.Checking, "USD");
-            CreateAccountRequestDTO accountRequestDTO1 = new(jersey.Id, Enums.AccountType.Savings, "USD");
+            AccountRequest accountRequestDTO = new(harlem.Id, Enums.AccountType.Checking, "USD");
+            AccountRequest accountRequestDTO1 = new(jersey.Id, Enums.AccountType.Savings, "USD");
 
-            AccountDTO? harlemAccount = await _customerService.OpenAccountAsync(accountRequestDTO, cts.Token);
-            AccountDTO? jerzAccount = await _customerService.OpenAccountAsync(accountRequestDTO1, cts.Token);
+            AccountResponse? harlemAccount = await _customerService.OpenAccountAsync(accountRequestDTO, cts.Token);
+            AccountResponse? jerzAccount = await _customerService.OpenAccountAsync(accountRequestDTO1, cts.Token);
 
             // create 2 deposit money request
-            DepositMoneyRequestDTO depositMoneyRequestDTO = new(harlemAccount.AccountNumber, 5000m, "EUR");
-            DepositMoneyRequestDTO depositMoneyRequestDTO1 = new(jerzAccount.AccountNumber, 2300, "USD");
+            DepositRequest depositMoneyRequestDTO = new(harlemAccount.AccountNumber, 5000m, "EUR");
+            DepositRequest depositMoneyRequestDTO1 = new(jerzAccount.AccountNumber, 2300, "USD");
 
             Func<Task> func = async () =>
             {
@@ -341,29 +341,29 @@ namespace BankingApp.Domain.Tests.Entities
         {
             CancellationTokenSource cts = new();
             // create 2 customers request
-            CreateCustomerRequestDTO createCustomerRequestDTO = new( "Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
+            CustomerRequest createCustomerRequestDTO = new("Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
 
-            CreateCustomerRequestDTO createCustomerRequestDTO1 = new( "Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTimeOffset.Parse("09/30/1995"));
+            CustomerRequest createCustomerRequestDTO1 = new("Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTimeOffset.Parse("09/30/1995"));
 
             // create 2 customers
-            CustomerDTO harlem = await _customerService.CreateCustomerAsync(createCustomerRequestDTO, cts.Token);
-            CustomerDTO jersey = await _customerService.CreateCustomerAsync(createCustomerRequestDTO1, cts.Token);
+            CustomerResponse harlem = await _customerService.CreateCustomerAsync(createCustomerRequestDTO, cts.Token);
+            CustomerResponse jersey = await _customerService.CreateCustomerAsync(createCustomerRequestDTO1, cts.Token);
 
             // create 2 account request
-            CreateAccountRequestDTO accountRequestDTO = new(harlem.Id, Enums.AccountType.Checking, "USD");
-            CreateAccountRequestDTO accountRequestDTO1 = new(jersey.Id, Enums.AccountType.Savings, "EUR");
+            AccountRequest accountRequestDTO = new(harlem.Id, Enums.AccountType.Checking, "USD");
+            AccountRequest accountRequestDTO1 = new(jersey.Id, Enums.AccountType.Savings, "EUR");
 
-            AccountDTO? harlemAccount = await _customerService.OpenAccountAsync(accountRequestDTO, cts.Token);
-            AccountDTO? jerzAccount = await _customerService.OpenAccountAsync(accountRequestDTO1, cts.Token);
+            AccountResponse? harlemAccount = await _customerService.OpenAccountAsync(accountRequestDTO, cts.Token);
+            AccountResponse? jerzAccount = await _customerService.OpenAccountAsync(accountRequestDTO1, cts.Token);
 
             // create 2 deposit money request
-            DepositMoneyRequestDTO depositMoneyRequestDTO = new(harlemAccount.AccountNumber, 5000m, "USD");
-            DepositMoneyRequestDTO depositMoneyRequestDTO1 = new(jerzAccount.AccountNumber, 2300, "EUR");
+            DepositRequest depositMoneyRequestDTO = new(harlemAccount.AccountNumber, 5000m, "USD");
+            DepositRequest depositMoneyRequestDTO1 = new(jerzAccount.AccountNumber, 2300, "EUR");
 
             await _transactionService.DepositMoneyAsync(depositMoneyRequestDTO, cts.Token);
             await _transactionService.DepositMoneyAsync(depositMoneyRequestDTO1, cts.Token);
 
-            WithdrawMoneyRequestDTO withdrawMoneyRequestDTO = new(harlemAccount.AccountNumber, 10000, "USD");
+            WithdrawRequest withdrawMoneyRequestDTO = new(harlemAccount.AccountNumber, 10000, "USD");
 
             Func<Task> func = async () =>
             {
@@ -379,24 +379,24 @@ namespace BankingApp.Domain.Tests.Entities
         {
             CancellationTokenSource cts = new();
             // create 2 customers request
-            CreateCustomerRequestDTO createCustomerRequestDTO = new( "Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
+            CustomerRequest createCustomerRequestDTO = new("Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
 
-            CreateCustomerRequestDTO createCustomerRequestDTO1 = new( "Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTimeOffset.Parse("09/30/1995"));
+            CustomerRequest createCustomerRequestDTO1 = new("Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTimeOffset.Parse("09/30/1995"));
 
             // create 2 customers
-            CustomerDTO harlem = await _customerService.CreateCustomerAsync(createCustomerRequestDTO, cts.Token);
-            CustomerDTO jersey = await _customerService.CreateCustomerAsync(createCustomerRequestDTO1, cts.Token);
+            CustomerResponse harlem = await _customerService.CreateCustomerAsync(createCustomerRequestDTO, cts.Token);
+            CustomerResponse jersey = await _customerService.CreateCustomerAsync(createCustomerRequestDTO1, cts.Token);
 
             // create 2 account request
-            CreateAccountRequestDTO accountRequestDTO = new(harlem.Id, Enums.AccountType.Checking, "USD");
-            CreateAccountRequestDTO accountRequestDTO1 = new(jersey.Id, Enums.AccountType.Savings, "EUR");
+            AccountRequest accountRequestDTO = new(harlem.Id, Enums.AccountType.Checking, "USD");
+            AccountRequest accountRequestDTO1 = new(jersey.Id, Enums.AccountType.Savings, "EUR");
 
-            AccountDTO? harlemAccount = await _customerService.OpenAccountAsync(accountRequestDTO, cts.Token);
-            AccountDTO? jerzAccount = await _customerService.OpenAccountAsync(accountRequestDTO1, cts.Token);
+            AccountResponse? harlemAccount = await _customerService.OpenAccountAsync(accountRequestDTO, cts.Token);
+            AccountResponse? jerzAccount = await _customerService.OpenAccountAsync(accountRequestDTO1, cts.Token);
 
             // create 2 deposit money request
-            DepositMoneyRequestDTO depositMoneyRequestDTO = new(harlemAccount.AccountNumber, 5000m, "USD");
-            DepositMoneyRequestDTO depositMoneyRequestDTO1 = new(jerzAccount.AccountNumber, 2300, "EUR");
+            DepositRequest depositMoneyRequestDTO = new(harlemAccount.AccountNumber, 5000m, "USD");
+            DepositRequest depositMoneyRequestDTO1 = new(jerzAccount.AccountNumber, 2300, "EUR");
 
             await _transactionService.DepositMoneyAsync(depositMoneyRequestDTO, cts.Token);
             await _transactionService.DepositMoneyAsync(depositMoneyRequestDTO1, cts.Token);
@@ -406,7 +406,7 @@ namespace BankingApp.Domain.Tests.Entities
             harlemAccount.Should().NotBeNull();
             jerzAccount.Should().NotBeNull();
 
-            WithdrawMoneyRequestDTO withdrawMoneyRequestDTO = new(harlemAccount.AccountNumber, 2000, "EUR");
+            WithdrawRequest withdrawMoneyRequestDTO = new(harlemAccount.AccountNumber, 2000, "EUR");
 
             Func<Task> func = async () =>
             {

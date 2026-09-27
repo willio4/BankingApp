@@ -8,12 +8,12 @@ namespace BankingApp.Application.Common.Interfaces.Services
 {
     public interface IAccountService
     {
-        Task<AccountDTO> CreateAccountAsync(CreateAccountRequestDTO requestDTO, CancellationToken cancellationToken = default);
+        Task<AccountResponse> CreateAccountAsync(AccountRequest requestDTO, CancellationToken cancellationToken = default);
 
-        Task<AccountDTO?> GetAccountByIdAsync(Guid accountId, CancellationToken cancellationToken = default);
+        Task<AccountResponse?> GetAccountByIdAsync(Guid accountId, CancellationToken cancellationToken = default);
 
-        Task<AccountDTO?> GetAccountByAccountNumberAsync(string accountNumber, CancellationToken cancellationToken = default);
+        Task<AccountResponse?> GetAccountByAccountNumberAsync(string accountNumber, CancellationToken cancellationToken = default);
 
-        Task<AccountDTO> CloseAccountAsync(AccountDTO account, CancellationToken cancellationToken = default);
+        Task<AccountResponse> CloseAccountAsync(AccountResponse account, CancellationToken cancellationToken = default);
     }
 }

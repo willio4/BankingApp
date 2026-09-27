@@ -35,9 +35,9 @@ namespace BankingApp.WebAPI.Controllers
         }
 
         [HttpGet("customer/{customerId:Guid}")]
-        public async Task<ActionResult<IReadOnlyList<AccountDTO>>> GetCustomerAccounts(Guid customerId, CancellationToken cancellationToken)
+        public async Task<ActionResult<IReadOnlyList<AccountResponse>>> GetCustomerAccounts(Guid customerId, CancellationToken cancellationToken)
         {
-            CustomerDTO? customer = await _customerService.GetCustomerByIdAsync(customerId, cancellationToken);
+            CustomerResponse? customer = await _customerService.GetCustomerByIdAsync(customerId, cancellationToken);
 
             if (customer is null) return Problem("Unknown customer id", statusCode: 404, title: "Account Retrieval");
 
@@ -45,9 +45,9 @@ namespace BankingApp.WebAPI.Controllers
         }
 
         [HttpGet("{accountId}")]
-        public async Task<ActionResult<AccountDTO>> GetAccount(Guid accountId, CancellationToken cancellationToken)
+        public async Task<ActionResult<AccountResponse>> GetAccount(Guid accountId, CancellationToken cancellationToken)
         {
-            AccountDTO? account = await _accountService.GetAccountByIdAsync(accountId, cancellationToken);
+            AccountResponse? account = await _accountService.GetAccountByIdAsync(accountId, cancellationToken);
 
             if (account is null) return Problem("Unknown account id", statusCode: 404, title: "Account Search");
 
@@ -55,9 +55,9 @@ namespace BankingApp.WebAPI.Controllers
         }
 
         [HttpPatch("close-account/{accountId}")]
-        public async Task<ActionResult<AccountDTO>> DeleteAccount(Guid accountId, CancellationToken cancellationToken)
+        public async Task<ActionResult<AccountResponse>> DeleteAccount(Guid accountId, CancellationToken cancellationToken)
         {
-            AccountDTO? account = await _accountService.GetAccountByIdAsync(accountId, cancellationToken);
+            AccountResponse? account = await _accountService.GetAccountByIdAsync(accountId, cancellationToken);
 
             if (account is null) return Problem("Unknown account", statusCode: 404, title: "Account Deletion");
 

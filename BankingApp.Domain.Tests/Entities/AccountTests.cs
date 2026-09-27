@@ -88,10 +88,10 @@ namespace BankingApp.Domain.Tests.Entities
 
             customers.Add(customer);
 
-            CreateAccountRequestDTO accountRequestDTO = new(customer.Id, Enums.AccountType.Checking, "USD");
+            AccountRequest accountRequestDTO = new(customer.Id, Enums.AccountType.Checking, "USD");
 
             // Act
-            AccountDTO accountDTO = await _customerService.OpenAccountAsync(accountRequestDTO, cts.Token);
+            AccountResponse accountDTO = await _customerService.OpenAccountAsync(accountRequestDTO, cts.Token);
 
             // Assert
             List<Account> accounts = customer.Accounts.ToList();
@@ -118,9 +118,9 @@ namespace BankingApp.Domain.Tests.Entities
 
             customers.Add(customer);
 
-            CreateAccountRequestDTO accountRequestDTO = new(customer.Id, Enums.AccountType.Checking, "USD");
+            AccountRequest accountRequestDTO = new(customer.Id, Enums.AccountType.Checking, "USD");
 
-            AccountDTO accountDTO = await _customerService.OpenAccountAsync(accountRequestDTO, cts.Token);
+            AccountResponse accountDTO = await _customerService.OpenAccountAsync(accountRequestDTO, cts.Token);
 
             accountDTO.Balance.Should().Be(0);
         }
@@ -142,10 +142,10 @@ namespace BankingApp.Domain.Tests.Entities
 
             customers.Add(customer);
 
-            CreateAccountRequestDTO accountRequestDTO = new(customer.Id, Enums.AccountType.Checking, "USD");
+            AccountRequest accountRequestDTO = new(customer.Id, Enums.AccountType.Checking, "USD");
 
             // Act
-            AccountDTO accountDTO = await _customerService.OpenAccountAsync(accountRequestDTO, cts.Token);
+            AccountResponse accountDTO = await _customerService.OpenAccountAsync(accountRequestDTO, cts.Token);
 
             // Assert
             List<Account> accounts = customer.Accounts.ToList();

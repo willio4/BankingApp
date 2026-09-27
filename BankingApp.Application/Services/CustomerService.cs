@@ -21,7 +21,7 @@ namespace BankingApp.Application.Services
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly IAccountService _accountService = accountService;
 
-        public async Task<CustomerDTO> CreateCustomerAsync(CreateCustomerRequestDTO requestDTO, CancellationToken cancellationToken = default)
+        public async Task<CustomerResponse> CreateCustomerAsync(CustomerRequest requestDTO, CancellationToken cancellationToken = default)
         {
             ArgumentNullException.ThrowIfNull(requestDTO);
 
@@ -51,7 +51,7 @@ namespace BankingApp.Application.Services
             return customer.ToDTO();
         }
 
-        public async Task<CustomerDTO?> GetCustomerByIdAsync(Guid id, CancellationToken cancellationToken)
+        public async Task<CustomerResponse?> GetCustomerByIdAsync(Guid id, CancellationToken cancellationToken)
         {
             Customer? customer = await _customerRepository
                 .GetByIdAsync(id, cancellationToken);
@@ -60,13 +60,13 @@ namespace BankingApp.Application.Services
         }
 
 
-        public async Task<AccountDTO> OpenAccountAsync(CreateAccountRequestDTO accountRequestDTO, CancellationToken cancellationToken)
+        public async Task<AccountResponse> OpenAccountAsync(AccountRequest accountRequestDTO, CancellationToken cancellationToken)
         {
             // check if customer id is valid
             Customer? customer = await _customerRepository.GetByIdAsync(accountRequestDTO.CustomerId, cancellationToken) ?? throw new InvalidCustomerException();
 
             // create account from account request
-            AccountDTO accountDTO = await _accountService.CreateAccountAsync(accountRequestDTO, cancellationToken);
+            AccountResponse accountDTO = await _accountService.CreateAccountAsync(accountRequestDTO, cancellationToken);
 
             return accountDTO;
         }
@@ -74,7 +74,7 @@ namespace BankingApp.Application.Services
         [GeneratedRegex(@"^\d{3}-?\d{3}-?\d{4}$")]
         private static partial Regex MyRegex1();
 
-        public async Task<CustomerDTO?> UpdateCustomerAsync(CustomerDTO previous, CreateCustomerRequestDTO updated, CancellationToken cancellationToken = default)
+        public async Task<CustomerResponse?> UpdateCustomerAsync(CustomerResponse previous, CustomerRequest updated, CancellationToken cancellationToken = default)
         {
             Customer? customer = await _customerRepository.GetByIdAsync(previous.Id, cancellationToken);
 
@@ -93,7 +93,7 @@ namespace BankingApp.Application.Services
             return customer!.ToDTO();
         }
 
-        public async Task<CustomerDTO> DeleteCustomerAsync(CustomerDTO customer, CancellationToken cancellationToken = default)
+        public async Task<CustomerResponse> DeleteCustomerAsync(CustomerResponse customer, CancellationToken cancellationToken = default)
         {
             if (customer is null) throw new InvalidCustomerException();
             Customer? update = await _customerRepository.GetByIdAsync(customer.Id, cancellationToken);

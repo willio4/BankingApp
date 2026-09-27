@@ -2,7 +2,7 @@ using BankingApp.Domain.Enums;
 
 namespace BankingApp.Application.DTOs
 {
-    public record AccountDTO(
+    public record AccountResponse(
         Guid Id,
         string AccountNumber,
         Guid CustomerId,
@@ -11,11 +11,4 @@ namespace BankingApp.Application.DTOs
         string Currency,
         AccountStatus AccountStatus
     );
-
-    public record CreateAccountRequestDTO(
-        Guid CustomerId,
-        AccountType AccountType,
-        string Currency
-    );
-
 }

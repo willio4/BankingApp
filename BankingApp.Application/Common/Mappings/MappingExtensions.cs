@@ -5,9 +5,9 @@ namespace BankingApp.Application.Common.Mappings;
 
 public static class MappingExtensions
 {
-    public static CustomerDTO ToDTO(this Customer customer)
+    public static CustomerResponse ToDTO(this Customer customer)
     {
-        return new CustomerDTO(
+        return new CustomerResponse(
             customer.Id,
             customer.FirstName,
             customer.LastName,
@@ -20,9 +20,9 @@ public static class MappingExtensions
         );
     }
 
-    public static AccountDTO ToDTO(this Account account)
+    public static AccountResponse ToDTO(this Account account)
     {
-        return new AccountDTO(
+        return new AccountResponse(
             account.Id,
             account.AccountNumber,
             account.CustomerId,
@@ -33,9 +33,9 @@ public static class MappingExtensions
         );
     }
 
-    public static TransactionDTO ToDTO(this Transaction transaction)
+    public static TransactionResponse ToDTO(this Transaction transaction)
     {
-        return new TransactionDTO(
+        return new TransactionResponse(
             transaction.Id,
             transaction.Description,
             transaction.Timestamp,

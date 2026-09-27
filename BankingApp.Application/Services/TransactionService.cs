@@ -18,7 +18,7 @@ namespace BankingApp.Application.Services
         private readonly IAccountRepository _accountRepository = accountRepository;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-        public async Task<IReadOnlyList<TransactionDTO>> GetAccountTransactionHistoryAsync(Guid accountId, CancellationToken cancellationToken = default)
+        public async Task<IReadOnlyList<TransactionResponse>> GetAccountTransactionHistoryAsync(Guid accountId, CancellationToken cancellationToken = default)
         {
             // check account exist
             Account? account = await _accountRepository.GetByIdAsync(accountId, cancellationToken) ?? throw new NullAccountException();
@@ -30,7 +30,7 @@ namespace BankingApp.Application.Services
             return [.. transactions.Select(t => t.ToDTO())];
         }
 
-        public async Task<TransactionDTO> TransferMoneyAsync(CreateTransactionRequestDTO requestDTO, CancellationToken cancellationToken = default)
+        public async Task<TransactionResponse> TransferMoneyAsync(TransactionRequest requestDTO, CancellationToken cancellationToken = default)
         {
             Account? source = await _accountRepository.GetByIdAsync(requestDTO.SourceAccountId, cancellationToken) ?? throw new NullAccountException("source account does not exist");
 
@@ -54,7 +54,7 @@ namespace BankingApp.Application.Services
             return transaction.ToDTO();
         }
 
-        public async Task<TransactionDTO> DepositMoneyAsync(DepositMoneyRequestDTO depositMoneyRequestDTO, CancellationToken cancellationToken = default)
+        public async Task<TransactionResponse> DepositMoneyAsync(DepositRequest depositMoneyRequestDTO, CancellationToken cancellationToken = default)
         {
             Account? account = await _accountRepository.GetByAccountNumberAsync(depositMoneyRequestDTO.AccountNumber, cancellationToken) ?? throw new NullAccountException("Account could not be found");
 
@@ -63,14 +63,14 @@ namespace BankingApp.Application.Services
             Money amount = new(depositMoneyRequestDTO.Amount, depositMoneyRequestDTO.Currency);
 
             Transaction transaction = Transaction.CreateTransfer(account, amount, $"Deposit: ${amount.Amount}, {amount.Currency}", false);
-            
+
             await _transactionRepository.AddTransactionAsync(transaction, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return transaction.ToDTO();
         }
 
-        public async Task<TransactionDTO> WithdrawMoneyAsync(WithdrawMoneyRequestDTO withdrawMoneyRequestDTO, CancellationToken cancellationToken = default)
+        public async Task<TransactionResponse> WithdrawMoneyAsync(WithdrawRequest withdrawMoneyRequestDTO, CancellationToken cancellationToken = default)
         {
             Account? account = await _accountRepository.GetByAccountNumberAsync(withdrawMoneyRequestDTO.AccountNumber, cancellationToken) ?? throw new NullAccountException("Account could not be found");
 
@@ -88,7 +88,7 @@ namespace BankingApp.Application.Services
             return transaction.ToDTO();
         }
 
-        public async Task<TransactionDTO> GetTransactionByIdAsync(Guid transactionId, CancellationToken cancellationToken = default)
+        public async Task<TransactionResponse> GetTransactionByIdAsync(Guid transactionId, CancellationToken cancellationToken = default)
         {
             Transaction? transaction = await _transactionRepository.GetByIdAsync(transactionId, cancellationToken) ?? throw new NullTransactionException();
 

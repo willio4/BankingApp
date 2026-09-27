@@ -61,9 +61,9 @@ namespace BankingApp.WebAPI.Controllers
                 if (result.Succeeded)
                 {
                     // if user created, use user to create customer
-                    CreateCustomerRequestDTO request = new(user.FirstName!, user.LastName!, user.Email, user.PhoneNumber, user.DateOfBirth, user.Id);
+                    CustomerRequest request = new(user.FirstName!, user.LastName!, user.Email, user.PhoneNumber, user.DateOfBirth, user.Id);
 
-                    CustomerDTO response = await _customerService.CreateCustomerAsync(request, cancellationToken);
+                    CustomerResponse response = await _customerService.CreateCustomerAsync(request, cancellationToken);
                 }
                 else
                 {
