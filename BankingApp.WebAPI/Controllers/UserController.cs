@@ -84,7 +84,7 @@ namespace BankingApp.WebAPI.Controllers
 
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request, TokenProvider tokenProvider, CancellationToken cancellationToken)
+        public async Task<IActionResult> Login([FromBody] LoginRequest request, ITokenProvider tokenProvider, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid)
             {
@@ -93,20 +93,37 @@ namespace BankingApp.WebAPI.Controllers
 
             ApplicationUser? user = await _db.Users.FirstOrDefaultAsync(u => u.Email == request.Email, cancellationToken);
 
-            
+
 
             if (user is null || await _userManager.CheckPasswordAsync(user, request.Password) == false) return Unauthorized();
 
-            var (accessToken, refreshToken) = tokenProvider.GenerateTokens(user);
+            var (accessToken, refreshToken) = await tokenProvider.GenerateTokens(user);
 
             return Ok(new LoginResponse(accessToken, refreshToken));
 
         }
 
         [HttpPost("logout")]
-        public async Task<IActionResult> Logout()
+        public async Task<IActionResult> Logout([FromBody] RefreshTokenRequest refreshToken)
         {
             return Ok(new { message = "Logged out successfully" });
+        }
+
+        [HttpPost("refresh")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequest refreshTokenRequest, ITokenProvider tokenProvider, IRefreshTokenService _refreshTokenService, CancellationToken cancellationToken)
+        {
+            RefreshToken? token = _db.RefreshTokens.FirstOrDefault(t => t.Token == refreshTokenRequest.RefreshToken);
+
+            if (token is null || DateTime.UtcNow >= token.ExpiresAt || token.IsDenied) return Unauthorized();
+
+            ApplicationUser? user = await _userManager.FindByIdAsync(token.UserId.ToString());
+
+            if (user is null) return Unauthorized();
+
+            var at = tokenProvider.GenerateAccessToken(user);
+
+            return Ok(new RefreshTokenResponse(at, token.Token!));
         }
     }
 }
