@@ -1,4 +1,4 @@
-using BankingApp.Infrastructure.Tokens;
+using BankingApp.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

@@ -39,7 +39,7 @@ namespace BankingApp.WebAPI.Controllers
         {
             CustomerDTO? customer = await _customerService.GetCustomerByIdAsync(customerId, cancellationToken);
 
-            if(customer is null) return Problem("Unknown customer id", statusCode: 404, title: "Account Retrieval");
+            if (customer is null) return Problem("Unknown customer id", statusCode: 404, title: "Account Retrieval");
 
             return Ok(customer.Accounts);
         }
@@ -49,7 +49,7 @@ namespace BankingApp.WebAPI.Controllers
         {
             AccountDTO? account = await _accountService.GetAccountByIdAsync(accountId, cancellationToken);
 
-            if(account is null) return Problem("Unknown account id", statusCode: 404, title: "Account Search");
+            if (account is null) return Problem("Unknown account id", statusCode: 404, title: "Account Search");
 
             return Ok(account);
         }
@@ -59,11 +59,11 @@ namespace BankingApp.WebAPI.Controllers
         {
             AccountDTO? account = await _accountService.GetAccountByIdAsync(accountId, cancellationToken);
 
-            if(account is null) return Problem("Unknown account", statusCode: 404, title: "Account Deletion");
+            if (account is null) return Problem("Unknown account", statusCode: 404, title: "Account Deletion");
 
-            if(account.Balance != 0) return Problem("Account balance must be zero before closing", statusCode: 405, title: "Account Deletion");
+            if (account.Balance != 0) return Problem("Account balance must be zero before closing", statusCode: 405, title: "Account Deletion");
 
-            account = await _accountService.CloseAccount(account, cancellationToken);
+            account = await _accountService.CloseAccountAsync(account, cancellationToken);
 
             return Ok(account);
         }

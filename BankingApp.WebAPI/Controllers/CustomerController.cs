@@ -53,7 +53,7 @@ namespace BankingApp.WebAPI.Controllers
         {
             CustomerDTO? customer = await _customerService.GetCustomerByIdAsync(customerId, cancellationToken);
 
-            if(customer == null)
+            if (customer == null)
             {
                 return Problem("Customer doesn't exist", statusCode: 404, title: "Customer Search");
             }
@@ -82,7 +82,7 @@ namespace BankingApp.WebAPI.Controllers
         {
             CustomerDTO? old = await _customerService.GetCustomerByIdAsync(id, cancellationToken);
             if (old is null) return Problem("Customer does not exist");
-            CustomerDTO? current = await _customerService.UpdateCustomer(old, updated, cancellationToken);
+            CustomerDTO? current = await _customerService.UpdateCustomerAsync(old, updated, cancellationToken);
 
             return Ok(current);
         }
@@ -112,7 +112,7 @@ namespace BankingApp.WebAPI.Controllers
                 try
                 {
                     AccountDTO currentAccount = customer.Accounts[customer.Accounts.Count - 1];
-                    await _accountService.CloseAccount(currentAccount, cancellationToken);
+                    await _accountService.CloseAccountAsync(currentAccount, cancellationToken);
                 }
                 catch (Exception err)
                 {
@@ -120,7 +120,7 @@ namespace BankingApp.WebAPI.Controllers
                 }
             }
 
-            customer = await _customerService.DeleteCustomer(customer, cancellationToken);
+            customer = await _customerService.DeleteCustomerAsync(customer, cancellationToken);
 
             return Ok(customer);
         }

@@ -76,8 +76,7 @@ namespace BankingApp.Application.Services
 
         public async Task<CustomerDTO?> UpdateCustomerAsync(CustomerDTO previous, CreateCustomerRequestDTO updated, CancellationToken cancellationToken = default)
         {
-            CancellationTokenSource cts = new();
-            Customer? customer = await _customerRepository.GetByIdAsync(previous.Id, cts.Token);
+            Customer? customer = await _customerRepository.GetByIdAsync(previous.Id, cancellationToken);
 
             if (customer is not null)
             {
@@ -87,8 +86,8 @@ namespace BankingApp.Application.Services
                 customer.PhoneNumber = updated.PhoneNumber;
                 customer.DateOfBirth = updated.DateOfBirth;
 
-                await _customerRepository.UpdateCustomerAsync(customer, cts.Token);
-                await _unitOfWork.SaveChangesAsync(cts.Token);
+                await _customerRepository.UpdateCustomerAsync(customer, cancellationToken);
+                await _unitOfWork.SaveChangesAsync(cancellationToken);
             }
 
             return customer!.ToDTO();

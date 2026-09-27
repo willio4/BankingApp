@@ -2,6 +2,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using BankingApp.Application.Common.Interfaces.Services;
+using BankingApp.Domain.Entities;
 using BankingApp.Infrastructure.IdentityEntities;
 using BankingApp.Infrastructure.Persistence;
 using Microsoft.Extensions.Configuration;
@@ -10,18 +12,18 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace BankingApp.Infrastructure.Tokens
 {
-    public sealed class TokenProvider
+    public sealed class TokenProvider : ITokenProvider
     {
         private readonly IConfiguration _configuration;
-        private readonly ApplicationDbContext _db;
+        private readonly IRefreshTokenService _refreshTokenService;
 
-        public TokenProvider(IConfiguration configuration, ApplicationDbContext db)
+        public TokenProvider(IConfiguration configuration, IRefreshTokenService refreshTokenService)
         {
             _configuration = configuration;
-            _db = db;
+            _refreshTokenService = refreshTokenService;
         }
 
-        public (string AccessToken, string RefreshToken) GenerateTokens(ApplicationUser user)
+        public async Task<(string AccessToken, string RefreshToken)> GenerateTokens(ApplicationUser user)
         {
             var accessToken = GenerateAccessToken(user);
 
@@ -34,12 +36,12 @@ namespace BankingApp.Infrastructure.Tokens
                 CreatedAt = DateTime.UtcNow
             };
 
-            _db.RefreshTokens.Add(refreshToken);
+            await _refreshTokenService.CreateRefreshToken(refreshToken);
 
             return (accessToken, refreshToken.Token);
         }
 
-        private string GenerateAccessToken(ApplicationUser user)
+        public string GenerateAccessToken(ApplicationUser user)
         {
             var claims = new[]
             {
