@@ -8,7 +8,6 @@ using BankingApp.Domain.ValueObjects;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
-using BankingApp.Infrastructure.Tokens;
 
 namespace BankingApp.Infrastructure.Persistence
 {

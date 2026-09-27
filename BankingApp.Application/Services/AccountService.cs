@@ -6,6 +6,7 @@ using BankingApp.Application.Common.Interfaces.Repositories;
 using BankingApp.Application.Common.Interfaces.Services;
 using BankingApp.Application.Common.Mappings;
 using BankingApp.Application.DTOs;
+using BankingApp.Application.DTOs.Account;
 using BankingApp.Domain.Entities;
 using BankingApp.Domain.Exceptions;
 
@@ -37,21 +38,21 @@ namespace BankingApp.Application.Services
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return account.ToDTO();
+            return account.ToAccountResponse();
         }
 
         public async Task<AccountResponse?> GetAccountByAccountNumberAsync(string accountNumber, CancellationToken cancellationToken = default)
         {
             Account? account = await _accountRepository.GetByAccountNumberAsync(accountNumber, cancellationToken);
 
-            return account is null ? null : account.ToDTO();
+            return account is null ? null : account.ToAccountResponse();
         }
 
         public async Task<AccountResponse?> GetAccountByIdAsync(Guid accountId, CancellationToken cancellationToken = default)
         {
             Account? account = await _accountRepository.GetByIdAsync(accountId, cancellationToken);
 
-            return account is null ? null : account.ToDTO();
+            return account is null ? null : account.ToAccountResponse();
         }
 
         private static string GenerateUniqueAccountNumber()
@@ -83,7 +84,7 @@ namespace BankingApp.Application.Services
 
             acc = await _accountRepository.GetByIdAsync(account.Id, cancellationToken);
 
-            return acc!.ToDTO();
+            return acc!.ToAccountResponse();
         }
     }
 

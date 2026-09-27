@@ -1,7 +1,9 @@
+using BankingApp.Application.DTOs.Account;
 using BankingApp.Domain.Entities;
 using BankingApp.Domain.Enums;
 
-namespace BankingApp.Application.DTOs
+
+namespace BankingApp.Application.DTOs.Customer
 {
     public record CustomerResponse(
         Guid Id,

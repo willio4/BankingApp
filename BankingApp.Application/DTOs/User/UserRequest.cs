@@ -4,7 +4,7 @@ using BankingApp.Domain.Enums;
 
 namespace BankingApp.Application.DTOs
 {
-    public class RegisterRequest(string FirstName, string LastName, string Email, string PhoneNumber, string Password, string ConfirmPassword, DateTimeOffset DateOfBirth, UserType UserType)
+    public class UserRequest(string FirstName, string LastName, string Email, string PhoneNumber, string Password, string ConfirmPassword, DateTimeOffset DateOfBirth, UserType UserType)
     {
         [Required(ErrorMessage = "{0} can't be blank")]
         public string FirstName { get; set; } = FirstName;
@@ -30,11 +30,6 @@ namespace BankingApp.Application.DTOs
         public DateTimeOffset DateOfBirth { get; set; } = DateOfBirth;
 
         public UserType UserType { get; set; } = UserType;
-
-        public RegisterResponse ToResponse()
-        {
-            return new RegisterResponse(FirstName, LastName, Email, PhoneNumber, UserType.ToString());
-        }
     }
 
 }

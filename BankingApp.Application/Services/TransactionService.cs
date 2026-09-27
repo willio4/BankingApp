@@ -6,6 +6,7 @@ using BankingApp.Application.Common.Interfaces.Repositories;
 using BankingApp.Application.Common.Interfaces.Services;
 using BankingApp.Application.Common.Mappings;
 using BankingApp.Application.DTOs;
+using BankingApp.Application.DTOs.Transaction;
 using BankingApp.Domain.Entities;
 using BankingApp.Domain.Exceptions;
 using BankingApp.Domain.ValueObjects;
@@ -27,7 +28,7 @@ namespace BankingApp.Application.Services
             IReadOnlyList<Transaction> transactions = await _transactionRepository.GetByAccountIdAsync(account.Id, cancellationToken);
 
             // spread transactions, map to dto then put in list and return
-            return [.. transactions.Select(t => t.ToDTO())];
+            return [.. transactions.Select(t => t.ToTransactionResponse())];
         }
 
         public async Task<TransactionResponse> TransferMoneyAsync(TransactionRequest requestDTO, CancellationToken cancellationToken = default)
@@ -51,7 +52,7 @@ namespace BankingApp.Application.Services
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return transaction.ToDTO();
+            return transaction.ToTransactionResponse();
         }
 
         public async Task<TransactionResponse> DepositMoneyAsync(DepositRequest depositMoneyRequestDTO, CancellationToken cancellationToken = default)
@@ -67,7 +68,7 @@ namespace BankingApp.Application.Services
             await _transactionRepository.AddTransactionAsync(transaction, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return transaction.ToDTO();
+            return transaction.ToTransactionResponse();
         }
 
         public async Task<TransactionResponse> WithdrawMoneyAsync(WithdrawRequest withdrawMoneyRequestDTO, CancellationToken cancellationToken = default)
@@ -85,14 +86,14 @@ namespace BankingApp.Application.Services
             await _transactionRepository.AddTransactionAsync(transaction, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return transaction.ToDTO();
+            return transaction.ToTransactionResponse();
         }
 
         public async Task<TransactionResponse> GetTransactionByIdAsync(Guid transactionId, CancellationToken cancellationToken = default)
         {
             Transaction? transaction = await _transactionRepository.GetByIdAsync(transactionId, cancellationToken) ?? throw new NullTransactionException();
 
-            return transaction.ToDTO();
+            return transaction.ToTransactionResponse();
         }
     }
 

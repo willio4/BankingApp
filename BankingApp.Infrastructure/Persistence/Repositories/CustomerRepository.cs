@@ -12,7 +12,7 @@ namespace BankingApp.Infrastructure.Persistence.Repositories
     {
         private readonly ApplicationDbContext _db = db;
 
-        public Task AddCustomerAsync(Customer customer, CancellationToken cancellationToken = default)
+        public Task AddCustomer(Customer customer, CancellationToken cancellationToken = default)
         {
             _db.Customers.Add(customer);
             return Task.CompletedTask;

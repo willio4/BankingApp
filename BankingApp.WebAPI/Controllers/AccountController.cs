@@ -2,6 +2,8 @@ using System.Net;
 using System.Reflection.Metadata.Ecma335;
 using BankingApp.Application.Common.Interfaces.Services;
 using BankingApp.Application.DTOs;
+using BankingApp.Application.DTOs.Account;
+using BankingApp.Application.DTOs.Customer;
 using BankingApp.Domain.Entities;
 using BankingApp.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Http;

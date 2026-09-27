@@ -8,6 +8,8 @@ using BankingApp.Domain.Entities;
 using BankingApp.Application.Common.Mappings;
 using Microsoft.Identity.Client.NativeInterop;
 using Microsoft.AspNetCore.Authorization;
+using BankingApp.Application.DTOs.Customer;
+using BankingApp.Application.DTOs.Account;
 
 namespace BankingApp.WebAPI.Controllers
 {
@@ -41,7 +43,7 @@ namespace BankingApp.WebAPI.Controllers
                 .ToListAsync(cancellationToken);
 
             List<CustomerResponse> customerDtos = customers
-                .Select(c => c.ToDTO())
+                .Select(c => c.ToCustomerResponse())
                 .OrderBy(c => c.CustomerStatus)
                 .ToList();
 

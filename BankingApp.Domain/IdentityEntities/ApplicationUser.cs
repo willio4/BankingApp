@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using BankingApp.Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 
 namespace BankingApp.Infrastructure.IdentityEntities
@@ -11,5 +12,6 @@ namespace BankingApp.Infrastructure.IdentityEntities
         public string? LastName { get; set; } = LastName;
         [PersonalData]
         public DateTimeOffset DateOfBirth { get; set; } = DateOfBirth;
+        
     }
 }

@@ -1,6 +1,6 @@
 using BankingApp.Infrastructure.IdentityEntities;
 
-namespace BankingApp.Infrastructure.Tokens
+namespace BankingApp.Application.Common.Interfaces.Services
 {
     public interface ITokenProvider
     {

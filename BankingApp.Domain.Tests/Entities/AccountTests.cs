@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using BankingApp.Application.Common.Interfaces.Repositories;
 using BankingApp.Application.Common.Interfaces.Services;
 using BankingApp.Application.DTOs;
+using BankingApp.Application.DTOs.Account;
 using BankingApp.Application.Services;
 using BankingApp.Domain.Entities;
 using BankingApp.Domain.ValueObjects;
@@ -44,7 +45,7 @@ namespace BankingApp.Domain.Tests.Entities
                     customers.FirstOrDefault(c => c.Id == id));
 
             _customerRepositoryMock
-                .Setup(repo => repo.AddCustomerAsync(It.IsAny<Customer>(), It.IsAny<CancellationToken>()))
+                .Setup(repo => repo.AddCustomer(It.IsAny<Customer>(), It.IsAny<CancellationToken>()))
                 .Callback<Customer, CancellationToken>((customer, ct) => customers.Add(customer))
                 .Returns(Task.CompletedTask);
 

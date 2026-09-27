@@ -3,21 +3,21 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using BankingApp.Application.Common.Interfaces.Services;
+using BankingApp.Application.DTOs.Login;
 using BankingApp.Domain.Entities;
 using BankingApp.Infrastructure.IdentityEntities;
-using BankingApp.Infrastructure.Persistence;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
-namespace BankingApp.Infrastructure.Tokens
+namespace BankingApp.Application.Services
 {
     public sealed class TokenProvider : ITokenProvider
     {
         private readonly IConfiguration _configuration;
-        private readonly IRefreshTokenService _refreshTokenService;
+        private readonly ITokenService _refreshTokenService;
 
-        public TokenProvider(IConfiguration configuration, IRefreshTokenService refreshTokenService)
+        public TokenProvider(IConfiguration configuration, ITokenService refreshTokenService)
         {
             _configuration = configuration;
             _refreshTokenService = refreshTokenService;
@@ -36,7 +36,7 @@ namespace BankingApp.Infrastructure.Tokens
                 CreatedAt = DateTime.UtcNow
             };
 
-            await _refreshTokenService.CreateRefreshToken(refreshToken);
+            await _refreshTokenService.AddRefreshTokenAsync(refreshToken);
 
             return (accessToken, refreshToken.Token);
         }
@@ -47,19 +47,20 @@ namespace BankingApp.Infrastructure.Tokens
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.UserName!),
-                new("permission", "orders:read"), 
+                new("permission", "orders:read"),
                 new("permission", "orders:write")
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]!));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var token = new SecurityTokenDescriptor{
-                Issuer= _configuration["Jwt:Issuer"],
-                Audience= _configuration["Jwt:Audience"],
-                Subject= new ClaimsIdentity(claims),
-                Expires= DateTime.UtcNow.AddMinutes(1),
-                SigningCredentials= creds
+            var token = new SecurityTokenDescriptor
+            {
+                Issuer = _configuration["Jwt:Issuer"],
+                Audience = _configuration["Jwt:Audience"],
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.UtcNow.AddMinutes(1),
+                SigningCredentials = creds
             };
 
             var jwt = new JsonWebTokenHandler().CreateToken(token);

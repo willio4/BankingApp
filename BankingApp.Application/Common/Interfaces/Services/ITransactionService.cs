@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BankingApp.Application.DTOs;
+
+using BankingApp.Application.DTOs.Transaction;
 
 namespace BankingApp.Application.Common.Interfaces.Services
 {

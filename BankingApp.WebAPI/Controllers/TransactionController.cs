@@ -1,5 +1,6 @@
 using BankingApp.Application.Common.Interfaces.Services;
 using BankingApp.Application.DTOs;
+using BankingApp.Application.DTOs.Transaction;
 using BankingApp.Domain.Entities;
 using BankingApp.Domain.ValueObjects;
 using BankingApp.Infrastructure.Persistence;

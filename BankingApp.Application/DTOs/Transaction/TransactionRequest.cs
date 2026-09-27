@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BankingApp.Domain.Entities;
 
-namespace BankingApp.Application.DTOs
+namespace BankingApp.Application.DTOs.Transaction
 {
     public record TransactionRequest(
         Guid SourceAccountId,

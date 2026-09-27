@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace BankingApp.Application.DTOs
+namespace BankingApp.Application.DTOs.Login
 {
     public class LoginRequest(string Email, string Password)
     {

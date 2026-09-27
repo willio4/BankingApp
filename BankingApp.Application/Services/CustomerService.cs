@@ -9,6 +9,8 @@ using BankingApp.Application.Common.Interfaces.Repositories;
 using BankingApp.Application.Common.Interfaces.Services;
 using BankingApp.Application.Common.Mappings;
 using BankingApp.Application.DTOs;
+using BankingApp.Application.DTOs.Account;
+using BankingApp.Application.DTOs.Customer;
 using BankingApp.Domain.Entities;
 using BankingApp.Domain.Enums;
 using BankingApp.Domain.Exceptions;
@@ -44,11 +46,11 @@ namespace BankingApp.Application.Services
 
             Customer customer = new(Guid.NewGuid(), requestDTO.FirstName, requestDTO.LastName, requestDTO.Email, requestDTO.PhoneNumber, requestDTO.DateOfBirth, requestDTO.UserId);
 
-            await _customerRepository.AddCustomerAsync(customer, cancellationToken);
+            await _customerRepository.AddCustomer(customer, cancellationToken);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return customer.ToDTO();
+            return customer.ToCustomerResponse();
         }
 
         public async Task<CustomerResponse?> GetCustomerByIdAsync(Guid id, CancellationToken cancellationToken)
@@ -56,7 +58,7 @@ namespace BankingApp.Application.Services
             Customer? customer = await _customerRepository
                 .GetByIdAsync(id, cancellationToken);
 
-            return customer == null ? throw new InvalidCustomerException("Customer does not exist") : customer.ToDTO();
+            return customer == null ? throw new InvalidCustomerException("Customer does not exist") : customer.ToCustomerResponse();
         }
 
 
@@ -90,7 +92,7 @@ namespace BankingApp.Application.Services
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
             }
 
-            return customer!.ToDTO();
+            return customer!.ToCustomerResponse();
         }
 
         public async Task<CustomerResponse> DeleteCustomerAsync(CustomerResponse customer, CancellationToken cancellationToken = default)
@@ -104,7 +106,7 @@ namespace BankingApp.Application.Services
 
             update = await _customerRepository.GetByIdAsync(customer.Id, cancellationToken);
 
-            return update!.ToDTO();
+            return update!.ToCustomerResponse();
         }
     }
 }

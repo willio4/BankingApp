@@ -5,7 +5,6 @@ using BankingApp.Application.Services;
 using BankingApp.Infrastructure.IdentityEntities;
 using BankingApp.Infrastructure.Persistence;
 using BankingApp.Infrastructure.Persistence.Repositories;
-using BankingApp.Infrastructure.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -72,7 +71,7 @@ builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
-builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ITokenProvider, TokenProvider>();
 
 builder.Services.AddOpenApi();
@@ -88,8 +87,8 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
-app.UseAuthentication(); 
-app.UseAuthorization();  
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 app.MapGet("/api", () => new { Status = "ok" });

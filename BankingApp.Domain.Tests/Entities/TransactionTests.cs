@@ -1,6 +1,9 @@
 using BankingApp.Application.Common.Interfaces.Repositories;
 using BankingApp.Application.Common.Interfaces.Services;
 using BankingApp.Application.DTOs;
+using BankingApp.Application.DTOs.Account;
+using BankingApp.Application.DTOs.Customer;
+using BankingApp.Application.DTOs.Transaction;
 using BankingApp.Application.Services;
 using BankingApp.Domain.Entities;
 using BankingApp.Domain.Exceptions;
@@ -48,7 +51,7 @@ namespace BankingApp.Domain.Tests.Entities
                     customers.FirstOrDefault(c => c.Id == id));
 
             _customerRepositoryMock
-                .Setup(repo => repo.AddCustomerAsync(It.IsAny<Customer>(), It.IsAny<CancellationToken>()))
+                .Setup(repo => repo.AddCustomer(It.IsAny<Customer>(), It.IsAny<CancellationToken>()))
                 .Callback<Customer, CancellationToken>((customer, ct) => customers.Add(customer))
                 .Returns(Task.CompletedTask);
 
@@ -115,9 +118,9 @@ namespace BankingApp.Domain.Tests.Entities
         {
             CancellationTokenSource cts = new();
             // create 2 customers request
-            CustomerRequest createCustomerRequestDTO = new("Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
+            CustomerRequest createCustomerRequestDTO = new("Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"), Guid.NewGuid());
 
-            CustomerRequest createCustomerRequestDTO1 = new("Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTimeOffset.Parse("09/30/1995"));
+            CustomerRequest createCustomerRequestDTO1 = new("Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTimeOffset.Parse("09/30/1995"), Guid.NewGuid());
 
             // create 2 customers
             CustomerResponse harlem = await _customerService.CreateCustomerAsync(createCustomerRequestDTO, cts.Token);
@@ -151,9 +154,9 @@ namespace BankingApp.Domain.Tests.Entities
         {
             CancellationTokenSource cts = new();
             // create 2 customers request
-            CustomerRequest createCustomerRequestDTO = new("Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
+            CustomerRequest createCustomerRequestDTO = new("Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"), Guid.NewGuid());
 
-            CustomerRequest createCustomerRequestDTO1 = new("Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTimeOffset.Parse("09/30/1995"));
+            CustomerRequest createCustomerRequestDTO1 = new("Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTimeOffset.Parse("09/30/1995"), Guid.NewGuid());
 
             // create 2 customers
             CustomerResponse harlem = await _customerService.CreateCustomerAsync(createCustomerRequestDTO, cts.Token);
@@ -185,9 +188,9 @@ namespace BankingApp.Domain.Tests.Entities
         {
             CancellationTokenSource cts = new();
             // create 2 customers request
-            CustomerRequest createCustomerRequestDTO = new("Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
+            CustomerRequest createCustomerRequestDTO = new("Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"), Guid.NewGuid());
 
-            CustomerRequest createCustomerRequestDTO1 = new("Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTimeOffset.Parse("09/30/1995"));
+            CustomerRequest createCustomerRequestDTO1 = new("Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTimeOffset.Parse("09/30/1995"), Guid.NewGuid());
 
             // create 2 customers
             CustomerResponse harlem = await _customerService.CreateCustomerAsync(createCustomerRequestDTO, cts.Token);
@@ -228,9 +231,9 @@ namespace BankingApp.Domain.Tests.Entities
             // Given
             CancellationTokenSource cts = new();
             // create 2 customers request
-            CustomerRequest createCustomerRequestDTO = new("Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
+            CustomerRequest createCustomerRequestDTO = new("Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"), Guid.NewGuid());
 
-            CustomerRequest createCustomerRequestDTO1 = new("Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTimeOffset.Parse("09/30/1995"));
+            CustomerRequest createCustomerRequestDTO1 = new("Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTimeOffset.Parse("09/30/1995"), Guid.NewGuid());
 
             // create 2 customers
             CustomerResponse harlem = await _customerService.CreateCustomerAsync(createCustomerRequestDTO, cts.Token);
@@ -263,9 +266,9 @@ namespace BankingApp.Domain.Tests.Entities
         {
             CancellationTokenSource cts = new();
             // create 2 customers request
-            CustomerRequest createCustomerRequestDTO = new("Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
+            CustomerRequest createCustomerRequestDTO = new("Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"), Guid.NewGuid());
 
-            CustomerRequest createCustomerRequestDTO1 = new("Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTimeOffset.Parse("09/30/1995"));
+            CustomerRequest createCustomerRequestDTO1 = new("Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTimeOffset.Parse("09/30/1995"), Guid.NewGuid());
 
             // create 2 customers
             CustomerResponse harlem = await _customerService.CreateCustomerAsync(createCustomerRequestDTO, cts.Token);
@@ -308,9 +311,9 @@ namespace BankingApp.Domain.Tests.Entities
         {
             CancellationTokenSource cts = new();
             // create 2 customers request
-            CustomerRequest createCustomerRequestDTO = new("Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
+            CustomerRequest createCustomerRequestDTO = new("Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"), Guid.NewGuid());
 
-            CustomerRequest createCustomerRequestDTO1 = new("Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTimeOffset.Parse("09/30/1995"));
+            CustomerRequest createCustomerRequestDTO1 = new("Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTimeOffset.Parse("09/30/1995"), Guid.NewGuid());
 
             // create 2 customers
             CustomerResponse harlem = await _customerService.CreateCustomerAsync(createCustomerRequestDTO, cts.Token);
@@ -341,9 +344,9 @@ namespace BankingApp.Domain.Tests.Entities
         {
             CancellationTokenSource cts = new();
             // create 2 customers request
-            CustomerRequest createCustomerRequestDTO = new("Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
+            CustomerRequest createCustomerRequestDTO = new("Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"), Guid.NewGuid());
 
-            CustomerRequest createCustomerRequestDTO1 = new("Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTimeOffset.Parse("09/30/1995"));
+            CustomerRequest createCustomerRequestDTO1 = new("Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTimeOffset.Parse("09/30/1995"), Guid.NewGuid());
 
             // create 2 customers
             CustomerResponse harlem = await _customerService.CreateCustomerAsync(createCustomerRequestDTO, cts.Token);
@@ -379,9 +382,9 @@ namespace BankingApp.Domain.Tests.Entities
         {
             CancellationTokenSource cts = new();
             // create 2 customers request
-            CustomerRequest createCustomerRequestDTO = new("Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"));
+            CustomerRequest createCustomerRequestDTO = new("Harlem", "Williams", "harwill22@gmail.com", "111-111-1111", DateTimeOffset.Parse("10/20/1997"), Guid.NewGuid());
 
-            CustomerRequest createCustomerRequestDTO1 = new("Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTimeOffset.Parse("09/30/1995"));
+            CustomerRequest createCustomerRequestDTO1 = new("Jersey", "Rowlette", "jerzrow21@gmail.com", "222-222-2222", DateTimeOffset.Parse("09/30/1995"), Guid.NewGuid());
 
             // create 2 customers
             CustomerResponse harlem = await _customerService.CreateCustomerAsync(createCustomerRequestDTO, cts.Token);
