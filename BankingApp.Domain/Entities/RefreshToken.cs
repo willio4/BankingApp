@@ -1,7 +1,7 @@
 
 using BankingApp.Infrastructure.IdentityEntities;
 
-namespace BankingApp.Infrastructure.Tokens
+namespace BankingApp.Domain.Entities
 {
     public sealed class RefreshToken
     {
