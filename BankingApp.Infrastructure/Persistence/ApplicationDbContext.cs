@@ -7,6 +7,8 @@ using BankingApp.Infrastructure.IdentityEntities;
 using BankingApp.Domain.ValueObjects;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
+using BankingApp.Infrastructure.Tokens;
 
 namespace BankingApp.Infrastructure.Persistence
 {
@@ -35,6 +37,8 @@ namespace BankingApp.Infrastructure.Persistence
         /// Customers Table
         /// </summary>
         public virtual DbSet<Customer> Customers { get; set; }
+
+        public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
