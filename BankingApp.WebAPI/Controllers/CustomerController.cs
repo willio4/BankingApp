@@ -7,12 +7,14 @@ using Microsoft.EntityFrameworkCore;
 using BankingApp.Domain.Entities;
 using BankingApp.Application.Common.Mappings;
 using Microsoft.Identity.Client.NativeInterop;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BankingApp.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Produces("application/json")]
+    [Authorize]
     public class CustomerController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
