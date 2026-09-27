@@ -14,6 +14,6 @@ namespace BankingApp.Application.Common.Interfaces.Services
 
         Task<AccountDTO?> GetAccountByAccountNumberAsync(string accountNumber, CancellationToken cancellationToken = default);
 
-        Task <AccountDTO> CloseAccount(AccountDTO account, CancellationToken cancellationToken = default);
+        Task<AccountDTO> CloseAccountAsync(AccountDTO account, CancellationToken cancellationToken = default);
     }
 }

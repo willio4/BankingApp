@@ -22,7 +22,7 @@ namespace BankingApp.Application.Services
             // check if customer exist
             Customer? customer = await _customerRepository.GetByIdAsync(requestDTO.CustomerId, cancellationToken) ?? throw new InvalidCustomerException($"Customer with id: {requestDTO.CustomerId} does not exist.");
 
-            if(string.IsNullOrEmpty(requestDTO.Currency.Trim()) || requestDTO.Currency.Length != 3) throw new ArgumentException("Currency is invalid");
+            if (string.IsNullOrEmpty(requestDTO.Currency.Trim()) || requestDTO.Currency.Length != 3) throw new ArgumentException("Currency is invalid");
 
             // create unique account number
             string accountNumber = GenerateUniqueAccountNumber();
@@ -66,7 +66,7 @@ namespace BankingApp.Application.Services
             return new string(buffer);
         }
 
-        public async Task<AccountDTO> CloseAccount(AccountDTO account, CancellationToken cancellationToken = default)
+        public async Task<AccountDTO> CloseAccountAsync(AccountDTO account, CancellationToken cancellationToken = default)
         {
             if (account is null) throw new NullAccountException();
 
@@ -74,7 +74,7 @@ namespace BankingApp.Application.Services
 
             Account? acc = await _accountRepository.GetByIdAsync(account.Id, cancellationToken);
 
-            if(acc is null) throw new NullAccountException();
+            if (acc is null) throw new NullAccountException();
 
             acc.AccountStatus = Domain.Enums.AccountStatus.Closed;
 

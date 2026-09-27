@@ -74,7 +74,7 @@ namespace BankingApp.Application.Services
         [GeneratedRegex(@"^\d{3}-?\d{3}-?\d{4}$")]
         private static partial Regex MyRegex1();
 
-        public async Task<CustomerDTO?> UpdateCustomer(CustomerDTO previous, CreateCustomerRequestDTO updated, CancellationToken cancellationToken = default)
+        public async Task<CustomerDTO?> UpdateCustomerAsync(CustomerDTO previous, CreateCustomerRequestDTO updated, CancellationToken cancellationToken = default)
         {
             CancellationTokenSource cts = new();
             Customer? customer = await _customerRepository.GetByIdAsync(previous.Id, cts.Token);
@@ -94,9 +94,9 @@ namespace BankingApp.Application.Services
             return customer!.ToDTO();
         }
 
-        public async Task<CustomerDTO> DeleteCustomer(CustomerDTO customer, CancellationToken cancellationToken = default)
+        public async Task<CustomerDTO> DeleteCustomerAsync(CustomerDTO customer, CancellationToken cancellationToken = default)
         {
-            if(customer is null) throw new InvalidCustomerException();
+            if (customer is null) throw new InvalidCustomerException();
             Customer? update = await _customerRepository.GetByIdAsync(customer.Id, cancellationToken);
 
             update!.CustomerStatus = CustomerStatus.Closed;
