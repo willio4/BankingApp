@@ -22,10 +22,6 @@ namespace BankingApp.Infrastructure.Persistence.Repositories
         {
             return await _db.Customers
                 .AsNoTracking()
-                .Include(c => c.Accounts
-                    .Where(a => a.AccountStatus != Domain.Enums.AccountStatus.Closed)
-                    .OrderBy(a => a.AccountStatus))
-                    .ThenInclude(a => a.LedgerEntries)
                 .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
         }
 

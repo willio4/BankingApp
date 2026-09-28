@@ -15,12 +15,12 @@ namespace BankingApp.Application.Services
     public sealed class TokenProvider : ITokenProvider
     {
         private readonly IConfiguration _configuration;
-        private readonly ITokenService _refreshTokenService;
+        private readonly ITokenService _tokenService;
 
-        public TokenProvider(IConfiguration configuration, ITokenService refreshTokenService)
+        public TokenProvider(IConfiguration configuration, ITokenService tokenService)
         {
             _configuration = configuration;
-            _refreshTokenService = refreshTokenService;
+            _tokenService = tokenService;
         }
 
         public async Task<(string AccessToken, string RefreshToken)> GenerateTokens(ApplicationUser user)
@@ -36,7 +36,7 @@ namespace BankingApp.Application.Services
                 CreatedAt = DateTime.UtcNow
             };
 
-            await _refreshTokenService.AddRefreshTokenAsync(refreshToken);
+            await _tokenService.AddRefreshTokenAsync(refreshToken);
 
             return (accessToken, refreshToken.Token);
         }

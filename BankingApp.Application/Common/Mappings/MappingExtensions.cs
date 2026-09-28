@@ -1,12 +1,7 @@
-using BankingApp.Application.DTOs.User;
 using BankingApp.Application.DTOs.Customer;
-using BankingApp.Application.DTOs.Login;
 using BankingApp.Application.DTOs.Account;
 using BankingApp.Application.DTOs.Transaction;
-using BankingApp.Application.DTOs.RefreshToken;
 using BankingApp.Domain.Entities;
-using BankingApp.Domain.Enums;
-using BankingApp.Infrastructure.IdentityEntities;
 
 namespace BankingApp.Application.Common.Mappings;
 
@@ -48,25 +43,6 @@ public static class MappingExtensions
             transaction.Timestamp,
             transaction.GetAmount().Amount,
             transaction.GetAmount().Currency
-        );
-    }
-
-    public static UserResponse ToUserResponse(this ApplicationUser user)
-    {
-        return new UserResponse(
-            user.FirstName!,
-            user.LastName!,
-            user.Email!,
-            user.PhoneNumber!
-        );
-    }
-
-    public static RefreshTokenResponse ToRefreshTokenResponse(this RefreshToken refreshToken)
-    {
-        return new RefreshTokenResponse(
-            refreshToken.Token!,
-            refreshToken.IsDenied,
-            refreshToken.User
         );
     }
 }

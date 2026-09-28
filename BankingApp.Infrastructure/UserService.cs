@@ -31,10 +31,14 @@ namespace BankingApp.Application.Services
         }
         public async Task<UserResponse?> CreateUserAndCustomerAsync(UserRequest request, CancellationToken cancellationToken = default)
         {
-            ApplicationUser user = new(request.FirstName, request.LastName, request.DateOfBirth);
+            ApplicationUser user = new(request.FirstName, request.LastName, request.DateOfBirth)
+            {
+                UserName = request.Email,
+                PhoneNumber = request.PhoneNumber,
+                Email = request.Email
+            };
 
             IdentityResult result = await _userManager.CreateAsync(user, request.Password);
-
             if (result.Succeeded)
             {
                 // if user created, use user to create customer
@@ -42,28 +46,26 @@ namespace BankingApp.Application.Services
 
                 CustomerResponse response = await _customerService.CreateCustomerAsync(customerRequest, cancellationToken);
 
-                await _userRepository.AddUserAsync(user, cancellationToken);
+                // if (request.UserType == UserType.Admin)
+                // {
+                //     if (await _roleManager.FindByNameAsync(UserType.Admin.ToString()) is null)
+                //     {
+                //         ApplicationRole applicationRole = new() { Name = UserType.Admin.ToString() };
+                //         await _roleManager.CreateAsync(applicationRole);
+                //     }
 
-                if (request.UserType == UserType.Admin)
-                {
-                    if (await _roleManager.FindByNameAsync(UserType.Admin.ToString()) is null)
-                    {
-                        ApplicationRole applicationRole = new() { Name = UserType.Admin.ToString() };
-                        await _roleManager.CreateAsync(applicationRole);
-                    }
+                //     await _userManager.AddToRoleAsync(user, UserType.Admin.ToString());
+                // }
+                // else
+                // {
+                //     if (await _roleManager.FindByNameAsync(UserType.User.ToString()) is null)
+                //     {
+                //         ApplicationRole applicationRole = new() { Name = UserType.User.ToString() };
+                //         await _roleManager.CreateAsync(applicationRole);
+                //     }
 
-                    await _userManager.AddToRoleAsync(user, UserType.Admin.ToString());
-                }
-                else
-                {
-                    if (await _roleManager.FindByNameAsync(UserType.User.ToString()) is null)
-                    {
-                        ApplicationRole applicationRole = new() { Name = UserType.User.ToString() };
-                        await _roleManager.CreateAsync(applicationRole);
-                    }
-
-                    await _userManager.AddToRoleAsync(user, UserType.User.ToString());
-                }
+                //     await _userManager.AddToRoleAsync(user, UserType.User.ToString());
+                // }
 
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
 
@@ -71,7 +73,7 @@ namespace BankingApp.Application.Services
             }
             else
             {
-                return null!;
+                return null;
             }
         }
 

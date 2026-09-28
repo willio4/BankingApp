@@ -1,4 +1,5 @@
 
+using BankingApp.Application.DTOs.RefreshToken;
 using BankingApp.Infrastructure.IdentityEntities;
 
 namespace BankingApp.Domain.Entities
@@ -14,5 +15,14 @@ namespace BankingApp.Domain.Entities
 
         public Guid UserId { get; set; }
         public ApplicationUser User { get; set; } = null!;
+
+        public RefreshTokenResponse ToRefreshTokenResponse()
+        {
+            return new RefreshTokenResponse(
+            Token!,
+            IsDenied,
+            User
+        );
+        }
     }
 }

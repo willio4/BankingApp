@@ -89,16 +89,16 @@ namespace BankingApp.WebAPI.Controllers
             return Ok(current);
         }
 
-        [HttpPost("{customerId}")]
-        public async Task<ActionResult<CustomerResponse>> OpenAccount(Guid customerId, [FromBody] AccountRequest accountRequest, CancellationToken cancellationToken)
+        [HttpPost("open-account")]
+        public async Task<ActionResult<CustomerResponse>> OpenAccount([FromBody] AccountRequest accountRequest, CancellationToken cancellationToken)
         {
-            CustomerResponse? customer = await _customerService.GetCustomerByIdAsync(customerId, cancellationToken);
+            CustomerResponse? customer = await _customerService.GetCustomerByIdAsync(accountRequest.CustomerId, cancellationToken);
 
             if (customer is null) return Problem("Unknown customer id", statusCode: 404, title: "Open customer account");
 
             AccountResponse account = await _customerService.OpenAccountAsync(accountRequest, cancellationToken);
 
-            return CreatedAtAction(nameof(GetCustomerById), new { customerId = customerId }, account);
+            return CreatedAtAction(nameof(GetCustomerById), new { customerId = accountRequest.CustomerId }, account);
         }
 
         [HttpPatch("delete-user/{customerId}")]

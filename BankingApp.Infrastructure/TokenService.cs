@@ -18,16 +18,14 @@ namespace BankingApp.Application.Services
     {
         readonly private IUnitOfWork _unitOfWork;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
-        private readonly IUserRepository _userService;
+        private readonly IUserRepository _userRepository;
         private readonly IConfiguration _configuration;
-        private readonly ITokenService _tokenService;
-        public TokenService(IUnitOfWork unitOfWork, IRefreshTokenRepository refreshTokenRepository, IConfiguration configuration, ITokenService tokenService, IUserRepository userService)
+        public TokenService(IUnitOfWork unitOfWork, IRefreshTokenRepository refreshTokenRepository, IConfiguration configuration, IUserRepository userRepository)
         {
             _unitOfWork = unitOfWork;
             _refreshTokenRepository = refreshTokenRepository;
             _configuration = configuration;
-            _tokenService = tokenService;
-            _userService = userService;
+            _userRepository = userRepository;
         }
         public async Task<RefreshToken> AddRefreshTokenAsync(RefreshToken refreshToken, CancellationToken cancellationToken = default)
         {
@@ -40,7 +38,7 @@ namespace BankingApp.Application.Services
 
         public async Task<string> GenerateAccessToken(LoginRequest request, CancellationToken cancellationToken)
         {
-            ApplicationUser? user = await _userService.GetUserByEmailAsync(request.Email, cancellationToken);
+            ApplicationUser? user = await _userRepository.GetUserByEmailAsync(request.Email, cancellationToken);
 
             var claims = new[]
             {
@@ -58,7 +56,7 @@ namespace BankingApp.Application.Services
                 Issuer = _configuration["Jwt:Issuer"],
                 Audience = _configuration["Jwt:Audience"],
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(1),
+                Expires = DateTime.UtcNow.AddMinutes(10),
                 SigningCredentials = creds
             };
 
@@ -69,11 +67,11 @@ namespace BankingApp.Application.Services
 
         public async Task<string> RefreshAccessToken(RefreshTokenRequest request, CancellationToken cancellationToken = default)
         {
-            RefreshTokenResponse? refreshToken = await _tokenService.GetRefreshTokenAsync(request, cancellationToken);
+            RefreshTokenResponse? refreshToken = await GetRefreshTokenAsync(request, cancellationToken);
 
             if (refreshToken is null) return null!;
 
-            ApplicationUser? user = await _userService.GetUserByEmailAsync(refreshToken.User.Email!, cancellationToken);
+            ApplicationUser? user = await _userRepository.GetUserByEmailAsync(refreshToken.User.Email!, cancellationToken);
 
             var claims = new[]
             {
@@ -91,7 +89,7 @@ namespace BankingApp.Application.Services
                 Issuer = _configuration["Jwt:Issuer"],
                 Audience = _configuration["Jwt:Audience"],
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(1),
+                Expires = DateTime.UtcNow.AddMinutes(10),
                 SigningCredentials = creds
             };
 
@@ -102,18 +100,18 @@ namespace BankingApp.Application.Services
 
         public async Task<string> GenerateRefreshToken(LoginRequest request, CancellationToken cancellationToken)
         {
-            ApplicationUser? user = await _userService.GetUserByEmailAsync(request.Email, cancellationToken);
+            ApplicationUser? user = await _userRepository.GetUserByEmailAsync(request.Email, cancellationToken);
 
             var refreshToken = new RefreshToken
             {
                 Id = Guid.NewGuid(),
                 UserId = user!.Id,
                 Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
-                ExpiresAt = DateTime.UtcNow.AddMinutes(3),
+                ExpiresAt = DateTime.UtcNow.AddMinutes(30),
                 CreatedAt = DateTime.UtcNow
             };
 
-            await _tokenService.AddRefreshTokenAsync(refreshToken, cancellationToken);
+            await AddRefreshTokenAsync(refreshToken, cancellationToken);
 
             return refreshToken.Token;
         }
@@ -135,7 +133,7 @@ namespace BankingApp.Application.Services
             
             token.IsRevoked = true;
             
-            await _tokenService.UpdateRefreshToken(token, cancellationToken);
+            await UpdateRefreshToken(token, cancellationToken);
 
             return true;
         }
