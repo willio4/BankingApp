@@ -38,45 +38,42 @@ namespace BankingApp.Application.Services
                 Email = request.Email
             };
 
-            IdentityResult result = await _userManager.CreateAsync(user, request.Password);
-            if (result.Succeeded)
+            await _unitOfWork.BeginTransactionAsync(cancellationToken);
+
+            try
             {
-                // if user created, use user to create customer
-                CustomerRequest customerRequest = new(user.FirstName!, user.LastName!, user.Email!, user.PhoneNumber!, user.DateOfBirth, user.Id);
+                IdentityResult result = await _userManager.CreateAsync(user, request.Password);
+                if (!result.Succeeded)
+                {
+                    await _unitOfWork.RollbackAsync(cancellationToken);
+                    return null; 
+                }
 
-                CustomerResponse response = await _customerService.CreateCustomerAsync(customerRequest, cancellationToken);
+                CustomerRequest customerRequest = new(
+                    user.FirstName!,
+                    user.LastName!,
+                    user.Email!,
+                    user.PhoneNumber!,
+                    user.DateOfBirth,
+                    user.Id
+                );
 
-                // if (request.UserType == UserType.Admin)
-                // {
-                //     if (await _roleManager.FindByNameAsync(UserType.Admin.ToString()) is null)
-                //     {
-                //         ApplicationRole applicationRole = new() { Name = UserType.Admin.ToString() };
-                //         await _roleManager.CreateAsync(applicationRole);
-                //     }
+                await _customerService.CreateCustomerAsync(customerRequest, cancellationToken);
 
-                //     await _userManager.AddToRoleAsync(user, UserType.Admin.ToString());
-                // }
-                // else
-                // {
-                //     if (await _roleManager.FindByNameAsync(UserType.User.ToString()) is null)
-                //     {
-                //         ApplicationRole applicationRole = new() { Name = UserType.User.ToString() };
-                //         await _roleManager.CreateAsync(applicationRole);
-                //     }
-
-                //     await _userManager.AddToRoleAsync(user, UserType.User.ToString());
-                // }
+                string roleName = request.UserType.ToString();
+                await EnsureRoleExistsAndAssignAsync(user, roleName);
 
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
+                await _unitOfWork.CommitAsync(cancellationToken);
 
                 return user.ToUserResponse();
             }
-            else
+            catch
             {
-                return null;
+                await _unitOfWork.RollbackAsync(cancellationToken);
+                throw;
             }
         }
-
         public async Task<UserResponse?> GetUserByEmailAsync(string email, CancellationToken cancellationToken = default)
         {
             ApplicationUser? user = await _userRepository.GetUserByEmailAsync(email, cancellationToken) ?? throw new InvalidOperationException();
@@ -91,6 +88,16 @@ namespace BankingApp.Application.Services
             if (user is null || await _userManager.CheckPasswordAsync(user, request.Password) == false) return false;
 
             return true;
+        }
+
+        private async Task EnsureRoleExistsAndAssignAsync(ApplicationUser user, string roleName)
+        {
+            if (await _roleManager.FindByNameAsync(roleName) is null)
+            {
+                await _roleManager.CreateAsync(new ApplicationRole { Name = roleName });
+            }
+
+            await _userManager.AddToRoleAsync(user, roleName);
         }
     }
 }

@@ -1,4 +1,5 @@
 using Azure.Core;
+using BankingApp.Application.Common.Interfaces.Repositories;
 using BankingApp.Application.Common.Interfaces.Services;
 using BankingApp.Application.DTOs;
 using BankingApp.Application.DTOs.Login;
@@ -18,11 +19,10 @@ namespace BankingApp.WebAPI.Controllers
     [ApiController]
     [Produces("application/json")]
     [Authorize]
-    public class AuthController(UserManager<ApplicationUser> userManager, ApplicationDbContext db, IUserService userService) : ControllerBase
+    public class AuthController(IUnitOfWork unitOfWork, IUserService userService) : ControllerBase
     {
-        private readonly UserManager<ApplicationUser> _userManager = userManager;
-        private readonly ApplicationDbContext _db = db;
         private readonly IUserService _userService = userService;
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
         [HttpPost("register")]
         [AllowAnonymous]
@@ -30,7 +30,7 @@ namespace BankingApp.WebAPI.Controllers
         {
             if (ModelState.IsValid == false)
             {
-                return BadRequest(u);
+                return BadRequest(ModelState);
             }
 
             UserResponse? user = await _userService.CreateUserAndCustomerAsync(u, cancellationToken);
