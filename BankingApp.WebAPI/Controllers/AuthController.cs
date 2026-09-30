@@ -1,17 +1,11 @@
-using Azure.Core;
 using BankingApp.Application.Common.Interfaces.Repositories;
 using BankingApp.Application.Common.Interfaces.Services;
 using BankingApp.Application.DTOs;
 using BankingApp.Application.DTOs.Login;
 using BankingApp.Application.DTOs.RefreshToken;
 using BankingApp.Application.DTOs.User;
-using BankingApp.Domain.Entities;
-using BankingApp.Infrastructure.IdentityEntities;
-using BankingApp.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BankingApp.WebAPI.Controllers
 {
