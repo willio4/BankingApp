@@ -21,7 +21,7 @@ namespace BankingApp.Infrastructure.Persistence.Repositories
         public async Task<RefreshToken?> GetRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken)
         {
             return await _db.RefreshTokens
-                .Where(rt => rt.IsDenied == false)
+                .Where(rt => rt.IsRevoked == false)
                 .FirstOrDefaultAsync(rt => rt.Token == refreshToken, cancellationToken);
         }
 
