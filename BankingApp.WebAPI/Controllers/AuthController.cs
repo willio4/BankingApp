@@ -77,10 +77,10 @@ namespace BankingApp.WebAPI.Controllers
         }
 
         [HttpPost("logout")]
-        public async Task<IActionResult> Logout([FromBody] RefreshTokenRequest refreshToken, ITokenService tokenService, CancellationToken cancellationToken)
+        public async Task<IActionResult> Logout([FromBody] RefreshTokenRequest refreshTokenRequest, ITokenService tokenService, CancellationToken cancellationToken)
         {
-            await tokenService.RevokeTokenAsync(refreshToken.RefreshToken, cancellationToken);
-            return Ok(new { message = "Logged out successfully" });
+            bool completed = await tokenService.RevokeTokenAsync(refreshTokenRequest.RefreshToken, cancellationToken);
+            return Ok(new { logout = completed });
         }
     }
 }

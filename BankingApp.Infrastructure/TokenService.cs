@@ -121,6 +121,12 @@ namespace BankingApp.Application.Services
             RefreshToken? token = await _refreshTokenRepository.GetRefreshTokenAsync(refreshToken.RefreshToken, cancellationToken);
 
             if (token is null) return null;
+            if(token.ExpiresAt < DateTime.UtcNow || token.Token is not null)
+            {
+                await RevokeTokenAsync(token.Token!, cancellationToken);
+                return null;
+            }
+                
 
             return token.ToRefreshTokenResponse();
         }
@@ -130,10 +136,12 @@ namespace BankingApp.Application.Services
             RefreshToken? token = await _refreshTokenRepository.GetRefreshTokenAsync(refreshToken, cancellationToken);
 
             if(token is null) return false;
+            if(token.IsRevoked) return false;
             
             token.IsRevoked = true;
             
             await UpdateRefreshToken(token, cancellationToken);
+            await _unitOfWork.SaveChangesAsync();
 
             return true;
         }
