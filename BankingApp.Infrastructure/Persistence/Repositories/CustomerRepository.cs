@@ -29,6 +29,7 @@ namespace BankingApp.Infrastructure.Persistence.Repositories
         {
             return await _db.Customers
                 .Include(c => c.Accounts)
+                .ThenInclude(a => a.LedgerEntries)
                 .FirstOrDefaultAsync(c => c.Email == email, cancellationToken);
         }
 
