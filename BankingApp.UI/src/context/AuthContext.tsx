@@ -31,10 +31,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setIsLoading(false);
     }, []);
 
-    const login = (authData: AuthResponse, refreshToken: string) => {
-        localStorage.setItem('accessToken', authData.token);
-        localStorage.setItem('refreshToken', refreshToken);
-        localStorage.setItem('user_profile', JSON.stringify(authData));
+    const login = (authData: AuthResponse) => {
+        localStorage.setItem('accessToken', authData.accessToken);
+        localStorage.setItem('refreshToken', authData.refreshToken);
+        localStorage.setItem('user_profile', JSON.stringify(authData.customer));
         setUser(authData);
     }
 
@@ -47,7 +47,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 });
             }
         } catch {
-            // left empty on purpose
+            // intentionally left blank
         } finally {
             localStorage.clear();
             window.location.href = '/login'

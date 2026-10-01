@@ -1,10 +1,7 @@
 export interface AuthResponse {
-    token: string;
-    userId: string;
-    customerId: string;
-    email: string;
-    firstName: string;
-    lastName: string;
+    accessToken: string,
+    refreshToken: string,
+    customer: CustomerProfile,
 }
 
 export interface CustomerProfile {
@@ -15,6 +12,9 @@ export interface CustomerProfile {
     email: string;
     phoneNumber: string;
     accounts: Account[];
+    dateOfBirth: string,
+    customerStatus: string,
+    
 }
 
 export interface Account {

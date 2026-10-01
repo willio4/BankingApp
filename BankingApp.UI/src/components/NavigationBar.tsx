@@ -5,10 +5,14 @@ import { Link } from "react-router-dom";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { far } from "@fortawesome/free-regular-svg-icons";
 import { fab } from "@fortawesome/free-brands-svg-icons";
+import { useAuth } from "../context/AuthContext";
 
 library.add(fas, far, fab);
 
 export const NavigationBar: React.FC = () => {
+
+  const { user, logout } = useAuth();
+
   return (
     <div style={styles.root}>
       {/* Brand Section */}
@@ -43,10 +47,20 @@ export const NavigationBar: React.FC = () => {
             <span>Chat</span>
           </li>
           <li>
-            <Link to="/login" style={styles.logOnButton}>
-              <FontAwesomeIcon icon={["far", "user-circle"]} />
-              <span>Log On</span>
-            </Link>
+            {user ? (
+              <>
+                <p style={styles.greetings}>Hello, {user.customer.firstName}</p>
+                <button onClick={logout} style={styles.logOutButton}>
+                  <FontAwesomeIcon icon={["far", "user-circle"]} />
+                  <span>Log Out</span>
+                </button>
+              </>
+            ) : (
+              <Link to="/login" style={styles.logOnButton}>
+                <FontAwesomeIcon icon={["far", "user-circle"]} />
+                <span>Log On</span>
+              </Link>
+            )}
           </li>
         </ul>
       </div>
@@ -137,5 +151,24 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: "center",
     gap: "6px",
     transition: "background-color 0.2s ease",
+  },
+  logOutButton: {
+    color: "#0d6e3d",
+    backgroundColor: "#ffffff",
+    border: 0,
+    height: "35px",
+    padding: "6px 14px",
+    borderRadius: "20px",
+    fontWeight: 600,
+    textDecoration: "none",
+    display: "flex",
+    alignItems: "center",
+    gap: "6px",
+    transition: "background-color 0.2s ease",
+  },
+  greetings: {
+    textDecoration: "underline",
+    color: "white",
+    
   },
 };

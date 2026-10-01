@@ -17,7 +17,7 @@ export const LoginPage: React.FC = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
     setError(null);
     setIsSubmitting(true);
@@ -28,8 +28,8 @@ export const LoginPage: React.FC = () => {
         password,
       });
 
-      const { refreshToken, ...authData } = response.data;
-      login(authData, refreshToken);
+      const { ...authData } = response.data;
+      login(authData, authData.refreshToken);
       navigate("/dashboard");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
@@ -144,7 +144,7 @@ const styles: Record<string, React.CSSProperties> = {
     margin: 0,
     fontSize: "24px",
     fontWeight: "700",
-    color: "#0f172a", // Dark navy slate instead of green header title
+    color: "#0f172a", 
     letterSpacing: "-0.02em",
   },
   subtitle: {
@@ -184,7 +184,7 @@ const styles: Record<string, React.CSSProperties> = {
     border: "1px solid #cbd5e1",
     borderRadius: "8px",
     backgroundColor: "#ffffff",
-    color: "#0f172a", // Crisp dark text for readability
+    color: "#0f172a",
     outline: "none",
     boxSizing: "border-box",
     width: "100%",
@@ -195,7 +195,7 @@ const styles: Record<string, React.CSSProperties> = {
     padding: "11px 16px",
     borderRadius: "8px",
     border: "none",
-    backgroundColor: "#0d6e3d", // Matches the deepened green from the navbar
+    backgroundColor: "#0d6e3d",
     color: "#ffffff",
     fontSize: "14px",
     fontWeight: "600",
