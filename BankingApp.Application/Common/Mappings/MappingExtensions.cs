@@ -16,7 +16,7 @@ public static class MappingExtensions
             customer.Email,
             customer.PhoneNumber,
             customer.DateOfBirth,
-            customer.CustomerStatus,
+            customer.CustomerStatus.ToString(),
             customer.UserId,
             customer.Accounts.Select(a => a.ToAccountResponse()).ToList()
         );
@@ -28,10 +28,10 @@ public static class MappingExtensions
             account.Id,
             account.AccountNumber,
             account.CustomerId,
-            account.Type,
+            account.Type.ToString(),
             account.CalculateBalance(),
             account.Currency,
-            account.AccountStatus
+            account.AccountStatus.ToString()
         );
     }
 

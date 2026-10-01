@@ -27,7 +27,9 @@ namespace BankingApp.Infrastructure.Persistence.Repositories
 
         public async Task<Customer?> GetByEmailAsync(string email, CancellationToken cancellationToken)
         {
-            return await _db.Customers.FirstOrDefaultAsync(c => c.Email == email, cancellationToken);
+            return await _db.Customers
+                .Include(c => c.Accounts)
+                .FirstOrDefaultAsync(c => c.Email == email, cancellationToken);
         }
 
         public Task UpdateCustomerAsync(Customer customer, CancellationToken cancellationToken = default)

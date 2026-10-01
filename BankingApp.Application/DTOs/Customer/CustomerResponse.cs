@@ -12,7 +12,7 @@ namespace BankingApp.Application.DTOs.Customer
         string Email,
         string PhoneNumber,
         DateTimeOffset DateOfBirth,
-        CustomerStatus CustomerStatus,
+        string CustomerStatus,
         Guid UserId,
         IReadOnlyList<AccountResponse> Accounts
     );

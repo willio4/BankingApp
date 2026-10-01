@@ -6,9 +6,9 @@ namespace BankingApp.Application.DTOs.Account
         Guid Id,
         string AccountNumber,
         Guid CustomerId,
-        AccountType Type,
+        string Type,
         decimal Balance,
         string Currency,
-        AccountStatus AccountStatus
+        string AccountStatus
     );
 }
