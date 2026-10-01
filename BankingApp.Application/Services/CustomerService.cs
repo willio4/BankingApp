@@ -108,5 +108,12 @@ namespace BankingApp.Application.Services
 
             return update!.ToCustomerResponse();
         }
+
+        public async Task<CustomerResponse?> GetCustomerByEmail(string email, CancellationToken cancellationToken)
+        {
+            Customer? customer = await _customerRepository.GetByEmailAsync(email, cancellationToken);
+
+            return customer?.ToCustomerResponse();
+        }
     }
 }

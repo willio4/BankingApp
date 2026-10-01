@@ -14,5 +14,6 @@ namespace BankingApp.Application.Common.Interfaces.Services
         Task<AccountResponse> OpenAccountAsync(AccountRequest accountRequestDTO, CancellationToken cancellationToken = default);
 
         Task<CustomerResponse> DeleteCustomerAsync(CustomerResponse customer, CancellationToken cancellationToken = default);
+        Task<CustomerResponse?> GetCustomerByEmail(string email, CancellationToken cancellationToken);
     }
 }
