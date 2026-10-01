@@ -53,7 +53,7 @@ namespace BankingApp.WebAPI.Controllers
                 string accessToken = await tokenService.GenerateAccessToken(request, cancellationToken);
                 string refreshToken = await tokenService.GenerateRefreshToken(request, cancellationToken);
 
-                LoginResponse response = new(accessToken, refreshToken, customer!);
+                LoginResponse response = new(accessToken, refreshToken, customer);
                 return Ok(response);
             }
             else
