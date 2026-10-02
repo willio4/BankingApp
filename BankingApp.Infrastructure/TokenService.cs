@@ -56,7 +56,7 @@ namespace BankingApp.Application.Services
                 Issuer = _configuration["Jwt:Issuer"],
                 Audience = _configuration["Jwt:Audience"],
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(10),
+                Expires = DateTime.UtcNow.AddSeconds(30),
                 SigningCredentials = creds
             };
 
@@ -89,7 +89,7 @@ namespace BankingApp.Application.Services
                 Issuer = _configuration["Jwt:Issuer"],
                 Audience = _configuration["Jwt:Audience"],
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(10),
+                Expires = DateTime.UtcNow.AddSeconds(30),
                 SigningCredentials = creds
             };
 
@@ -107,7 +107,7 @@ namespace BankingApp.Application.Services
                 Id = Guid.NewGuid(),
                 UserId = user!.Id,
                 Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
-                ExpiresAt = DateTime.UtcNow.AddMinutes(30),
+                ExpiresAt = DateTime.UtcNow.AddMinutes(1),
                 CreatedAt = DateTime.UtcNow
             };
 
@@ -121,7 +121,7 @@ namespace BankingApp.Application.Services
             RefreshToken? token = await _refreshTokenRepository.GetRefreshTokenAsync(refreshToken.RefreshToken, cancellationToken);
 
             if (token is null) return null;
-            if(token.ExpiresAt < DateTime.UtcNow || token.Token is not null)
+            if(token.ExpiresAt <= DateTime.UtcNow)
             {
                 await RevokeTokenAsync(token.Token!, cancellationToken);
                 return null;
@@ -141,7 +141,7 @@ namespace BankingApp.Application.Services
             token.IsRevoked = true;
             
             await UpdateRefreshToken(token, cancellationToken);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return true;
         }

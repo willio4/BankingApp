@@ -22,6 +22,7 @@ namespace BankingApp.Infrastructure.Persistence.Repositories
         {
             return await _db.RefreshTokens
                 .Where(rt => rt.IsRevoked == false)
+                .Include(rt => rt.User)
                 .FirstOrDefaultAsync(rt => rt.Token == refreshToken, cancellationToken);
         }
 
