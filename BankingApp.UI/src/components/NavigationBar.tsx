@@ -11,7 +11,13 @@ library.add(fas, far, fab);
 
 export const NavigationBar: React.FC = () => {
 
-  const { user, logout } = useAuth();
+  const { user, logout, isLoading } = useAuth();
+
+  if(isLoading) {
+    return (
+      <h1>Loading...</h1>
+    )
+  }
 
   return (
     <div style={styles.root}>
@@ -49,7 +55,7 @@ export const NavigationBar: React.FC = () => {
           <li>
             {user ? (
               <>
-                <p style={styles.greetings}>Hello, {user.customer.firstName}</p>
+                <p style={styles.greetings}>Hello, {user?.customer.firstName}</p>
                 <button onClick={logout} style={styles.logOutButton}>
                   <FontAwesomeIcon icon={["far", "user-circle"]} />
                   <span>Log Out</span>

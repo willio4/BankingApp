@@ -17,13 +17,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [ isLoading, setIsLoading ] = useState<boolean>(true);
 
     useEffect(() => {
-        const token = localStorage.getItem('accessToken');
-        const storedUser = localStorage.getItem('user_profile')
+        const accessToken = localStorage.getItem("accessToken");
+        const refreshToken = localStorage.getItem("refreshToken");
+        const storedCustomer = localStorage.getItem("user_profile");
 
-        if (token && storedUser) {
+        if (accessToken && refreshToken && storedCustomer) {
             try {
                 // eslint-disable-next-line react-hooks/set-state-in-effect
-                setUser(JSON.parse(storedUser));
+                setUser({
+                  accessToken,
+                  refreshToken,
+                  customer: JSON.parse(storedCustomer),
+                });
             } catch {
                 localStorage.clear();
             }
