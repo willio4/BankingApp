@@ -20,7 +20,7 @@ export const NavigationBar: React.FC = () => {
   }
 
   return (
-    <div style={styles.root}>
+    <div style={styles.navBar}>
       {/* Brand Section */}
       <div style={styles.logo}>
         <FontAwesomeIcon icon={["fas", "building-columns"]} size="lg" />
@@ -50,17 +50,20 @@ export const NavigationBar: React.FC = () => {
           </li>
           <li style={styles.toolItem}>
             <FontAwesomeIcon icon={["far", "message"]} />
-            <span>Chat</span>
+            <span>Chat 24/7</span>
           </li>
           <li>
             {user ? (
-              <>
-                <p style={styles.greetings}>Hello, {user?.customer.firstName}</p>
-                <button onClick={logout} style={styles.logOutButton}>
+              <div style={styles.userAndLogout}>
+                <p style={{ ...styles.greetings,  ...styles.accountButton}}>
                   <FontAwesomeIcon icon={["far", "user-circle"]} />
+                  {user?.customer.firstName}
+                  <FontAwesomeIcon icon={["fas", "caret-down"]} />
+                </p>
+                <button onClick={logout} style={styles.logout}>
                   <span>Log Out</span>
                 </button>
-              </>
+              </div>
             ) : (
               <Link to="/login" style={styles.logOnButton}>
                 <FontAwesomeIcon icon={["far", "user-circle"]} />
@@ -75,7 +78,7 @@ export const NavigationBar: React.FC = () => {
 };
 
 const styles: Record<string, React.CSSProperties> = {
-  root: {
+  navBar: {
     background: "#0d6e3d",
     color: "#ffffff",
     display: "flex",
@@ -158,7 +161,7 @@ const styles: Record<string, React.CSSProperties> = {
     gap: "6px",
     transition: "background-color 0.2s ease",
   },
-  logOutButton: {
+  accountButton: {
     color: "#0d6e3d",
     backgroundColor: "#ffffff",
     border: 0,
@@ -171,10 +174,21 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: "center",
     gap: "6px",
     transition: "background-color 0.2s ease",
+    cursor: "pointer",
   },
   greetings: {
     textDecoration: "underline",
     color: "white",
     
+  },
+  userAndLogout: {
+    display: "flex",
+
+  },
+  logout: {
+    all: "unset",
+    cursor: "pointer",
+    textDecoration: "underline",
+    marginLeft: "10px",
   },
 };
