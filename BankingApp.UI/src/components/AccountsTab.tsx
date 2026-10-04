@@ -1,62 +1,49 @@
-import { faArrowRightArrowLeft, faCreditCard, faFileLines, faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowRightArrowLeft,
+  faPaperPlane,
+  faFileLines,
+  faPlus,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import type { Account } from "../types/api";
+import type { Account as AccountType } from "../types/api";
+import { Account } from "./Account";
 
-export function AccountsTab({accounts} : {accounts:Account[]}) {
-
-
-    return (
-<div style={styles.left}>
-          <div style={styles.accountsCard}>
-            <div style={styles.accountsHeader}>
-              <span style={styles.accountsTitle}>Accounts</span>
-              <div style={styles.accountsActions}>
-                <button style={styles.actionButton}>
-                  <FontAwesomeIcon icon={faArrowRightArrowLeft} />
-                  <span>Transfer</span>
-                </button>
-                <button style={styles.actionButton}>
-                  <FontAwesomeIcon icon={faCreditCard} />
-                  <span>Pay bills</span>
-                </button>
-                <button style={styles.actionButton}>
-                  <FontAwesomeIcon icon={faFileLines} />
-                  <span>Statements</span>
-                </button>
-                <button style={styles.actionButton}>
-                  <FontAwesomeIcon icon={faPlus} />
-                  <span>Add account</span>
-                </button>
-              </div>
-            </div>
-
-            <div style={styles.accountsList}>
-              {accounts.map((account) => (
-                <div key={account.id} style={styles.accountEntry}>
-                  <div style={styles.accountInfo}>
-                    <span style={styles.accountName}>
-                      {account.type === "Checking"
-                        ? "ApexBank Checking"
-                        : "ApexBank Savings"}
-                    </span>
-                    <span style={styles.accountNumber}>
-                      *{account.accountNumber?.slice(-4)}
-                    </span>
-                  </div>
-
-                  <div style={styles.accountMeta}>
-                    <span style={styles.accountBalance}>
-                      ${account.balance?.toFixed(2)}
-                    </span>
-                    <button style={styles.linkButton}>Deposit</button>
-                    <button style={styles.linkButton}>Withdraw</button>
-                  </div>
-                </div>
-              ))}
-            </div>
+export function AccountsTab({ accounts }: { accounts: AccountType[] }) {
+  return (
+    <div style={styles.left}>
+      <div style={styles.accountsCard}>
+        <div style={styles.accountsHeader}>
+          <span style={styles.accountsTitle}>Accounts</span>
+          <div style={styles.accountsActions}>
+            <button style={styles.actionButton}>
+              <FontAwesomeIcon icon={faArrowRightArrowLeft} />
+              <span>Transfer</span>
+            </button>
+            <button style={styles.actionButton}>
+              <FontAwesomeIcon icon={faPaperPlane} />
+              <span>Send money</span>
+            </button>
+            <button style={styles.actionButton}>
+              <FontAwesomeIcon icon={faFileLines} />
+              <span>Statements</span>
+            </button>
+            <button style={styles.actionButton}>
+              <FontAwesomeIcon icon={faPlus} />
+              <span>Add account</span>
+            </button>
           </div>
         </div>
-    );
+
+        <div style={styles.accountsList}>
+          {accounts.map((account) => (
+            <div key={account.id}>
+              <Account account={account} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 const styles: Record<string, React.CSSProperties> = {
@@ -101,46 +88,5 @@ const styles: Record<string, React.CSSProperties> = {
     flexDirection: "column",
     gap: "12px",
   },
-  accountEntry: {
-    border: "1px solid #cbd5e1",
-    borderRadius: "10px",
-    padding: "16px",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "#ffffff",
-  },
-  accountInfo: {
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-  },
-  accountName: {
-    fontWeight: "700",
-    fontSize: "16px",
-    color: "#0f172a",
-  },
-  accountNumber: {
-    fontSize: "13px",
-    color: "#64748b",
-  },
-  accountMeta: {
-    display: "flex",
-    alignItems: "center",
-    gap: "16px",
-  },
-  accountBalance: {
-    fontWeight: "700",
-    fontSize: "16px",
-    color: "#0f172a",
-  },
-  linkButton: {
-    background: "none",
-    border: "none",
-    color: "#0d6e3d",
-    fontWeight: "600",
-    fontSize: "14px",
-    cursor: "pointer",
-    padding: 0,
-  },
+  
 };
