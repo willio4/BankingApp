@@ -1,29 +1,30 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { library } from "@fortawesome/fontawesome-svg-core";
+import React from "react";
 import { Link } from "react-router-dom";
-
-import { fas } from "@fortawesome/free-solid-svg-icons";
-import { far } from "@fortawesome/free-regular-svg-icons";
-import { fab } from "@fortawesome/free-brands-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faBuildingColumns,
+  faMagnifyingGlass,
+  faCaretDown,
+} from "@fortawesome/free-solid-svg-icons";
+import { faMessage, faUserCircle } from "@fortawesome/free-regular-svg-icons";
 import { useAuth } from "../context/AuthContext";
 
-library.add(fas, far, fab);
-
 export const NavigationBar: React.FC = () => {
-
   const { user, logout, isLoading } = useAuth();
 
-  if(isLoading) {
+  if (isLoading) {
     return (
-      <h1>Loading...</h1>
-    )
+      <div style={styles.loadingContainer}>
+        <span>Loading...</span>
+      </div>
+    );
   }
 
   return (
     <div style={styles.navBar}>
       {/* Brand Section */}
       <div style={styles.logo}>
-        <FontAwesomeIcon icon={["fas", "building-columns"]} size="lg" />
+        <FontAwesomeIcon icon={faBuildingColumns} size="lg" />
         <span style={styles.brandName}>ApexBank</span>
       </div>
 
@@ -45,28 +46,28 @@ export const NavigationBar: React.FC = () => {
       <div style={styles.tools}>
         <ul style={styles.toolsUl}>
           <li style={styles.toolItem}>
-            <FontAwesomeIcon icon={["fas", "magnifying-glass"]} />
+            <FontAwesomeIcon icon={faMagnifyingGlass} />
             <span>Search</span>
           </li>
           <li style={styles.toolItem}>
-            <FontAwesomeIcon icon={["far", "message"]} />
+            <FontAwesomeIcon icon={faMessage} />
             <span>Chat 24/7</span>
           </li>
           <li>
             {user ? (
               <div style={styles.userAndLogout}>
-                <p style={{ ...styles.greetings,  ...styles.accountButton}}>
-                  <FontAwesomeIcon icon={["far", "user-circle"]} />
-                  {user?.customer.firstName}
-                  <FontAwesomeIcon icon={["fas", "caret-down"]} />
-                </p>
+                <button style={styles.accountButton}>
+                  <FontAwesomeIcon icon={faUserCircle} />
+                  <span>{user?.customer?.firstName}</span>
+                  <FontAwesomeIcon icon={faCaretDown} />
+                </button>
                 <button onClick={logout} style={styles.logout}>
-                  <span>Log Out</span>
+                  Log Out
                 </button>
               </div>
             ) : (
               <Link to="/login" style={styles.logOnButton}>
-                <FontAwesomeIcon icon={["far", "user-circle"]} />
+                <FontAwesomeIcon icon={faUserCircle} />
                 <span>Log On</span>
               </Link>
             )}
@@ -78,14 +79,19 @@ export const NavigationBar: React.FC = () => {
 };
 
 const styles: Record<string, React.CSSProperties> = {
+  loadingContainer: {
+    background: "#0d6e3d",
+    color: "#ffffff",
+    padding: "16px 32px",
+    fontFamily: "system-ui, -apple-system, sans-serif",
+  },
   navBar: {
     background: "#0d6e3d",
     color: "#ffffff",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    padding: "40px 40px",
-    borderBottom: "1px solid rgba(0, 0, 0, 0.15)",
+    padding: "16px 32px",
     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
     WebkitFontSmoothing: "antialiased",
   },
@@ -108,7 +114,7 @@ const styles: Record<string, React.CSSProperties> = {
   tabsUl: {
     fontFamily: "system-ui, -apple-system, sans-serif",
     fontWeight: 500,
-    fontSize: "14px",
+    fontSize: "15px",
     listStyleType: "none",
     display: "flex",
     justifyContent: "center",
@@ -152,7 +158,7 @@ const styles: Record<string, React.CSSProperties> = {
   logOnButton: {
     color: "#0d6e3d",
     backgroundColor: "#ffffff",
-    padding: "6px 14px",
+    padding: "8px 16px",
     borderRadius: "20px",
     fontWeight: 600,
     textDecoration: "none",
@@ -160,35 +166,34 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: "center",
     gap: "6px",
     transition: "background-color 0.2s ease",
+  },
+  userAndLogout: {
+    display: "flex",
+    alignItems: "center",
+    gap: "12px",
   },
   accountButton: {
     color: "#0d6e3d",
     backgroundColor: "#ffffff",
-    border: 0,
-    height: "35px",
-    padding: "6px 14px",
+    border: "none",
+    padding: "8px 16px",
     borderRadius: "20px",
     fontWeight: 600,
-    textDecoration: "none",
     display: "flex",
     alignItems: "center",
     gap: "6px",
-    transition: "background-color 0.2s ease",
     cursor: "pointer",
-  },
-  greetings: {
-    textDecoration: "underline",
-    color: "white",
-    
-  },
-  userAndLogout: {
-    display: "flex",
-
+    fontFamily: "inherit",
+    fontSize: "14px",
   },
   logout: {
-    all: "unset",
+    background: "none",
+    border: "none",
+    color: "#ffffff",
     cursor: "pointer",
     textDecoration: "underline",
-    marginLeft: "10px",
+    fontSize: "14px",
+    padding: 0,
+    fontFamily: "inherit",
   },
 };
