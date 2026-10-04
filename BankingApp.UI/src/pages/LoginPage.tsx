@@ -17,7 +17,7 @@ export const LoginPage: React.FC = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.SubmitEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     setIsSubmitting(true);
@@ -28,10 +28,10 @@ export const LoginPage: React.FC = () => {
         password,
       });
 
-      const { ...authData } = response.data;
+      const authData = response.data;
       login(authData, authData.refreshToken);
       navigate("/dashboard");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       if (err.response?.data?.title) {
         setError(err.response.data.title);
@@ -53,7 +53,11 @@ export const LoginPage: React.FC = () => {
           <p style={styles.subtitle}>Access your online banking account</p>
         </div>
 
-        {error && <div style={styles.errorBanner}>{error}</div>}
+        {error && (
+          <div style={styles.errorBanner} role="alert">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} style={styles.form}>
           <div style={styles.field}>
@@ -66,6 +70,7 @@ export const LoginPage: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              autoComplete="email"
               placeholder="name@example.com"
               style={styles.inputBox}
             />
@@ -76,9 +81,9 @@ export const LoginPage: React.FC = () => {
               <label htmlFor="password" style={styles.label}>
                 Password
               </label>
-              <a href="#forgot" style={styles.forgotLink}>
+              <Link to="/forgot-password" style={styles.forgotLink}>
                 Forgot password?
-              </a>
+              </Link>
             </div>
             <input
               id="password"
@@ -86,6 +91,7 @@ export const LoginPage: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              autoComplete="current-password"
               placeholder="••••••••"
               style={styles.inputBox}
             />
@@ -121,7 +127,7 @@ const styles: Record<string, React.CSSProperties> = {
     justifyContent: "center",
     alignItems: "center",
     minHeight: "calc(100vh - 120px)",
-    backgroundColor: "#f8fafc", // Subtle slate backdrop
+    backgroundColor: "#f8fafc",
     padding: "20px",
     fontFamily: "system-ui, -apple-system, sans-serif",
     WebkitFontSmoothing: "antialiased",
@@ -144,7 +150,7 @@ const styles: Record<string, React.CSSProperties> = {
     margin: 0,
     fontSize: "24px",
     fontWeight: "700",
-    color: "#0f172a", 
+    color: "#0f172a",
     letterSpacing: "-0.02em",
   },
   subtitle: {
@@ -188,7 +194,6 @@ const styles: Record<string, React.CSSProperties> = {
     outline: "none",
     boxSizing: "border-box",
     width: "100%",
-    transition: "border-color 0.15s ease, box-shadow 0.15s ease",
   },
   button: {
     marginTop: "0.5rem",
@@ -211,7 +216,6 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: "14px",
   },
   footerText: {
-    marginTop: "1.75rem",
     textAlign: "center",
     fontSize: "14px",
     color: "#64748b",
