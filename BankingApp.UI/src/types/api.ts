@@ -22,5 +22,6 @@ export interface Account {
     accountNumber: string;
     balance: number;
     currency: string;
-    accountType: string;
+    type: string;
+    accountStatus: string;
 }
