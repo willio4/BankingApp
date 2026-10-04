@@ -16,24 +16,21 @@ export const RegisterPage: React.FC = () => {
 
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]:
-        e.target.type === "checkbox"
-          ? setIsChecked(e.target.checked)
-          : e.target.value,
-    });
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
-  const handleSubmit = async (e: React.SubmitEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
 
-    if (formData.password != formData.confirmPassword) {
+    if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match.");
       return;
     }
@@ -53,7 +50,7 @@ export const RegisterPage: React.FC = () => {
       });
 
       navigate("/login", { state: { registered: true } });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       if (err.response?.data?.errors) {
         const messages = Object.values(err.response.data.errors).flat();
@@ -80,7 +77,12 @@ export const RegisterPage: React.FC = () => {
             <span style={styles.bank}>ApexBank</span>
           </p>
         </div>
-        {error && <div style={styles.errorBanner}>{error}</div>}
+
+        {error && (
+          <div style={styles.errorBanner} role="alert">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} style={styles.form}>
           <div style={styles.row}>
@@ -125,6 +127,7 @@ export const RegisterPage: React.FC = () => {
               value={formData.email}
               onChange={handleChange}
               required
+              autoComplete="email"
               style={styles.inputBox}
             />
           </div>
@@ -140,6 +143,7 @@ export const RegisterPage: React.FC = () => {
               value={formData.phoneNumber}
               onChange={handleChange}
               required
+              autoComplete="tel"
               style={styles.inputBox}
             />
           </div>
@@ -155,6 +159,7 @@ export const RegisterPage: React.FC = () => {
               value={formData.password}
               onChange={handleChange}
               required
+              autoComplete="new-password"
               style={styles.inputBox}
             />
           </div>
@@ -170,12 +175,13 @@ export const RegisterPage: React.FC = () => {
               value={formData.confirmPassword}
               onChange={handleChange}
               required
+              autoComplete="new-password"
               style={styles.inputBox}
             />
           </div>
 
           <div style={styles.field}>
-            <label style={styles.label} htmlFor="dateOfBirth">
+            <label htmlFor="dateOfBirth" style={styles.label}>
               Date of Birth
             </label>
             <input
@@ -189,28 +195,35 @@ export const RegisterPage: React.FC = () => {
             />
           </div>
 
-          <div style={styles.field}>
-            <label htmlFor="userType" style={{ ...styles.label }}>
-              Admin?
-            </label>
+          <div style={styles.checkboxField}>
             <input
-              id="userType"
-              name="userType"
+              id="admin"
+              name="admin"
               type="checkbox"
-              checked={isChecked}
+              checked={formData.admin}
               onChange={handleChange}
               style={styles.checkbox}
             />
+            <label htmlFor="admin" style={styles.checkboxLabel}>
+              Register as Administrator
+            </label>
           </div>
 
-          <button type="submit" disabled={isSubmitting} style={styles.button}>
-            {isSubmitting ? "Creating Account" : "Register"}
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            style={{
+              ...styles.button,
+              opacity: isSubmitting ? 0.7 : 1,
+              cursor: isSubmitting ? "not-allowed" : "pointer",
+            }}
+          >
+            {isSubmitting ? "Creating Account..." : "Register"}
           </button>
 
           <p style={styles.footerText}>
-            Already have an account?
-            <Link to={"/login"} style={styles.loginLink}>
-              {" "}
+            Already have an account?{" "}
+            <Link to="/login" style={styles.loginLink}>
               Login here
             </Link>
           </p>
@@ -226,14 +239,14 @@ const styles: Record<string, React.CSSProperties> = {
     justifyContent: "center",
     alignItems: "center",
     minHeight: "calc(100vh - 120px)",
-    backgroundColor: "#f8fafc", // Subtle slate backdrop
+    backgroundColor: "#f8fafc",
     padding: "20px",
     fontFamily: "system-ui, -apple-system, sans-serif",
     WebkitFontSmoothing: "antialiased",
   },
   card: {
     width: "100%",
-    maxWidth: "420px",
+    maxWidth: "460px",
     padding: "2.5rem 2.25rem",
     borderRadius: "12px",
     boxShadow:
@@ -241,15 +254,30 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: "#ffffff",
     border: "1px solid #e2e8f0",
   },
+  headerGroup: {
+    textAlign: "center",
+    marginBottom: "1.75rem",
+  },
+  createAccount: {
+    margin: 0,
+    fontSize: "24px",
+    fontWeight: "700",
+    color: "#0f172a",
+    letterSpacing: "-0.02em",
+  },
+  subtitle: {
+    margin: "6px 0 0 0",
+    fontSize: "14px",
+    color: "#64748b",
+  },
+  bank: {
+    fontWeight: "700",
+    color: "#0d6e3d",
+  },
   form: {
     display: "flex",
     flexDirection: "column",
     gap: "1.25rem",
-  },
-  label: {
-    fontSize: "14px",
-    fontWeight: "500",
-    color: "#334155",
   },
   row: {
     display: "grid",
@@ -260,6 +288,39 @@ const styles: Record<string, React.CSSProperties> = {
     display: "flex",
     flexDirection: "column",
     gap: "0.375rem",
+  },
+  label: {
+    fontSize: "14px",
+    fontWeight: "500",
+    color: "#334155",
+  },
+  inputBox: {
+    padding: "10px 14px",
+    fontSize: "14px",
+    border: "1px solid #cbd5e1",
+    borderRadius: "8px",
+    backgroundColor: "#ffffff",
+    color: "#0f172a",
+    outline: "none",
+    boxSizing: "border-box",
+    width: "100%",
+  },
+  checkboxField: {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    marginTop: "0.25rem",
+  },
+  checkbox: {
+    accentColor: "#0d6e3d",
+    width: "16px",
+    height: "16px",
+    cursor: "pointer",
+  },
+  checkboxLabel: {
+    fontSize: "14px",
+    color: "#334155",
+    cursor: "pointer",
   },
   button: {
     marginTop: "0.5rem",
@@ -282,52 +343,14 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: "14px",
   },
   footerText: {
-    marginTop: "1.75rem",
     textAlign: "center",
     fontSize: "14px",
     color: "#64748b",
-    margin: "1.75rem 0 0 0",
+    margin: "1.25rem 0 0 0",
   },
   loginLink: {
     color: "#0d6e3d",
     fontWeight: "600",
     textDecoration: "none",
-  },
-  inputBox: {
-    padding: "10px 14px",
-    fontSize: "14px",
-    border: "1px solid #cbd5e1",
-    borderRadius: "8px",
-    backgroundColor: "#ffffff",
-    color: "#0f172a",
-    outline: "none",
-    boxSizing: "border-box",
-    width: "100%",
-    transition: "border-color 0.15s ease, box-shadow 0.15s ease",
-  },
-
-  headerGroup: {
-    textAlign: "center",
-    marginBottom: "1.75rem",
-  },
-  createAccount: {
-    margin: 0,
-    fontSize: "24px",
-    fontWeight: "700",
-    color: "#0f172a",
-    letterSpacing: "-0.02em",
-  },
-  subtitle: {
-    margin: "6px 0 0 0",
-    fontSize: "14px",
-    color: "#64748b",
-  },
-  bank: {
-    // fontFamily: "initial",
-    fontWeight: "bolder",
-    letterSpacing: "-0.02em",
-  },
-  checkbox: {
-    accentColor: "gold",
   },
 };
