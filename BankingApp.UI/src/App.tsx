@@ -6,6 +6,7 @@ import { NavigationBar } from "./components/NavigationBar";
 import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
+import { AddAccountPage } from "./pages/AddAccountPage";
 
 export default function App() {
   return (
@@ -19,7 +20,8 @@ export default function App() {
 
           {/* Protected Banking Routes */}
           <Route element={<ProtectedRoute />}>
-            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/my/dashboard" element={<DashboardPage />} />
+            <Route path="/my/add-account" element={<AddAccountPage />} />
           </Route>
 
           {/* Fallback */}

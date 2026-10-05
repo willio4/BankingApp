@@ -19,7 +19,7 @@ export const LoginPage: React.FC = () => {
 
   useEffect(() => {
     if(isAuthenticated){
-      navigate("/dashboard")
+      navigate("/my/dashboard")
     }
   })
 
@@ -35,8 +35,8 @@ export const LoginPage: React.FC = () => {
       });
 
       const authData = response.data;
-      login(authData, authData.refreshToken);
-      navigate("/dashboard");
+      login(authData);
+      navigate("/my/dashboard");
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       if (err.response?.data?.title) {

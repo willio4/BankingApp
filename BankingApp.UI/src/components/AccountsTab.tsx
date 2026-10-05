@@ -7,8 +7,13 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { Account as AccountType } from "../types/api";
 import { Account } from "./Account";
+import { useNavigate } from "react-router-dom";
 
 export function AccountsTab({ accounts }: { accounts: AccountType[] }) {
+  const navigate = useNavigate();
+  function handleAddAccountClick() {
+    navigate("/my/add-account");
+  }
   return (
     <div style={styles.left}>
       <div style={styles.accountsCard}>
@@ -27,7 +32,7 @@ export function AccountsTab({ accounts }: { accounts: AccountType[] }) {
               <FontAwesomeIcon icon={faFileLines} />
               <span>Statements</span>
             </button>
-            <button style={styles.actionButton}>
+            <button style={styles.actionButton} onClick={handleAddAccountClick}>
               <FontAwesomeIcon icon={faPlus} />
               <span>Add account</span>
             </button>
