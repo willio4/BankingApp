@@ -32,9 +32,9 @@ export const AddAccountPage: React.FC = () => {
       return;
     }
 
-    const accountType = accountElement.value;
-    const currency = currencyElement.value;
-    const deposit = depositElement.value;
+    const accountType : string = accountElement.value;
+    const currency : string = currencyElement.value;
+    const deposit : string = depositElement.value;
 
     try {
       const response = await api.post("/customer/open-account", {
@@ -43,7 +43,7 @@ export const AddAccountPage: React.FC = () => {
         Currency: currency,
       });
 
-      if (deposit != null || deposit.trim() != "") {
+      if (deposit != null && deposit.trim() !== "") {
         const amount = parseFloat(deposit);
         try {
           await api.post("/transaction/deposit", {
@@ -53,7 +53,8 @@ export const AddAccountPage: React.FC = () => {
           });
           await refreshUser();
           navigateTo("/my/dashboard");
-        } catch (error) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
           if (error.response) {
             const errorDetails =
               error.response.data.message ||
@@ -71,7 +72,8 @@ export const AddAccountPage: React.FC = () => {
         await refreshUser();
         navigateTo("/my/dashboard");
       }
-    } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       if (error.response) {
         const errorDetails =
           error.response.data.message ||
@@ -86,6 +88,10 @@ export const AddAccountPage: React.FC = () => {
       }
     }
   };
+
+  if (!user || !user.customer) {
+    return null;
+  }
 
   const { firstName, lastName, id } = user.customer;
   return (
