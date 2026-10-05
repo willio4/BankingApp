@@ -1,0 +1,90 @@
+.account-entry {
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.account-entry:hover {
+  border-color: #94a3b8;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.account-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.account-name {
+  font-weight: 700;
+  font-size: 16px;
+  color: #0f172a;
+}
+
+.account-number {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.account-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.account-info:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.account-balance {
+  font-weight: 700;
+  font-size: 16px;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+}
+
+.account-action-link {
+  background: none;
+  border: none;
+  color: #0d6e3d;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.account-action-link:hover {
+  background-color: #f0fdf4;
+  color: #09522d;
+  text-decoration: underline;
+}
+
+.account-action-link:focus-visible {
+  outline: 2px solid #0d6e3d;
+  outline-offset: 2px;
+}
+
+@media (max-width: 520px) {
+  .account-entry {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .account-meta {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

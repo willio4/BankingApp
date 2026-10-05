@@ -1,71 +1,58 @@
-import type { Account } from "../types/api";
-
-export function Account({ account }: { account: Account }) {
-  return (
-    <div style={styles.accountEntry}>
-      <div style={styles.accountInfo}>
-        <span style={styles.accountName}>
-          {account.type === "Checking"
-            ? "ApexBank Checking"
-            : "ApexBank Savings"}
-        </span>
-        <span style={styles.accountNumber}>
-          *{account.accountNumber?.slice(-4)}
-        </span>
-      </div>
-
-      <div style={styles.accountMeta}>
-        <span style={styles.accountBalance}>
-          ${account.balance?.toFixed(2)}
-        </span>
-        <button style={styles.linkButton}>Deposit</button>
-        <button style={styles.linkButton}>Withdraw</button>
-      </div>
-    </div>
-  );
+import type { Account as AccountType } from "../types/api";
+import "./Account.css";
+interface AccountProps {
+  account: AccountType;
+  onDeposit?: (account: AccountType) => void;
+  onWithdraw?: (account: AccountType) => void;
 }
 
-const styles: Record<string, React.CSSProperties> = {
-  accountInfo: {
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-  },
-  accountName: {
-    fontWeight: "700",
-    fontSize: "16px",
-    color: "#0f172a",
-  },
-  accountNumber: {
-    fontSize: "13px",
-    color: "#64748b",
-  },
-  accountMeta: {
-    display: "flex",
-    alignItems: "center",
-    gap: "16px",
-  },
-  accountBalance: {
-    fontWeight: "700",
-    fontSize: "16px",
-    color: "#0f172a",
-  },
-  linkButton: {
-    background: "none",
-    border: "none",
-    color: "#0d6e3d",
-    fontWeight: "600",
-    fontSize: "14px",
-    cursor: "pointer",
-    padding: 0,
-  },
-  accountEntry: {
-    border: "1px solid #cbd5e1",
-    borderRadius: "10px",
-    padding: "16px",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "#ffffff",
-  },
-};
+const onDeposit = () => {
+
+}
+
+const onWithdraw = () => {
+  
+}
+
+export function Account({ account }: AccountProps) {
+  const maskedNumber = account.accountNumber
+    ? `*${account.accountNumber.slice(-4)}`
+    : "****";
+
+  const formattedBalance = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: account.currency || "USD",
+    minimumFractionDigits: 2,
+  }).format(account.balance ?? 0);
+
+  const accountTitle = account.type
+    ? `ApexBank ${account.type}`
+    : "ApexBank Account";
+
+  return (
+    <article className="account-entry">
+      <div className="account-info">
+        <span className="account-name">{accountTitle}</span>
+        <span className="account-number">{maskedNumber}</span>
+      </div>
+
+      <div className="account-meta">
+        <span className="account-balance">{formattedBalance}</span>
+        <button
+          type="button"
+          className="account-action-link"
+          onClick={onDeposit}
+        >
+          Deposit
+        </button>
+        <button
+          type="button"
+          className="account-action-link"
+          onClick={onWithdraw}
+        >
+          Withdraw
+        </button>
+      </div>
+    </article>
+  );
+}

@@ -1,86 +1,59 @@
+import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faInbox,
   faPhone,
   faFileLines,
 } from "@fortawesome/free-solid-svg-icons";
+import "./UserHeader.css";
 
-export function UserHeader({
-  firstName,
-  id,
-}: {
+interface UserHeaderProps {
   firstName: string;
-  id: string;
-}) {
-  {
-    /* Header Banner */
-  }
-  return (
-    <div style={styles.heading}>
-      <div style={styles.greetingGroup}>
-        <h2 style={styles.greeting}>Good Evening, {firstName}</h2>
-        <span style={styles.memberId}>Member: *{id?.slice(-6)}</span>
-      </div>
-      <ul style={styles.shortcuts}>
-        <li style={styles.shortcutItem}>
-          <FontAwesomeIcon icon={faInbox} />
-          <span>Inbox</span>
-        </li>
-        <li style={styles.shortcutItem}>
-          <FontAwesomeIcon icon={faFileLines} />
-          <span>Documents</span>
-        </li>
-        <li style={styles.shortcutItem}>
-          <FontAwesomeIcon icon={faPhone} />
-          <span>Help</span>
-        </li>
-      </ul>
-    </div>
-  );
+  id?: string;
 }
 
-const styles: Record<string, React.CSSProperties> = {
-  heading: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    background: "#0d6e3d",
-    color: "#ffffff",
-    padding: "20px 32px",
-    borderRadius: "12px",
-    marginBottom: "24px",
-  },
-  greetingGroup: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "4px",
-  },
-  greeting: {
-    margin: 0,
-    fontSize: "26px",
-    fontWeight: 700,
-    color: "inherit",
-  },
-  memberId: {
-    color: "#a7f3d0",
-    fontSize: "14px",
-    textAlign: "left",
-    paddingLeft: "12px",
-  },
-  shortcuts: {
-    display: "flex",
-    listStyleType: "none",
-    gap: "20px",
-    margin: 0,
-    padding: 0,
-  },
-  shortcutItem: {
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    cursor: "pointer",
-    fontSize: "14px",
-    fontWeight: 500,
-    opacity: 0.9,
-  },
+const getGreeting = (): string => {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good Morning";
+  if (hour < 18) return "Good Afternoon";
+  return "Good Evening";
 };
+
+export function UserHeader({ firstName, id }: UserHeaderProps) {
+  const greetingText = getGreeting();
+  const maskedId = id ? `*${id.slice(-6)}` : "N/A";
+
+  return (
+    <header className="user-header">
+      <div className="greeting-group">
+        <h2 className="greeting-title">
+          {greetingText}, {firstName}
+        </h2>
+        <span className="member-id">Member: {maskedId}</span>
+      </div>
+
+      <nav aria-label="Header shortcuts">
+        <ul className="header-shortcuts">
+          <li>
+            <button type="button" className="shortcut-button">
+              <FontAwesomeIcon icon={faInbox} />
+              <span>Inbox</span>
+            </button>
+          </li>
+          <li>
+            <button type="button" className="shortcut-button">
+              <FontAwesomeIcon icon={faFileLines} />
+              <span>Documents</span>
+            </button>
+          </li>
+          <li>
+            <button type="button" className="shortcut-button">
+              <FontAwesomeIcon icon={faPhone} />
+              <span>Help</span>
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </header>
+  );
+}
