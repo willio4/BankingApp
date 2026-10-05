@@ -58,7 +58,12 @@ namespace BankingApp.Application.Services
             Customer? customer = await _customerRepository
                 .GetByIdAsync(id, cancellationToken);
 
-            return customer == null ? throw new InvalidCustomerException("Customer does not exist") : customer.ToCustomerResponse();
+            if (customer == null)
+            {
+                return null;
+            }
+
+            return customer.ToCustomerResponse();
         }
 
 

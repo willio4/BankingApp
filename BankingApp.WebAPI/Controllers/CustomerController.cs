@@ -98,7 +98,7 @@ namespace BankingApp.WebAPI.Controllers
 
             AccountResponse account = await _customerService.OpenAccountAsync(accountRequest, cancellationToken);
 
-            return CreatedAtAction(nameof(GetCustomerById), new { customerId = accountRequest.CustomerId }, account);
+            return Ok(account);
         }
 
         [HttpPatch("delete-user/{customerId}")]

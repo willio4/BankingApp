@@ -21,6 +21,8 @@ namespace BankingApp.Infrastructure.Persistence.Repositories
         public async Task<Customer?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return await _db.Customers
+                .Include(c => c.Accounts)
+                .ThenInclude(a => a.LedgerEntries)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
         }
